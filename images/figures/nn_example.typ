@@ -9,8 +9,9 @@
 
 #set text(size: 12pt) // Has to be same as in main doc
 
-
 #draw-network(
+    palette: "cold",
+    scale: 200%,
     (
         (
             type: "input",
