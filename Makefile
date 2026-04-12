@@ -1,10 +1,9 @@
-TARGET = memoria.pdf
+TARGET = report_TFG_ArnauKDeprez2026.pdf
 
 # figures
-FIGURE_DIR = images/figures
+FIGURE_DIR = assets/figures
 FIGURE_SOURCES = $(wildcard $(FIGURE_DIR)/*.typ)
 FIGURE_OUTPUTS = $(FIGURE_SOURCES:.typ=.svg)
-
 
 all: $(TARGET)
 
