@@ -4,9 +4,11 @@ Typst code for my bachelor's thesis.
 
 Written using [typst](typst.app).
 
-To build install `typst` compiler and make:
+To build, install `typst` compiler. Then make:
 
 ```sh
+git clone https://github.com/arnauKL/tfg_writing.git
+cd tfg_writing/
 make
 ```
 
