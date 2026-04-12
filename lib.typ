@@ -1,11 +1,16 @@
+// This is a modified version of the mousse_notes template
+// to suit personal preferences and university requirements.
+//
+// Visit the original template at: https://github.com/dogeystamp/mousse-notes
+
+
 #let INDENT = 1.4em
 
 #let appendix(body) = {
-    set heading(numbering: "A.1.1a", supplement: [Appendix])
-    counter(heading).update(0)
-    body
+  set heading(numbering: "A.1.1a", supplement: [Appendix])
+  counter(heading).update(0)
+  body
 }
-
 
 /// Manual override for indent (see https://github.com/typst/typst/issues/3206)
 #let indent = h(INDENT)
@@ -66,18 +71,18 @@
     }
   }
   align(bottom + center)[
-    #set text(spacing: 150%) 
-      #smallcaps([
-        // From institution to details
-        Polytechnic School \
-        Department of Computer Architecture and Technology \
-        Bachelor’s Degree in Biomedical Engineering \
-        Academic Year: 2025-2026
-      ])
-    ]
-    }
-  )
- }
+    #set text(spacing: 150%)
+    #smallcaps([
+      // From institution to details
+      Polytechnic School \
+      Department of Computer Architecture and Technology \
+      Bachelor’s Degree in Biomedical Engineering \
+      Academic Year: 2025-2026
+    ])
+  ]
+}
+)
+}
 
 #let book(
   title: none,
@@ -93,12 +98,10 @@
       text: "Linux Libertine",
       //text: "Source Serif Pro",
       //text: "New Computer Modern",
-      
       //text: "Alegreya Sans",
       //text: "Noto Sans",
       //text: "Source Sans Pro",
       //text: "Fira Sans",
-
       math: "New Computer Modern Math",
     ),
     sans: (
@@ -112,7 +115,6 @@
   font-style: "serif",
   body,
 ) = {
-
   set text(font: fonts.at(font-style).at("text"))
   show math.equation: set text(font: fonts.at(font-style).at("math"))
 
