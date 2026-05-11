@@ -3,14 +3,43 @@
 //
 // Visit the original template at: https://github.com/dogeystamp/mousse-notes
 
+// some packages that may become useful later:
+// wrap-it (wrap text around figures) -> https://typst.app/universe/package/wrap-it
+// supbar (subfigures in typst)       -> https://typst.app/universe/package/subpar
+// meander (fancy text wrap)          -> https://typst.app/universe/package/meander
 
 #let INDENT = 1.4em
+#let debug = false
+//#let debug = true
 
 #let appendix(body) = {
-  set heading(numbering: "A.1.1a", supplement: [Appendix])
+  set heading(numbering: "A.1.1 a", supplement: [Appendix])
   counter(heading).update(0)
   body
 }
+
+// functions to create list of figures and tables
+#let lof = {
+  text(1.5em, style: "italic")[List of Figures]
+  v(1.5%)
+  outline(title: none, target: figure.where(kind: image))
+}
+#let lot = {
+  text(1.5em, style: "italic")[List of Tables]
+  v(1.5%)
+  outline(title: none, target: figure.where(kind: table))
+}
+
+#let lin(it) = {
+  // lining figures
+  if debug {
+    text(number-type: "lining", blue, it)
+  } else {
+    text(number-type: "lining", it)
+  }
+}
+#let smol(it) = { if debug { text(orange, smallcaps(it)) } else {smallcaps(it)} }
+#let caps(it) = { if debug { text(green, upper(it)) } else {upper(it)}}
 
 /// Manual override for indent (see https://github.com/typst/typst/issues/3206)
 #let indent = h(INDENT)
@@ -24,34 +53,48 @@
   epigraph: none,
   author: none,
 ) = {
-  //place(top + left, dy: +2%, { image("assets/EPS.png", width: 50%) })
-  //place(top + cente, dy: +2%, { image("assets/UDG.png", width: 25%) })
-  place(top + center, { image("assets/UdG_dues_linies_centrat_blau.svg", width: 40%) })
-  place(horizon + center, dy: -10%, {
-    set par(spacing: 0.7em, leading: 0.2em, justify: false)
+  show smallcaps: set text(spacing: 120%, tracking: 0.05em)
+  place(top + center, dy: +5%, { image("assets/UdG_dues_linies_centrat_blau.svg", width: 40%) })
+  place(horizon + center, dy: -5%, {
+    set par(leading: .5em, justify: false)
     align(
       center,
-      text(size: 2em, smallcaps(title), weight: "regular", hyphenate: false)
+      text(size: 1.85em, smallcaps(title))
         + v(2.5%, weak: true)
         + if subtitle != none {
           text(size: 2em, smallcaps(subtitle))
           v(2.5%, weak: true)
         },
     )
+    set text(size: 1.20em)
+
     v(3.5%, weak: true)
-    emph(text(size: 1.5em, subsubtitle))
+    subsubtitle + [\ Document: Main Report]
     v(3.5%, weak: true)
-    set text(size: 1.25em)
-    emph([Supervisor #smallcaps[#tutor]])
+
+
+    // let al(x) = align(left + top, x)
+    // let ar(x) = align(right + top, x)
+    // grid(
+    //   columns: (1fr, 1fr),
+    //   //columns: 2,
+    //   column-gutter: .5em,
+    //   row-gutter: .75em,
+    //   ar(emph[Supervisor]), al(smallcaps[#tutor]),
+    //   ar(emph[Author]), al(smallcaps[#author]),
+    //   ar(emph[Document]), al([Main Report]),
+    // )
+
     v(1.25%, weak: true)
-    emph([Author #smallcaps[#author]])
+    emph([Supervisor]) + h(.5em) + smallcaps[#tutor]
+    v(1.25%, weak: true)
+    emph([Author]) + h(.5em) + smallcaps[#author]
+
+
     v(3.5%, weak: true)
-    [Document: Main Report]
   })
 
   {
-    let appendix = false
-
     set par(justify: false, linebreaks: "optimized", spacing: 1em)
     set text(costs: (runt: 400%))
     set quote(block: true)
@@ -73,18 +116,15 @@
   align(bottom + center)[
     #set text(spacing: 150%)
     #smallcaps([
-      // From institution to details
       Polytechnic School \
       Department of Computer Architecture and Technology \
-      Bachelor’s Degree in Biomedical Engineering \
-      Academic Year: 2025-2026
+      Bachelor's Degree in Biomedical Engineering \
+      June 2026
     ])
   ]
 }
-)
-}
 
-#let book(
+#let ak_tfg(
   title: none,
   shorttitle: none,
   author: none,
@@ -92,57 +132,51 @@
   subsubtitle: none,
   tutor: none,
   epigraph: none,
-  darkmode: none,
-  fonts: (
-    serif: (
-      text: "Linux Libertine",
-      //text: "Source Serif Pro",
-      //text: "New Computer Modern",
-      //text: "Alegreya Sans",
-      //text: "Noto Sans",
-      //text: "Source Sans Pro",
-      //text: "Fira Sans",
-      math: "New Computer Modern Math",
-    ),
-    sans: (
-      text: "Fira Sans",
-      math: "Fira Math",
-    ),
-    mono: (
-      text: "BlexMono Nerd Font",
-    ),
-  ),
-  font-style: "serif",
+  debug: false,
   body,
 ) = {
-  set text(font: fonts.at(font-style).at("text"))
-  show math.equation: set text(font: fonts.at(font-style).at("math"))
+  let text-font = "Libertinus Serif"
+  let math-font = "Libertinus Math" // same as text
+  let mono-font = "BlexMono Nerd Font"
 
-  set par(first-line-indent: (amount: INDENT, all: false), justify: true, spacing: 1em, leading: 0.5em + 1pt)
+  set text(font: text-font)
+  set text(number-type: "old-style")
+  show math.equation: set text(font: math-font, number-type: "lining")
+
+  set par(
+    first-line-indent: (amount: INDENT, all: false),
+    justify: true,
+    spacing: 1em,
+    leading: 0.5em + 1pt,
+    justification-limits: (
+      // allow adjusting spaces to fix justification
+      // spacing -> spaces between words
+      spacing: (min: 100% * 2 / 3, max: 150%), // defaults
+      // spacing -> spaces between chars in a word
+      tracking: (min: -0.01em, max: 0.01em), // custom
+    ),
+  )
   //set enum(indent: INDENT, numbering: "1.")
   set list(indent: INDENT, marker: [--], body-indent: INDENT)
   set terms(hanging-indent: INDENT)
-
-  // break block equations
-  show math.equation: set block(breakable: true)
-
-  show enum: set block(breakable: true)
+  set page(paper: "a4")
   show list: set block(breakable: true)
 
   // --- CODE BLOCKS
   show raw: set block(
-    fill: luma(245),
+    fill: luma(240),
     radius: 4pt,
-    stroke: .25pt + gray,
-    inset: (left: 1em, top: 1em, bottom: 1em),
-    above: 1em,
-    below: 1em,
-    width: 80%,
+    //stroke: .5pt + luma(205),
+    inset: (left: 2em, right: 2em, top: 1.5em, bottom: 1.5em),
+    //above: 1em,
+    //below: 1em,
+    //width: 80%,
   )
   show raw.where(block: true): set text(size: 0.8em)
-  show raw: set text(font: fonts.at("mono").at("text"))
+  show raw.where(block: true): it => align(center)[#it]
+  show raw: set text(font: mono-font, weight: "medium", number-type: "lining")
 
-  show smallcaps: set text(spacing: 125%, tracking: 0.05em)
+  //show smallcaps: set text(spacing: 125%, tracking: 0.02em)
 
   set document(author: if author != none { author } else { () }, title: title)
 
@@ -190,13 +224,13 @@
         smallcaps(current_chapter.body)
       }
       let chap_num = if current_chapter != none [
-        #if current_chapter.supplement.at("text") == "Chapter" [Chap.] else [App.] // show correct supplement if chapter of appendix
-        //[ chap. ] // this was the default, always chap
+        #if current_chapter.supplement.at("text") == "Section" [Sec.] else [App.] // show correct supplement if chapter of appendix
         #numbering(current_chapter.numbering, ..counter(heading).at(current_chapter.location()))
       ]
 
       let sec_num = if current_sec != none [
-        sec. #numbering(current_sec.numbering, ..counter(heading).at(current_sec.location()))
+        sec. #lin(numbering(current_sec.numbering,
+        ..counter(heading).at(current_sec.location())))
       ]
 
       set text(size: 9pt)
@@ -229,9 +263,9 @@
       // we can't just set #label("") anymore
       #math.equation(it.body, block: true, numbering: none)#label("___NOLABEL")
     ] else {
-      v(.75em)
+      //v(.75em)
       it
-      v(.75em)
+      //v(.75em)
     }
   }
 
@@ -241,9 +275,10 @@
     let eq = math.equation
     let el = it.element
     if el != none and el.func() == eq {
-      link(el.location(), numbering(el.numbering, ..counter(eq).at(el.location())))
+      link(el.location(), numbering(el.numbering,
+      ..counter(eq).at(el.location())))
     } else {
-      it
+      smol(lin(it))
     }
   }
   show math.qed: "▮"
@@ -275,13 +310,27 @@
     epigraph: epigraph,
   )
 
-  set heading(numbering: "1.1.1a")
+  // configure outlines
+  show outline.entry.where(level: 1): set block(above: 1.375em, breakable: true)
+  show outline.entry.where(level: 2): set block(above: .85em, breakable: true)
+  show outline.entry: set outline.entry(fill: "")
+  show outline.entry.where(level: 1): set outline.entry(fill:
+  repeat(text(.5em)[.], gap: 0.15em))
+  show outline: it => align(center)[#block(width: 80%, it)]
+  show outline.entry: it => link(
+    it.element.location(),
+    it.indented(text(0.85em, lin(it.prefix())), it.inner()),
+  )
+
+  // configure headings
+  set heading(numbering: "1.1.1 a")
 
   let heading-func = (body-fmt: strong, use-line: false, it) => {
     block(
       sticky: true,
       (
-        emph(text(size: 0.8em, counter(heading).display()))
+        emph(text(size: 0.8em,
+        lin(counter(heading).display())))
           + "."
           + h(0.5em)
           + body-fmt(it.body)
@@ -295,12 +344,10 @@
     )
   }
 
-  // show heading.where(level: 2): heading-func.with(body-fmt: emph, use-line: true)
-  show heading.where(level: 2): heading-func.with(body-fmt: emph, use-line: false)
-  show heading.where(level: 2): set text(size: 1.1em)
+  show heading.where(level: 2): heading-func.with(body-fmt: emph, use-line: true)
   show heading.where(level: 2): it => {
-    set block(above: 0em, below: 0em)
-    v(2em, weak: true) + it + v(1em, weak: true)
+    set block(above: 2em, below: 1em)
+    text(size: 1.1em, it)
   }
 
   show heading.where(level: 3): heading-func
@@ -311,18 +358,16 @@
 
   show heading.where(level: 4): heading-func
 
-  set heading(supplement: [Chapter])
-  //show heading.where(level: 1): set heading(supplement: [Chapter])
+  set heading(supplement: [Section])
   show heading.where(level: 1): it => {
     //pagebreak(weak: true)
-    colbreak(weak: true) // using colbreak instead of pagebreak lets me split the outline into 2 columns
+    colbreak(weak: true)
     set text(weight: "regular", hyphenate: false)
     set par(first-line-indent: 0.0em)
     counter(footnote).update(0)
     counter("moussethm-thmlike").update(0)
     counter("moussethm-example").update(0)
     counter(figure.where(kind: table)).update(0)
-    //align(right)[#block(
     block(
       inset: (left: -0.2em),
       height: 10%,
@@ -333,19 +378,23 @@
         + if it.numbering != none and it.outlined {
           emph[
             #v(0.9em, weak: true)
-            #h(0.125em)#smallcaps[#it.supplement] #counter(heading).display()
+            #h(0.125em)#smallcaps[#it.supplement]
+            #counter(heading).display()
           ]
         },
     )
   }
   show enum: it => { v(0.9em, weak: true) + it + v(0.9em, weak: true) }
 
-  show figure: it => { v(3em, weak: true) + it + v(2em, weak: true) }
-  show figure.caption: emph
+  // figures
+  show figure: it => { v(2em, weak: true) + it + v(2em, weak: true) }
+  show figure.caption: it => {
+    set text(0.85em)
+    emph(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body 
+  }
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: table): set figure(gap: 1em)
   show figure.where(kind: table): it => { v(1.5em, weak: true) + it + v(2em, weak: true) }
-
 
   pagebreak()
   body
@@ -468,4 +517,3 @@
     ..(args.pos() + (table.hline(stroke: 1pt),)),
   )
 }
-

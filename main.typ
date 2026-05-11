@@ -1,53 +1,29 @@
-#import "lib.typ": *
-#set page(paper: "a4")
-
-//#set page(foreground: text(rgb("#4444440e"), 12em, rotate(-45deg, [Esborrany])))
-
-#show: book.with(
-  title: [Deep Learning-Based Classification \ of Parkinson's Disease Stages \ Using DaTSCAN],
-  shorttitle: [DL Classification of Parkinson's Stages (DaTSCAN)],
+// Arnau K. Deprez: source file of the report document.
+#import "ak_tfg_lib.typ": *
+#show: ak_tfg.with(
+  title: [Deep Learning-Based \ Classification  of Parkinson's \ Disease Stages Using DaTscan],
+  shorttitle: [DL Classification of Parkinson's Stages (DaTscan)],
   subsubtitle: [Bachelor's Thesis],
   tutor: "Adrià Casamitjana",
-  author: "Arnau K. Deprez",
-  font-style: "serif",
+  author: "Arnau K. Deprez Santamaria",
 )
 
-//#set outline.entry(fill: "")
-#set outline.entry(fill: repeat(text(.5em)[.], gap: 0.15em))
-#show outline.entry.where(level: 1): set block(above: 1.375em, breakable: true)
-#show outline.entry.where(level: 2): set outline.entry(fill: "")
-//#show outline.entry.where(level: 2): set outline.entry(fill: repeat(text(.25em)[.], gap: 0.15em))
+// regex to catch some acronyms
+#show regex("\b2D\b"): smol[2d]
+#show regex("\b2.5D\b"): smol[2.5d]
+#show regex("\b3D\b"): smol[3d]
+#show regex("\bPD\b"): smol[pd]
+#show regex("\bCNN\b"): smol[cnn]
+#show regex("\bCNNs\b"): [#smol[cnn]s]
+#show regex("\bML\b"): smol[ml]
+#show regex("\bPPMI\b"): smol[ppmi]
+#show regex("\bSPECT\b"): smol[spect]
+#show regex("\bDAT\b"): smol[dat]
 
-// one column
-#show outline: it => align(center)[#block(width: 80%)[#it]]
-#heading(numbering: none, outlined: false)[Contents]
-#outline(title: none)
+#include "parts/preface.typ"
+#counter(page).update(1) // Reset page num to 1
 
-// 2 columns
-// #block(height: 60%)[
-//   #columns(2, gutter: 10%)[
-//     #outline()
-//   ]
-// ]
-
-#v(1fr)
-
-#smallcaps[Copyright 2026] Arnau K. Deprez Santamaria
-#grid(
-  columns: (auto, 1fr),
-  gutter: .75em,
-  image("assets/by.svg", width: 100pt),
-  [
-    #set text(hyphenate: false)
-    This work is licensed under the _Creative Commons Attribution 4.0
-    International License_. To view a copy of this license, visit #link("http://creativecommons.org/licenses/by/4.0/").
-  ],
-)
-
-#pagebreak()
-
-
-// ---------- Content ----------
+// ---------- Content specified in the GEB guides ----------
 
 // 1. Introducció
 // 2. Conceptes previs
@@ -62,109 +38,60 @@
 // Annex B. Codi
 // Annex C. Pressupost
 // Annex D. Comitè d’Ètica
-#place(horizon + right)[
-  #heading(outlined: false, numbering: none)[Acknowledgements]
-  I'd like to thank my mom.
-]
+
+// See `notes.md` for a file wit more in-depth
+// explanations and contents
 
 
-= Introduction <ch_intro>
-#counter(page).update(1) // Reset page num to 1
+// ---------- document ----------
 
-//= Previous Concepts <ch_prev_concepts>
-= Theoretical Background <ch_coneix_prev>
+#include "parts/1_introduction.typ"
+#include "parts/3_sota.typ"
 
-#lorem(33)
-
-#lorem(33)
-#lorem(33)
-
-#lorem(33)
-#lorem(43)
-#lorem(34)
-
-== a
-
-#lorem(33)
-
-== b
-
-#lorem(13)
-#lorem(38)
-
-#lorem(123)
-
-#lorem(38)
-
-#lorem(48)
-
-== cdfaksjfa
-
-#lorem(148)
-
-since when
-
-#figure(
-  image("assets/by.svg", width: 60%),
-  caption: [A test],
-)
-
-#lorem(48)
-
-#figure(
-  ```c
-  #include <stdio.h>
-
-  int
-  main(void)
-  {
-    printf("Hello, world!\n");
-    return 0;
-  }
-  ```,
-  caption: [A test],
-)
-
-#lorem(48)
-
-
-= State of the Art <ch_state_of_the_art>
-// = Hypothesis and Objectives <ch_hypothesis>
-// = Materials and methods <ch_materials_n_methods>
-// = Results <ch_results>
-// = Discussion <ch_discussion>
-// = Conclusions <ch_conclusions>
-
-//= References (unnumbered section)
-#bibliography("assets/references.bib", title: [References]) <ch_bibliography>
+// = Hypothesis and Objectives
+// = Materials and methods
+// = Results
+// = Discussion
+// = Conclusions
+= References (unnumbered section)
+#bibliography("assets/zotero_library.bib", title: [References])
 
 #show: appendix
-
-#align(center, line(length: 90%, stroke: .5pt))
-#v(1.5%)
-#text(1.5em, style: "italic")[List of Figures]
-#v(1.5%)
-#outline(title: none, target: figure.where(kind: image))
-#text(1.5em, style: "italic")[List of Tables]
-#v(1.5%)
-#outline(title: none, target: figure.where(kind: table))
-
-// = Planning <app_planning>
+// = Planning
+//
+// Work on the thesis can be viewed in @gantt.
+// The proposal was sent in late january and accepted in early march. Work on
+// training the CNNs started on march and endured until the end of april.
+// Multimodal integration was worked on in early may.
+//
+// Writing of this thesis was started in may based on log notes kept during the
+// semester, while the template itself was finalised around april (see
+// @colophon).
+//
 // #figure(
-//     image("assets/figures/gantt.svg"),
-//     caption: [ Gantt diagram. ],
-//     alt: "Gantt diagram",
-// )
+//   include "assets/figures/gantt.typ",
+//   caption: [Gantt diagram showing the evolution of this thesis.],
+// )<gantt>
 
-= Code <app_code>
+//= Budget
+
+= Code
 
 This project has been version controlled since I started it and its hosted on GitHub. It can be found at #link("https://github.com/arnauKL/codi_tfg")[`arnauKL/tfg`].
+It's hosted under a #smol[bsd] license.
+
+#heading(bookmarked: false, depth: 2)[Colophon]<colophon>
+
+This thesis was typeset in #link("https://typst.app")[Typst] using a custom template
+based on
+#link("https://typst.app/universe/package/mousse-notes")[mousse-notes].
+The body text is set in #link("https://www.linuxlibertine.org/")[Libertinus
+  Serif] and code listings in
+#link("https://github.com/IBM/plex")[IBM Plex Mono]. All tools used in its production are free and open-source software.
 
 
-// = Budget <app_budget>
-// = Ethics committee / Ethical Considerations <app_ethics>
+= Ethics committee
 
+== PPMI dataset
 
-#heading(outlined: false)[Colophon]
-
-This thesis was typeset in #link("https://typst.app")[Typst] using a customised version of the #link("https://typst.app/universe/package/mousse-notes")[mousse-notes] template. The body text is set in #link("https://www.linuxlibertine.org/")[Linux Libertine] and code listings in #link("https://github.com/microsoft/cascadia-code")[Caskaydia Cove]. All tools used in its production are free and open-source software.
+I was granted access to the PPMI dataset at the start of the thesis.

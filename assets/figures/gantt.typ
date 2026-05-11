@@ -1,82 +1,102 @@
-#import "@preview/timeliney:0.4.0"
+#import "../../ak_tfg_lib.typ": *
+#import "@preview/timeliney:0.4.0": *
 
-#set page(
-    height: auto,
-    margin: 1em,
-    // fill: luma(240),
-)
-
-#set text(size: 12pt) // Has to be same as in main doc
-
-#timeliney.timeline(
+#box(width: 90%, [
+  #set text(.85em)
+  #timeline(
     show-grid: true,
+    spacing: 4pt,
+    grid-style: (
+      stroke: (
+        dash: "dotted",
+        thickness: 0.5pt,
+        paint: luma(66.66%),
+      ),
+    ),
+    milestone-line-style: (stroke: (dash: "dashed")),
+    line-style: (stroke: 8pt + luma(64%)),
     {
-        import timeliney: *
+      headerline(group((smol[March], 2)), group((smol[April],
+      2)), group((smol[April], 2)), group((smol[June], 1)))
+      // headerline(
+      //   smol[March],
+      //   smol[April],
+      //   smol[May],
+      // )
 
-        headerline(group(([*2026*], 5)))
-        headerline(
-            [February],
-            [March],
-            [April],
-            [May],
-            [June],
+      taskgroup(
+        title: [*Classic ML*],
+        style: (stroke: 2pt + luma(0)),
+        {
+          task(
+            "PPMI preprocessing",
+            //(from: 0, to: 2, content: text(9pt)[John (70% done)]),
+            (0.3, 2),
+          )
+          task(
+            "Traditional models",
+            (1.5, 4),
+          )
+          task(
+            "Multimodal testing",
+            (4, 5.8),
+          )
+        },
+      )
+
+      taskgroup(
+        title: [*CNN*], 
+        style: (stroke: 2pt + luma(0)), {
+        task(
+          "custom 2D and 3D",
+          (2, 4),
         )
-
-        taskgroup(
-            title: [*Research*],
-            content: text(10pt, white)[*John + Julia*],
-            style: (stroke: 14pt + black),
-            {
-                task(
-                    "Research the market",
-                    (from: 0, to: 2, content: text(9pt)[John (70% done)]),
-                    style: (stroke: 13pt + gray),
-                )
-                task(
-                    "Conduct user surveys",
-                    (from: 1, to: 3, content: text(9pt)[Julia (50% done)]),
-                    style: (stroke: 13pt + gray),
-                )
-            },
+        task(
+          "ResNet and MedNet",
+          (4, 5.8),
         )
-
-        taskgroup(title: [*Development*], {
-            task("Create mock-ups", (2, 3), style: (stroke: 2pt + gray))
-            task("Develop application", (3, 3.1), style: (stroke: 2pt + gray))
-            task("QA", (3.5, 4.1), style: (stroke: 2pt + gray))
-        })
-
-        taskgroup(title: [*Report*], {
-            task("Template creation", (1, 1.4), style: (stroke: 2pt + gray))
-            task("Writing", (1, 4.1), style: (
-                stroke: 2pt + gray,
-            ))
-        })
-
-        milestone(
-            at: .25,
-            style: (stroke: (dash: "dashed")),
-            align(center, [
-                *Start of Q2*\
-            ]),
+        task(
+          "Multimodal testing",
+          (5, 6),
         )
+      })
 
-        milestone(
-            at: 1.15,
-            style: (stroke: (dash: "dashed")),
-            align(center, [
-                *Proposal accepted*\
-                3 Mar 2026
-            ]),
+      taskgroup(title: [*Writing*],
+        style: (stroke: 2pt + luma(0)), {
+        task(
+          "Logging",
+          (0.3, 6),
         )
+        task(
+          "Thesis redaction",
+          (4, 6.1),
+        )
+      })
 
-        milestone(
-            at: 4.1,
-            style: (stroke: (dash: "dashed")),
-            align(center, [
-                *Final Deadline*\
-                June 2026
-            ]),
-        )
+      milestone(
+        at: 0.3,
+        align(center, [
+          *Proposal accepted*\
+          3 Mar 
+        ]),
+      )
+
+      milestone(
+        at: 6.1,
+        align(center, [
+          *Final Deadline*\
+          1 June 
+        ]),
+      )
+
+      // milestone(
+      //   at: 3.8,
+      //   style: (stroke: (dash: "dashed")),
+      //   align(center, [
+      //     *Presentation*\
+      //     23 June 
+      //   ]),
+      // )
     },
+  )]
 )
