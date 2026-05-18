@@ -38,8 +38,8 @@
     text(number-type: "lining", it)
   }
 }
-#let smol(it) = { if debug { text(orange, smallcaps(it)) } else {smallcaps(it)} }
-#let caps(it) = { if debug { text(green, upper(it)) } else {upper(it)}}
+#let smol(it) = { if debug { text(orange, smallcaps(it)) } else { smallcaps(it) } }
+#let caps(it) = { if debug { text(green, upper(it)) } else { upper(it) } }
 
 /// Manual override for indent (see https://github.com/typst/typst/issues/3206)
 #let indent = h(INDENT)
@@ -69,52 +69,15 @@
     set text(size: 1.20em)
 
     v(3.5%, weak: true)
-    subsubtitle + [\ Document: Main Report]
+    //subsubtitle + [\ Document: Main Report]
     v(3.5%, weak: true)
 
-
-    // let al(x) = align(left + top, x)
-    // let ar(x) = align(right + top, x)
-    // grid(
-    //   columns: (1fr, 1fr),
-    //   //columns: 2,
-    //   column-gutter: .5em,
-    //   row-gutter: .75em,
-    //   ar(emph[Supervisor]), al(smallcaps[#tutor]),
-    //   ar(emph[Author]), al(smallcaps[#author]),
-    //   ar(emph[Document]), al([Main Report]),
-    // )
-
-    v(1.25%, weak: true)
     emph([Supervisor]) + h(.5em) + smallcaps[#tutor]
     v(1.25%, weak: true)
     emph([Author]) + h(.5em) + smallcaps[#author]
-
-
-    v(3.5%, weak: true)
   })
 
-  {
-    set par(justify: false, linebreaks: "optimized", spacing: 1em)
-    set text(costs: (runt: 400%))
-    set quote(block: true)
-    show quote: it => [
-      #emph(it.body)
-
-      #align(right, box(text(size: 0.7em)[--- #it.attribution]))
-    ]
-
-    if epigraph != none {
-      place(bottom + center, dy: -17.5%, block(
-        stroke: (top: black, bottom: black),
-        inset: (top: 12pt, bottom: 12pt, left: 6pt, right: 6pt),
-        width: 80%,
-        align(left, text(size: 1.4em, epigraph, hyphenate: false)),
-      ))
-    }
-  }
   align(bottom + center)[
-    #set text(spacing: 150%)
     #smallcaps([
       Polytechnic School \
       Department of Computer Architecture and Technology \
@@ -135,7 +98,12 @@
   debug: false,
   body,
 ) = {
-  let text-font = "Libertinus Serif"
+  //let text-font = "Tex Gyre Pagella"
+  let text-font = "EB Garamond 12"
+  //let text-font = "Libertinus Serif"
+  //let text-font = "Alegreya"
+  //let text-font = "IBM Plex Serif" // does not have smallcaps
+
   let math-font = "Libertinus Math" // same as text
   let mono-font = "BlexMono Nerd Font"
 
@@ -183,6 +151,7 @@
   set bibliography(style: "vancouver", title: [References])
 
   set page(
+    //https://practicaltypography.com/page-margins.html
     margin: (left: 16.3%, right: 16.3%),
     footer: context {
       let current_chapter = query(selector(heading.where(level: 1)).before(here())).at(-1, default: none)
@@ -229,8 +198,7 @@
       ]
 
       let sec_num = if current_sec != none [
-        sec. #lin(numbering(current_sec.numbering,
-        ..counter(heading).at(current_sec.location())))
+        sec. #lin(numbering(current_sec.numbering, ..counter(heading).at(current_sec.location())))
       ]
 
       set text(size: 9pt)
@@ -275,8 +243,7 @@
     let eq = math.equation
     let el = it.element
     if el != none and el.func() == eq {
-      link(el.location(), numbering(el.numbering,
-      ..counter(eq).at(el.location())))
+      link(el.location(), numbering(el.numbering, ..counter(eq).at(el.location())))
     } else {
       smol(lin(it))
     }
@@ -314,12 +281,11 @@
   show outline.entry.where(level: 1): set block(above: 1.375em, breakable: true)
   show outline.entry.where(level: 2): set block(above: .85em, breakable: true)
   show outline.entry: set outline.entry(fill: "")
-  show outline.entry.where(level: 1): set outline.entry(fill:
-  repeat(text(.5em)[.], gap: 0.15em))
+  show outline.entry.where(level: 1): set outline.entry(fill: repeat(text(.5em)[.], gap: 0.15em))
   show outline: it => align(center)[#block(width: 80%, it)]
   show outline.entry: it => link(
     it.element.location(),
-    it.indented(text(0.85em, lin(it.prefix())), it.inner()),
+    it.indented(text(0.85em, lin(it.prefix())), lin(it.inner())),
   )
 
   // configure headings
@@ -329,8 +295,7 @@
     block(
       sticky: true,
       (
-        emph(text(size: 0.8em,
-        lin(counter(heading).display())))
+        emph(text(size: 0.8em, lin(counter(heading).display())))
           + "."
           + h(0.5em)
           + body-fmt(it.body)
@@ -390,7 +355,7 @@
   show figure: it => { v(2em, weak: true) + it + v(2em, weak: true) }
   show figure.caption: it => {
     set text(0.85em)
-    emph(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body 
+    emph(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body
   }
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: table): set figure(gap: 1em)

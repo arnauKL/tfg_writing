@@ -15,6 +15,30 @@
   file = {/home/ak/Zotero/storage/FK7S96DD/Adams et al. - 2021 - Improved motor outcome prediction in Parkinson's disease applying deep learning to DaTscan SPECT ima.pdf;/home/ak/Zotero/storage/GEGEC8IP/S0010482521001062.html}
 }
 
+@online{chenMed3DTransferLearning2019,
+  title = {{{Med3D}}: {{Transfer Learning}} for {{3D Medical Image Analysis}}},
+  shorttitle = {{{Med3D}}},
+  author = {Chen, Sihong and Ma, Kai and Zheng, Yefeng},
+  date = {2019-07-17},
+  eprint = {1904.00625},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.1904.00625},
+  url = {http://arxiv.org/abs/1904.00625},
+  urldate = {2026-05-07},
+  abstract = {The performance on deep learning is significantly affected by volume of training data. Models pre-trained from massive dataset such as ImageNet become a powerful weapon for speeding up training convergence and improving accuracy. Similarly, models based on large dataset are important for the development of deep learning in 3D medical images. However, it is extremely challenging to build a sufficiently large dataset due to difficulty of data acquisition and annotation in 3D medical imaging. We aggregate the dataset from several medical challenges to build 3DSeg-8 dataset with diverse modalities, target organs, and pathologies. To extract general medical three-dimension (3D) features, we design a heterogeneous 3D network called Med3D to co-train multi-domain 3DSeg-8 so as to make a series of pre-trained models. We transfer Med3D pre-trained models to lung segmentation in LIDC dataset, pulmonary nodule classification in LIDC dataset and liver segmentation on LiTS challenge. Experiments show that the Med3D can accelerate the training convergence speed of target 3D medical tasks 2 times compared with model pre-trained on Kinetics dataset, and 10 times compared with training from scratch as well as improve accuracy ranging from 3\% to 20\%. Transferring our Med3D model on state-the-of-art DenseASPP segmentation network, in case of single model, we achieve 94.6\textbackslash\% Dice coefficient which approaches the result of top-ranged algorithms on the LiTS challenge.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition},
+  file = {/home/ak/Zotero/storage/8ALMHE5V/Chen et al. - 2019 - Med3D Transfer Learning for 3D Medical Image Analysis.pdf}
+}
+
+@online{HomeParkinsonsPrecision,
+  title = {Home | {{Parkinson}}'s {{Precision Medicine Initiative}}},
+  url = {https://www.ppmi-info.org/},
+  urldate = {2026-05-11},
+  file = {/home/ak/Zotero/storage/Z7M4CCDS/www.ppmi-info.org.html}
+}
+
 @article{houdaboulkrinatParkinsonsDiseaseDetection2025,
   title = {Parkinson’s Disease Detection Based on {{3D Convolutional Neural Network}} and {{DaTscan}} Imaging},
   author = {Houda Boulkrinat, Nour El and Taourirt, Hamza and Saada, Samir},
@@ -49,4 +73,30 @@
   urldate = {2026-02-19},
   langid = {english},
   file = {/home/ak/Zotero/storage/ERV3S2MC/Shokrpour et al. - 2025 - Machine learning for Parkinson’s disease a comprehensive review of datasets, algorithms, and challe.pdf}
+}
+
+@online{sunRevisitingUnreasonableEffectiveness2017,
+  title = {Revisiting {{Unreasonable Effectiveness}} of {{Data}} in {{Deep Learning Era}}},
+  author = {Sun, Chen and Shrivastava, Abhinav and Singh, Saurabh and Gupta, Abhinav},
+  date = {2017-08-04},
+  eprint = {1707.02968},
+  eprinttype = {arXiv},
+  eprintclass = {cs},
+  doi = {10.48550/arXiv.1707.02968},
+  url = {http://arxiv.org/abs/1707.02968},
+  urldate = {2026-05-07},
+  abstract = {The success of deep learning in vision can be attributed to: (a) models with high capacity; (b) increased computational power; and (c) availability of large-scale labeled data. Since 2012, there have been significant advances in representation capabilities of the models and computational capabilities of GPUs. But the size of the biggest dataset has surprisingly remained constant. What will happen if we increase the dataset size by 10x or 100x? This paper takes a step towards clearing the clouds of mystery surrounding the relationship between `enormous data' and visual deep learning. By exploiting the JFT-300M dataset which has more than 375M noisy labels for 300M images, we investigate how the performance of current vision tasks would change if this data was used for representation learning. Our paper delivers some surprising (and some expected) findings. First, we find that the performance on vision tasks increases logarithmically based on volume of training data size. Second, we show that representation learning (or pre-training) still holds a lot of promise. One can improve performance on many vision tasks by just training a better base model. Finally, as expected, we present new state-of-the-art results for different vision tasks including image classification, object detection, semantic segmentation and human pose estimation. Our sincere hope is that this inspires vision community to not undervalue the data and develop collective efforts in building larger datasets.},
+  pubstate = {prepublished},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computer Vision and Pattern Recognition},
+  file = {/home/ak/Zotero/storage/54ESZJ5E/Sun et al. - 2017 - Revisiting Unreasonable Effectiveness of Data in Deep Learning Era.pdf}
+}
+
+@software{TencentMedicalNet2026,
+  title = {Tencent/{{MedicalNet}}},
+  date = {2026-05-05T03:26:20Z},
+  origdate = {2019-07-17T09:53:10Z},
+  url = {https://github.com/Tencent/MedicalNet},
+  urldate = {2026-05-07},
+  abstract = {Many studies have shown that the performance on deep learning is significantly affected by volume of training data. The MedicalNet project provides a series of 3D-ResNet pre-trained models and relative code.},
+  organization = {Tencent}
 }
