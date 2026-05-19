@@ -16,10 +16,8 @@ make
 
 - `main.typ`: entry point
 - `parts/`: one file per chapter/appendix
-- `assets/`: figures, bibliography, and logos
-- `ak_tfg_lib.typ`: custom template, adapted from [mousse-notes](https://github.com/dogeystamp/mousse-notes)
-- `regexes.typ`: utility definitions
-
+- `assets/`: figures, bibliography, logos, utilities and template
+- `assets/ak_tfg_lib.typ`: custom template, adapted from [mousse-notes](https://github.com/dogeystamp/mousse-notes)
 
 ## License
 
