@@ -1,4 +1,4 @@
-#import "../ak_tfg_lib.typ": *
+#import "../assets/ak_tfg_lib.typ": *
 
 = State of the Art
 

@@ -1,4 +1,4 @@
-#import "ak_tfg_lib.typ": *
+#import "../assets/ak_tfg_lib.typ": *
 
 // regex to catch some acronyms
 #show regex("\b2D\b"): smol[2d]

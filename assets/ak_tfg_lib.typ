@@ -54,7 +54,7 @@
   author: none,
 ) = {
   show smallcaps: set text(spacing: 120%, tracking: 0.05em)
-  place(top + center, dy: +5%, { image("assets/UdG_dues_linies_centrat_blau.svg", width: 40%) })
+  place(top + center, dy: +5%, { image("UdG_dues_linies_centrat_blau.svg", width: 40%) })
   place(horizon + center, dy: -5%, {
     set par(leading: .5em, justify: false)
     align(

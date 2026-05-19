@@ -1,4 +1,4 @@
-#import "../ak_tfg_lib.typ": *
+#import "../assets/ak_tfg_lib.typ": *
 
 = Planning
 Work on the thesis can be viewed in @gantt.

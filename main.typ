@@ -1,6 +1,5 @@
-
 // Arnau K. Deprez: source file of the report document.
-#import "ak_tfg_lib.typ": *
+#import "assets/ak_tfg_lib.typ": *
 #show: ak_tfg.with(
   title: [Deep Learning-Based \ Classification  of Parkinson's \ Disease Stages Using DaTscan],
   shorttitle: [DL Classification of Parkinson's Stages (DaTscan)],
@@ -9,8 +8,7 @@
   author: "Arnau K. Deprez Santamaria",
 )
 
-
-#include "regexes.typ"
+#include "assets/regexes.typ"
 #include "parts/preface.typ"
 #counter(page).update(1) // Reset page num to 1
 

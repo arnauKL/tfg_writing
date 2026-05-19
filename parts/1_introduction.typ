@@ -1,4 +1,4 @@
-#import "../ak_tfg_lib.typ": *
+#import "../assets/ak_tfg_lib.typ": *
 
 // Requirements (from guia_geb_tfg.pdf)
 // The introduction is used to situate 'el marc', the context (?) of this thesis. This means:
