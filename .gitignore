@@ -1,4 +1,4 @@
 figures/*.svg
 *.pdf
-references/
 notes.md
+Makefile

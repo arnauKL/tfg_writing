@@ -33,7 +33,7 @@
 // ---------- document ----------
 
 #include "parts/1_introduction.typ"
-// #include "parts/2_preliminary_concepts.typ"
+#include "parts/2_preliminary_concepts.typ"
 // #include "parts/3_sota.typ"
 //
 // = 4 Hypothesis and Objectives
@@ -41,9 +41,9 @@
 // = 6 Results
 // = 7 Discussion
 // = 8 Conclusions
-// = References (unnumbered section)
-// #bibliography("assets/references.bib", title: [References])
-// #show: appendix
+#show: appendix
+= References
+#bibliography("assets/references.bib", title: none)
 //#include "parts/app_planning.typ"
 //#include "parts/app_code.typ"
 //= Budget

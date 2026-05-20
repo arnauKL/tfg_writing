@@ -6,9 +6,6 @@
 // - It must include the motivation within the areas (Health Sciences, Engineering) that it is developed.
 // - It can include a description of the environment within which the thesis is developed, and/or an explanation of the starting point of the thesis.
 // - I must specify what  the contribution of the thesis is in relation to the
-starting point.
-
-
 
 // this section should be around 1--2 pages max.
 // Agatha does 1, Reglà: 1, and Lisa, 1.8-ish
@@ -26,17 +23,81 @@ starting point.
 
 = Introduction
 
-Parkinson’s Disease (PD) is the second most common neurodegenerative disorder
-globally, characterized by the progressive loss of dopaminergic neurons in the
-substantia nigra pars compacta. While clinical diagnosis relies on motor
-symptoms (tremor, bradykinesia, and rigidity), these often appear only after a
-significant percentage of dopaminergic neurons have already been lost.
+// Old intro:
+//
+//Parkinson’s Disease (PD) is the second most common neurodegenerative disorder
+//globally, characterized by the progressive loss of dopaminergic neurons in the
+//substantia nigra pars compacta. While clinical diagnosis relies on motor
+//symptoms (tremor, bradykinesia, and rigidity), these often appear only after a
+//significant percentage of dopaminergic neurons have already been lost.
+//
+//Dopamine transporter imaging (DaTscan) has emerged as a tool for visualizing
+//this depletion. However, in clinical practice, the interpretation of these scans
+//is often qualitative and prone to inter-observer variability, especially in
+//early or prodromal stages where the "comma-shaped" striatum only shows subtle
+//thinning. This thesis explores the transition from subjective radiological
+//assessment to objective, Deep Learning-based quantification, aiming to leverage
+//the Parkinson’s Progression Markers Initiative (PPMI) dataset to improve
+//diagnostic sensitivity through multimodal data fusion.
 
-Dopamine transporter imaging (DaTscan) has emerged as a tool for visualizing
-this depletion. However, in clinical practice, the interpretation of these scans
-is often qualitative and prone to inter-observer variability, especially in
-early or prodromal stages where the "comma-shaped" striatum only shows subtle
-thinning. This thesis explores the transition from subjective radiological
-assessment to objective, Deep Learning-based quantification, aiming to leverage
-the Parkinson’s Progression Markers Initiative (PPMI) dataset to improve
-diagnostic sensitivity through multimodal data fusion.
+
+Parkinson's Disease (PD) is the world's fastest growing neurological disorder
+and the second most common neurodegenerative disease globally, affecting an
+estimated #oldf[10] million people and projected to nearly double in prevalence
+over the next two decades as populations age @poeweParkinson2017
+@ben-shlomoEpidemiology2024.
+Beyond its human toll, the disease imposes an enormous economic burden: in the
+United States alone, annual costs including direct medical expenditure,
+caregiving and lost productivity reached \$82.2 billion in 2024, surpassing
+projections that had not been expected until 2037 @faulkEconomic.
+In Europe, where an ageing demographic accelerates incidence, the situation is
+similar. Effective management of #smol[pd] depends critically on early and
+accurate diagnosis, yet this remains one of the most persistent challenges in
+clinical neurology.
+
+This difficulty is rooted in the biology of the disease // I don't like this sentence.
+#smol[pd] is characterized by the progressive degeneration of dopaminergic
+neurons in the #redt[substantia nigra pars compacta (SNpc) (should this be
+  in italics?)],
+whose axons project to the striatum through the nigrostriatal pathway to
+regulate voluntary movement. This degeneration is slow, silent and
+irreversible: by the time the motor symptoms --- resting tremor, bradykynesia,
+and rigidity --- become clinically apparent, approximately 60--80% of the
+dopaminergic neuron population has already been lost #text(red, [missing citation]).
+// Idk if I should avoid dashes, I don't want to sound like an LLM
+
+
+// The intro is on the importance of diagnosing prodromal patients even though I
+// have changed a bit
+A presymptomatic window of years exists during which neurodegeneration is
+underway but patients are unaware and untreated. Identifying patients in this
+window is a central objective of current PD research, as any future
+neuroprotective therapy is likely to be most effective before irreversible
+damage is established.
+
+Dopamine transporter (DaT) imaging with #super[123]I-ioflupane SPECT,
+commercially known as DaTscan, has become a key diagnostic tool in this effort.
+By radiolabeling the dopamine transporter protein on presynaptic terminals,
+DaTscan provides a direct, functional map of the integreity of the nigrostriatal
+pathway in vivo.
+In healthy individuals, the resulting image shows a characteristic bilateral
+"comma" pattern of high tracer uptake #redt[add image?] in the caudate and
+putamen; in PD, progressive putaminal denervation erodes this pattern, producing
+an asymmetric reduction colloquially described as a "period" or "dot" #redt[cite
+  nicastro].
+
+The technique was approved by the European Medicines Agency in 2000 and by the
+U.S. FDA in 2011, and has since become the only approved imaging biomarker for
+suspected parkinsonian syndromes in routine clinical practice #redt[cite
+  booij2013].
+
+Despite its value, DaTscan interpretation in clinical practice relies
+predomininantly on visual assesment by trained specialists --- a process that is
+time-consuming and inherently subjective. Inter-observer discrepancies are well
+documented, particularly in borderline cases, where early-stage putaminal
+thinning produces only subtle deviations form normal patterns #redt[cite
+  helmich2011].
+
+#redt[To be continued.]
+
+

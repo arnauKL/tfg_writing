@@ -9,8 +9,8 @@
 // meander (fancy text wrap)          -> https://typst.app/universe/package/meander
 
 #let INDENT = 1.4em
-#let debug = false
-//#let debug = true
+//#let debug = false
+#let debug = true
 
 #let appendix(body) = {
   set heading(numbering: "A.1.1 a", supplement: [Appendix])
@@ -38,8 +38,20 @@
     text(number-type: "lining", it)
   }
 }
-#let smol(it) = { if debug { text(orange, smallcaps(it)) } else { smallcaps(it) } }
+#let oldf(it) = {
+  // old-style figures
+  if debug {
+    text(number-type: "old-style", blue, it)
+  } else {
+    text(number-type: "old-style", it)
+  }
+}
+
+#let smol(it) = { if debug { text(orange, smallcaps(it)) } else {
+  smallcaps(it) } }
 #let caps(it) = { if debug { text(green, upper(it)) } else { upper(it) } }
+
+#let redt(it) = { text(red, it) }
 
 /// Manual override for indent (see https://github.com/typst/typst/issues/3206)
 #let indent = h(INDENT)
@@ -55,6 +67,10 @@
 ) = {
   show smallcaps: set text(spacing: 120%, tracking: 0.05em)
   place(top + center, dy: +5%, { image("UdG_dues_linies_centrat_blau.svg", width: 40%) })
+  if debug {
+    place(horizon + center, dy: 10em,text(2em, red, smallcaps[debug
+    mode on]))
+  }
   place(horizon + center, dy: -5%, {
     set par(leading: .5em, justify: false)
     align(
@@ -99,8 +115,8 @@
   body,
 ) = {
   //let text-font = "Tex Gyre Pagella"
-  let text-font = "EB Garamond 12"
-  //let text-font = "Libertinus Serif"
+  //let text-font = "EB Garamond 12"
+  let text-font = "Libertinus Serif"
   //let text-font = "Alegreya"
   //let text-font = "IBM Plex Serif" // does not have smallcaps
 
@@ -363,6 +379,7 @@
 
   pagebreak()
   body
+  //bibliography("references.bib")
 }
 
 /// Theorem environment. Optionally can have a name, like "Rolle's" theorem.
