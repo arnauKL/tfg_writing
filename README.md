@@ -14,7 +14,7 @@ make
 
 ## Structure
 
-- `main.typ`: entry point
+- `report.typ`: report entry point
 - `parts/`: one file per chapter/appendix
 - `assets/`: figures, bibliography, logos, utilities and template
 - `assets/ak_tfg_lib.typ`: custom template, adapted from [mousse-notes](https://github.com/dogeystamp/mousse-notes)
