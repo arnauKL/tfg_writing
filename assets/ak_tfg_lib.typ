@@ -9,8 +9,8 @@
 // meander (fancy text wrap)          -> https://typst.app/universe/package/meander
 
 #let INDENT = 1.4em
-//#let debug = false
-#let debug = true
+#let debug = false
+//#let debug = true
 
 #let appendix(body) = {
   set heading(numbering: "A.1.1 a", supplement: [Appendix])
@@ -47,8 +47,8 @@
   }
 }
 
-#let smol(it) = { if debug { text(orange, smallcaps(it)) } else {
-  smallcaps(it) } }
+#let smol(it) = { if debug { text(orange, smallcaps(lower(it))) } else {
+  smallcaps(lower(it)) } }
 #let caps(it) = { if debug { text(green, upper(it)) } else { upper(it) } }
 
 #let redt(it) = { text(red, it) }
@@ -261,7 +261,7 @@
     if el != none and el.func() == eq {
       link(el.location(), numbering(el.numbering, ..counter(eq).at(el.location())))
     } else {
-      smol(lin(it))
+      smallcaps(lin(it))
     }
   }
   show math.qed: "▮"
@@ -371,7 +371,7 @@
   show figure: it => { v(2em, weak: true) + it + v(2em, weak: true) }
   show figure.caption: it => {
     set text(0.85em)
-    emph(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body
+    smallcaps(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body
   }
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: table): set figure(gap: 1em)

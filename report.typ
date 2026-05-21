@@ -8,7 +8,6 @@
   author: "Arnau K. Deprez Santamaria",
 )
 
-#include "assets/regexes.typ"
 #include "parts/preface.typ"
 #counter(page).update(1) // Reset page num to 1
 
@@ -44,8 +43,8 @@
 #show: appendix
 = References
 #bibliography("assets/references.bib", title: none)
-//#include "parts/app_planning.typ"
-//#include "parts/app_code.typ"
+#include "parts/app_planning.typ"
+#include "parts/app_code.typ"
 //= Budget
 //#include "parts/app_ethics.typ"
 

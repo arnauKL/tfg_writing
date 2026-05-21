@@ -1,4 +1,4 @@
-#import "../../ak_tfg_lib.typ": *
+#import "../ak_tfg_lib.typ": *
 #import "@preview/timeliney:0.4.0": *
 
 #box(width: 90%, [
@@ -48,7 +48,7 @@
         title: [*CNN*], 
         style: (stroke: 2pt + luma(0)), {
         task(
-          "custom 2D and 3D",
+          [custom #lin[2D and 3D]],
           (2, 4),
         )
         task(

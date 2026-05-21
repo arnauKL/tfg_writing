@@ -4,4 +4,4 @@
 
 == PPMI dataset
 
-I was granted access to the PPMI dataset at the start of the thesis.
+I was granted access to the #smol[PPMI] dataset at the start of the thesis.
