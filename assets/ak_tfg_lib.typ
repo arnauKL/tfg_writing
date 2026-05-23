@@ -119,11 +119,11 @@
   let text-font = "Libertinus Serif"
   //let text-font = "Alegreya"
   //let text-font = "IBM Plex Serif" // does not have smallcaps
-
+  //let text-font = "Gentium Plus"
   let math-font = "Libertinus Math" // same as text
   let mono-font = "BlexMono Nerd Font"
 
-  set text(font: text-font)
+  set text(font: text-font, 12pt, fill: rgb("#141414"))
   set text(number-type: "old-style")
   show math.equation: set text(font: math-font, number-type: "lining")
 
@@ -141,7 +141,7 @@
     ),
   )
   //set enum(indent: INDENT, numbering: "1.")
-  set list(indent: INDENT, marker: [--], body-indent: INDENT)
+  set list(indent: .75em, marker: [--], body-indent: .75em)
   set terms(hanging-indent: INDENT)
   set page(paper: "a4")
   show list: set block(breakable: true)
@@ -167,8 +167,9 @@
   set bibliography(style: "vancouver", title: [References])
 
   set page(
-    //https://practicaltypography.com/page-margins.html
-    margin: (left: 16.3%, right: 16.3%),
+    // https://practicaltypography.com/page-margins.html
+    //margin: (left: 16.3%, right: 16.3%),
+    margin: (x: 3cm, y: 2.5cm),
     footer: context {
       let current_chapter = query(selector(heading.where(level: 1)).before(here())).at(-1, default: none)
       let is_chapter_heading = current_chapter != none and current_chapter.location().page() == here().page()
@@ -210,7 +211,9 @@
       }
       let chap_num = if current_chapter != none [
         #if current_chapter.supplement.at("text") == "Section" [Sec.] else [App.] // show correct supplement if chapter of appendix
-        #numbering(current_chapter.numbering, ..counter(heading).at(current_chapter.location()))
+        #if current_chapter.numbering != none [
+        #numbering(current_chapter.numbering,
+        ..counter(heading).at(current_chapter.location()))]
       ]
 
       let sec_num = if current_sec != none [
@@ -295,10 +298,12 @@
 
   // configure outlines
   show outline.entry.where(level: 1): set block(above: 1.375em, breakable: true)
-  show outline.entry.where(level: 2): set block(above: .85em, breakable: true)
+  show outline.entry.where(level: 2): set block(above: .75em, breakable: true)
   show outline.entry: set outline.entry(fill: "")
   show outline.entry.where(level: 1): set outline.entry(fill: repeat(text(.5em)[.], gap: 0.15em))
-  show outline: it => align(center)[#block(width: 80%, it)]
+  show outline: it => align(center)[#block(width: 100%, [
+    #it
+  ])]
   show outline.entry: it => link(
     it.element.location(),
     it.indented(text(0.85em, lin(it.prefix())), lin(it.inner())),
@@ -368,7 +373,7 @@
   show enum: it => { v(0.9em, weak: true) + it + v(0.9em, weak: true) }
 
   // figures
-  show figure: it => { v(2em, weak: true) + it + v(2em, weak: true) }
+  show figure: it => { v(2em, weak: true) + align(center, box(width: 90%, it)) + v(2em, weak: true) }
   show figure.caption: it => {
     set text(0.85em)
     smallcaps(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body

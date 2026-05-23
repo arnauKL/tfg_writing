@@ -1,10 +1,14 @@
-# Bachelor's Thesis: Parkinson's Disease Prediction via DaTscan CNNs and Multimodal ML
+# Bachelor's Thesis: Deep Learning-Based Classification of Parkinson's Disease from DaTscan Images
 
-Written in [Typst](https://typst.app). Source code for the accompanying experiments lives in [arnauKL/code_thesis](https://github.com/arnauKL/code_thesis).
+[Typst](https://typst.app) source code for the accompanying bachelor's thesis in Biomedical Engineering at the Universitat de Girona.
+
+The experimental codebase, including CNN implementations, preprocessing pipelines, and multimodal machine learning experiments, is maintained separately at [arnauKL/code_thesis](https://github.com/arnauKL/code_thesis).
 
 ## Building
 
 Requires the `typst` compiler.
+
+Compilation requires the Typst compiler.
 
 ```sh
 git clone https://github.com/arnauKL/tfg_writing.git
@@ -14,10 +18,10 @@ make
 
 ## Structure
 
-- `report.typ`: report entry point
-- `parts/`: one file per chapter/appendix
-- `assets/`: figures, bibliography, logos, utilities and template
-- `assets/ak_tfg_lib.typ`: custom template, adapted from [mousse-notes](https://github.com/dogeystamp/mousse-notes)
+- `report.typ`: Main report entry point
+- `parts/`: Individual chapters and appendices
+- `assets/`: Figures, bibliography, logos, utility files, and template resources
+- `assets/ak_tfg_lib.typ`: Custom Typst template derived from [mousse-notes](https://github.com/dogeystamp/mousse-notes)
 
 ## License
 
@@ -25,5 +29,9 @@ This work is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/
 
 ## Reading the Thesis
 
-A compiled PDF is available in the [latest release](../../releases/latest) (link
-does not work right now, I'll add the pdf in the future).
+<!-- A compiled PDF is available in the [latest release](../../releases/latest) -->
+Compiled PDF releases are planned to be published through the repository releases page.
+
+
+
+

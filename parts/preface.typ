@@ -5,7 +5,6 @@
   #heading(numbering: none, outlined: false)[Contents]
   #v(-3em)
   #outline(title: none)
-
   // List of Figures and List of Tables
   //#lof
   //#lot
@@ -26,29 +25,31 @@
   )
 
   // Acknowledgements
-  //#pagebreak(weak: true)
-  //#heading(numbering: none, outlined: false)[Acknowledgements]
-  //First and foremost, I would like to express my deepest gratitude to my advisor,
-  //Adrià Casamitjana, for his invaluable guidance, patience, and insightful
-  //feedback throughout the development of this thesis; and to Xavier Lladó and
-  //Arnau Oliver for putting me in contact with him and introducing me to medical
-  //imaging.
+  #pagebreak(weak: true)
+  #page()[
+    #heading(numbering: none, outlined: false)[Acknowledgements]
+    First and foremost, I would like to express my deepest gratitude to my
+    advisor, Adrià Casamitjana, for his invaluable guidance and patience,
+    throughout the development of this thesis; and to Xavier Lladó and Arnau
+    Oliver for putting me in contact with him and introducing me to medical
+    imaging.
+    I am also grateful to the staff at #smol[VICOROB] for providing the academic foundation
+    and computational resources that made this thesis possible.
 
-  //I am also grateful to the staff at #smol[VICOROB] for providing the academic foundation
-  //and computational resources that made this thesis possible.
+    I'd also like to thank my acquaintances.
 
-
-  //// This is a requirement, PPMI mandates that this block is in the
-  //// acknowledgements
-  //Data used in the preparation of this article were obtained from the
-  //Parkinson’s Progression Markers Initiative (#smol[PPMI]) database
-  //(#link("www.ppmi-info.org/data")). For up-to-date information on the study,
-  //visit #link("www.ppmi-info.org"). #smol[PPMI] --- a public-private
-  //partnership --- is funded by the Michael J. Fox Foundation for Parkinson’s
-  //Research and funding partners, to see the full names of all of the
-  //#smol[PPMI] funding partners found at
-  //#link("www.ppmi-info.org/fundingpartners").
-
-  //Finally, I want to thank my mom; I wish to be like her when I grow up.
+    //Finally, I want to thank my mom; I wish to be like her when I grow up./
+    
+    #v(1fr)
+    // This is a requirement, PPMI mandates that this block is in the
+    // acknowledgements
+    Data used in the preparation of this article were obtained from the
+    Parkinson’s Progression Markers Initiative (#smol[PPMI]) database
+    (#link("www.ppmi-info.org/data")). For up-to-date information on the study,
+    visit #link("www.ppmi-info.org"). #smol[PPMI] --- a public-private
+    partnership --- is funded by the Michael J. Fox Foundation for Parkinson’s
+    Research and funding partners, to see the full names of all of the
+    #smol[PPMI] funding partners found at
+    #link("www.ppmi-info.org/fundingpartners").
+  ]
 ]
-
