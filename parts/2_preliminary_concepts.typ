@@ -114,8 +114,7 @@ symptoms such as depression and anxiety belong to this prodromal syndrome and
 are increasingly used in research criteria for preclinical PD
 @tolosaChallenges2021. The presence of these markers in subjects without motor
 symptoms is of direct relevance to the #smol[PPMI] cohort structure and to the
-multimodal features used in this thesis (see #redt[add reference to the corresponing
-section once it's written]).
+multimodal features used in this thesis (see #redt[_próximamente en cines_]).
 
 The primary diagnostic challenge is the clinical overlap with conditions that
 mimic parkinsonism: essential tremor (#smol[ET]), drug-induced parkinsonism 

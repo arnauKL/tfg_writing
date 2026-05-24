@@ -60,21 +60,13 @@ degeneration is slow and irreversible, meaning that by the time the motor
 symptoms, such as resting tremor or rigidity, become clinically apparent,
 substantial damage has already been done.
 
-// The intro is on the importance of diagnosing prodromal patients even though I
-// have changed a bit
-A presymptomatic window of years exists during which neurodegeneration is
-underway but patients are unaware and untreated. Identifying patients in this
-window is a central objective of current PD research, as any future
-neuroprotective therapy is likely to be most effective before irreversible
-damage is established.
-
 Dopamine transporter (DaT) imaging with #super[123]I-ioflupane
 #smol[SPECT],
 commercially known as DaTscan, has become a key diagnostic tool in this effort.
 By radiolabeling the dopamine transporter protein on presynaptic terminals,
 DaTscan provides a direct, functional map of the integrity of the nigrostriatal
 pathway in vivo. In PD patients, the image generated visualizes degeneration of
-the nigrostriatal pathway #redt[mention image?] @palermoDopamine2021.
+the nigrostriatal pathway (see @datscan_image_compare) @palermoDopamine2021.
 
 Despite its value, DaTscan interpretation in clinical practice relies
 predomininantly on visual assesment by trained specialists, a process that is

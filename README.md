@@ -1,6 +1,8 @@
 # Bachelor's Thesis: Deep Learning-Based Classification of Parkinson's Disease from DaTscan Images
 
-[Typst](https://typst.app) source code for the accompanying bachelor's thesis in Biomedical Engineering at the Universitat de Girona.
+[Typst](https://typst.app) source code and pdf for the accompanying bachelor's thesis in Biomedical Engineering at the Universitat de Girona.
+The full report is available [here](report.pdf).
+
 
 The experimental codebase, including CNN implementations, preprocessing pipelines, and multimodal machine learning experiments, is maintained separately at [arnauKL/code_thesis](https://github.com/arnauKL/code_thesis).
 
@@ -13,7 +15,7 @@ Compilation requires the Typst compiler.
 ```sh
 git clone https://github.com/arnauKL/tfg_writing.git
 cd tfg_writing/
-make
+typst compile report.typ
 ```
 
 ## Structure
@@ -26,12 +28,3 @@ make
 ## License
 
 This work is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-
-## Reading the Thesis
-
-<!-- A compiled PDF is available in the [latest release](../../releases/latest) -->
-Compiled PDF releases are planned to be published through the repository releases page.
-
-
-
-

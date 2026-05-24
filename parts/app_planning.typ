@@ -13,8 +13,7 @@ during the semester, while the Typst template and report structure were
 finalized in parallel.
 
 Writing of this thesis was started in may based on log notes kept during the
-semester, while the template itself was finalised around april (see
-@colophon).
+semester, while the template itself was finalised around april.
 
 #figure(
   include "../assets/figures/gantt.typ",
