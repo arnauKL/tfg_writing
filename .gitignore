@@ -1,3 +1,4 @@
 figures/*.svg
+*.pdf
 notes.md
 Makefile
