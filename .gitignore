@@ -1,4 +1,5 @@
 figures/*.svg
+notes/
+parts/3_sota.typ
 *.pdf
-notes.md
 Makefile

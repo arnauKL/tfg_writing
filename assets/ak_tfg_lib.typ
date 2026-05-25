@@ -15,6 +15,8 @@
 #let appendix(body) = {
   set heading(numbering: "A.1.1 a", supplement: [Appendix])
   counter(heading).update(0)
+  counter(page).update(0)
+  set page(numbering: "1")
   body
 }
 
@@ -51,7 +53,7 @@
   smallcaps(lower(it)) } }
 #let caps(it) = { if debug { text(green, upper(it)) } else { upper(it) } }
 
-#let redt(it) = { text(red, it) }
+#let redt(it) = { if debug { text(red, it) } }
 
 /// Manual override for indent (see https://github.com/typst/typst/issues/3206)
 #let indent = h(INDENT)
@@ -159,6 +161,7 @@
   show raw.where(block: true): set text(size: 0.8em)
   show raw.where(block: true): it => align(center)[#it]
   show raw: set text(font: mono-font, weight: "medium", number-type: "lining")
+  show raw: it => box(it, outset: 1.5pt, fill: luma(220), radius: 3pt)
 
   //show smallcaps: set text(spacing: 125%, tracking: 0.02em)
 

@@ -189,7 +189,7 @@ visual basis on which clinical readers classify scans.
     image("../assets/figures/preliminary_concepts/HC_example_41.svg"),
     image("../assets/figures/preliminary_concepts/PD_example_33.svg")
   )),
-  caption: [side-by-side DaTscan #redt[coronal?] slices showing normal bilateral
+  caption: [side-by-side DaTscan axial slices showing normal bilateral
 _comma_ pattern (left, healthy patient) vs. asymmetric _period_ pattern of PD
 (right, diagnosed patient).]
 ) <datscan_image_compare>
@@ -267,7 +267,7 @@ a linear boundary suffices. SVMs generalize well in high-dimensional settings
 and with limited data, making them a natural baseline for medical applications
 //with small cohort sizes @cortes1995.
 
-*Logistic Regression (LR).* Despite its name, LR is a linear binary classifier
+*Logistic Regression (LR).* LR is a linear binary classifier
 that models the log-odds of class membership as a linear function of the input
 features, producing calibrated probability estimates. Its simplicity and
 interpretability make it a standard reference point in clinical machine
@@ -352,14 +352,14 @@ demonstrated conclusively that deep end-to-end trained CNNs, given sufficient
 data and compute, vastly outperform handcrafted feature pipelines.
 
 //VGGNet @simonyan2014 extended this insight by showing that very deep networks
-(16–19 layers) built entirely from small 3×3 convolutional filters achieved
+(16--19 layers) built entirely from small 3×3 convolutional filters achieved
 strong performance, establishing architectural depth as a key design principle.
 
 //ResNet @he2016 then resolved the fundamental obstacle to training very deep
 networks: the vanishing gradient problem, in which gradients shrink
 exponentially as they backpropagate through many layers, preventing early layers
 from learning effectively. The ResNet solution — _residual connections_ (skip
-connections) — adds the input of a block directly to its output:
+connections) -- adds the input of a block directly to its output:
 
 $ bold(y) = F(bold(x)) + bold(x) $
 
@@ -472,7 +472,7 @@ motor, sensory, cognitive, and epidemiological.
 
 === Fusion Strategies
 
-//Three main fusion paradigms are recognized in the literature @li2024:
+// Three main fusion paradigms are recognized in the literature @li2024:
 
 *Early fusion* concatenates raw features from all modalities into a single input
 before any processing. In the image-plus-tabular setting this is rarely
@@ -480,13 +480,14 @@ practical because the image and tabular representations live in very different
 spaces.
 
 *Late fusion* trains independent models for each modality and combines their
-output predictions — for example, by averaging predicted probabilities or
+output predictions, for example, by averaging predicted probabilities or
 learning a meta-classifier on the combined outputs. This approach is modular and
 computationally inexpensive: existing single-modality models can be reused
 without retraining. In this thesis, late fusion averages the probability output
 of the best CNN model with that of a logistic regression trained on the tabular
 features.
 
+// this is the guillem mode:
 *Intermediate (feature-level) fusion* extracts learned representations from each
 modality and merges them before the classification head. The image branch
 produces a compact embedding vector from the CNN backbone; the tabular branch
@@ -497,7 +498,8 @@ modality before integration, and is the second fusion strategy evaluated in this
 thesis. The CNN backbone is frozen during fusion training, which limits
 overfitting on the small labeled dataset.
 
-[FIGURE: fusion_architecture — diagram of the Y-shaped intermediate fusion
+potential figure here?
+fusion architecture diagram of the Y-shaped intermediate fusion
 network: CNN branch (frozen ResNet18 backbone) producing a 512-dim embedding,
 tabular MLP branch, concatenation, and shared classification head]
 

@@ -1,6 +1,6 @@
 #import "../assets/ak_tfg_lib.typ": *
 
-= Colophon
+= Colophon <app_colophon>
 
 This thesis was typeset in #link("https://typst.app")[Typst] using a custom
 template derived from
