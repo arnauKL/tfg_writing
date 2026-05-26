@@ -1,6 +1,6 @@
 #import "../assets/ak_tfg_lib.typ": *
 
-= Code
+= Code <app_code>
 
 This project was developed under continuous version control using Git and is
 hosted on GitHub at

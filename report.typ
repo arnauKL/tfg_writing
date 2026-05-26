@@ -8,8 +8,7 @@
   author: "Arnau K. Deprez Santamaria",
 )
 
-
-#include "parts/preface.typ"
+//#include "parts/preface.typ"
 #set page(numbering: "1") // this forces reset on pdf viewers too
 #counter(page).update(1) // Reset page num to 1
 
@@ -34,8 +33,8 @@ TODO
 
 
 #show: appendix
-#include "parts/app_planning.typ"
+//#include "parts/app_planning.typ"
 #include "parts/app_code.typ"
-#include "parts/app_budget.typ"
+//#include "parts/app_budget.typ"
 #include "parts/app_ethics.typ"
-#include "parts/app_colophon.typ"
+//#include "parts/app_colophon.typ"
