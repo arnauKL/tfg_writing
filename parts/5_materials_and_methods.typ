@@ -1,4 +1,5 @@
 #import "../assets/ak_tfg_lib.typ": *
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
 #let dims(it) = {
   [ #it $times$ #it $times$ #it ]
@@ -34,10 +35,7 @@ As I mentioned, only the *sesBL* (baseline session) session was used (BIDS, see
 @bids for more) to avoid repeating the same patients in different timelines,
 introducing accidental biases.
 
-This left me with a dataset of a total of ...
-
-// i cant' check right now, the server is down, but there were 1000-ish PD and
-// 200 ish HC
+This left me with a dataset of a total of ... nanana
 
 This imbalance was present in the tabular data too. I tried fixing it both
 automatically with weighted samplers and manually (dropping enough PD so that
@@ -55,11 +53,25 @@ labels into the training set.
 
 To limit each subject to a single observation and avoid temporal data leakage,
 only the baseline session (`sesBL` in BIDS notation, described in @sec-bids) was
-retained for each participant. The raw (unregistered) image set contained
-#redt[FILL: \~158 HC] and #redt[FILL: \~PD count] PD subjects; the registered image
-set contained 124 HC and 124 PD subjects after applying the same filter. The
-larger raw set arises because the registration pipeline discarded images that
-failed quality control or fell outside the template field of view.
+retained for each participant. As seen in @tab-dataset, the raw (unregistered)
+image set contained 158 HC and 618 PD subjects; the registered image set
+contained 124 HC and 561 PD subjects after applying the same filter. The
+reduction in sample size associated with registration should be considered when
+interpreting the comparative performance of raw and registered datasets in later
+experiments.
+
+#figure(
+  tablef(
+    columns: (auto, 3em, 3em),
+    //columns: (auto, auto, auto),
+    align: right,
+    [Dataset], [HC], [PD],
+    [rawdata], [158], [618],
+    [registered], [124], [561],
+    [tabular], [296], [3066],
+  ),
+  caption: [Distribution of patients in selected datasets.]
+)<tab-dataset>
 
 The class imbalance inherent in the PPMI cohort, where PD subjects substantially
 outnumber HC, was addressed by downsampling the majority class (PD) to match
@@ -68,14 +80,15 @@ two-class datasets. This decision was preferred over weighted sampling after
 empirical comparison, as it produced more stable training results and
 performance across architectures.
 
-For the tabular experiments (classical ML baseline), the same diagnostic filter
+For the tabular experiments (classical ML baseline, tabular row in @tab-dataset), the same diagnostic filter
 was applied to the curated spreadsheet. After removing rows with missing values
-in the feature columns of interest, the tabular cohort comprised #redt[some] PD and
-#redt[some] HC subjects. The substantially larger tabular counts relative to the
+in the feature columns of interest, the tabular cohort comprised 3066 PD and
+296 HC subjects. The substantially larger tabular counts relative to the
 image cohort reflect the fact that #smol[PPMI] collects clinical assessments at
 multiple visits and from participants who did not undergo imaging at baseline.
 
 // maybe this last sentence should go
+
 
 === Legal and Ethical Considerations
 
@@ -121,45 +134,55 @@ ensures reproducibility and facilitates automated processing. Under BIDS, each
 subject is identified by a unique prefix (`sub-XXXX`), sessions by `ses-LABEL`,
 and files follow a standardized naming scheme encoding the subject, session, and
 imaging modality. @tab-bids summarizes the key BIDS elements relevant to this
-work.
+work and @BIDS_ppmi shows this structure in the server itself.
+
 
 #figure(
-  table(
-    columns: (auto, auto, auto),
+  tablef(
+    columns: (1fr, 1.5fr, 1fr),
     align: (left, left, left),
-    [*BIDS element*],
-    [*Description*],
-    [*Example*],
+    [*BIDS element*], [*Description*], [*Example*],
 
-    [`sub-ID`],
-    [Unique subject identifier],
-    [`sub-3001`],
-
+    [`sub-ID`], [Unique subject identifier], [`sub-3001`],
     [`ses-LABEL`], [Session label (timepoint)], [`ses-BL`],
     [Modality folder], [Imaging modality], [`pet/`],
     [`.nii.gz`], [Compressed NIfTI image volume], [`sub-3001_ses-BL_pet.nii.gz`],
     [`.json`], [Acquisition metadata sidecar], [`sub-3001_ses-BL_pet.json`],
-    [`participants.tsv`], [Subject-level metadata table], [age, sex, diagnosis],
+    [`participants.tsv`/`.json`], [Subject-level metadata table], [age, sex, diagnosis],
   ),
-  caption: [#redt[THIS NEEDS TO BE FILLED WITH REAL STUFF] Key BIDS standard elements used in this work.],
+  caption: [Key BIDS standard elements used in this work.],
 ) <tab-bids>
 
-In the case of the PPMI data, once loaded using this standard the resulting
-structure looks like this:
-// FILL: paste the directory tree output here once the server is back. Something
-// like:
-// ``` PPMI/
-// ├── sub-3001/
-// │   └── ses-BL/
-// │       └── pet/
-// │
-// ├── sub-3001_ses-BL_pet.nii.gz
-// │           └── sub-3001_ses-BL_pet.json
-// ├── sub-3002/ ...
-// └── participants.tsv
-// ```
+The use of BIDS enabled automated subject discovery, metadata extraction, and
+reproducible preprocessing across the full cohort.
 
-=== Image Preprocessing
+#figure(
+  ```sh
+  (mic) PPMI $ tree rawdata/ | head -n 20
+  rawdata/
+  ├── dataset_description.json
+  ├── participants.json
+  ├── participants.tsv  # metadata
+  ├── sub-PPMI100001  # patient
+  │   ├── ses-BL  # session
+  │   │   ├── anat  # modality 
+  │   │   │   ├── sub-PPMI100001_ses-BL_T1w.json  # acquisition metadata
+  │   │   │   └── sub-PPMI100001_ses-BL_T1w.nii.gz  # compressed image
+  │   │   └── spect  # different modality (DaTscan)
+  │   │       ├── sub-PPMI100001_ses-BL_DaTSCAN.json
+  │   │       └── sub-PPMI100001_ses-BL_DaTSCAN.nii.gz
+  │   ├── ses-V02 # next session
+  │   │   └── spect
+  │   │       ├── sub-PPMI100001_ses-V02_DaTSCAN.json
+  │   │       └── sub-PPMI100001_ses-V02_DaTSCAN.nii.gz
+      ...
+  ...
+  ```,
+  caption: [Directory structure using BIDS standard in VICOROB's server. The
+  registered directory is shown.]
+)<BIDS_ppmi>
+
+=== Image Preprocessing <sec-preprocessing>
 
 /*
 First, I focused on the
@@ -191,37 +214,95 @@ monai's website, zotero got a weird bib key */, which
 provides a composable, GPU-compatible pipeline of medical image transforms.
 
 Two parallel image sets were maintained throughout all experiments and never
-combined: `raw` (unregistered, native acquisition space) images and `registered` 
-(spatially normalized) images. Registered images were produced by the PPMI
-processing pipeline using affine registration to a standard DaTscan template,
-making all volumes nominally comparable in voxel space. Raw images were used as
-acquired, without spatial normalization.
+combined: `raw` (unregistered, native acquisition space) images and `registered`
+(spatially normalized) images (see @fig-compareraw-reg). Registered images were
+produced by the PPMI processing pipeline using affine registration to a standard
+DaTscan template, making all volumes nominally comparable in voxel space. Raw
+images were used as acquired, without spatial normalization.
 
-A practical challenge was that volumes differed in spatial dimensions across
-subjects, even within the registered set. This prevented direct use as CNN
-input, which requires a fixed input shape. The following preprocessing steps
-were applied to all image sets:
+#figure(
+  grid(
+    image("../assets/figures/methods/unregistered_images.svg", width: 80%),
+    image("../assets/figures/methods/registered_images.svg", width: 80%)
+  ),
+  placement: auto,
+  caption: [Images from the `raw` set (above, multiple different sizes) compared to registered images
+  from the `derivatives` set (below, $91 times 109 times 91$ across).]
+)<fig-compareraw-reg>
+
+A practical challenge was that volumes within the raw dataset differed in
+spatial dimensions across subjects, preventing their direct use as CNN input,
+which requires a fixed input shape. Conversely, while volumes within the
+registered set shared uniform spatial dimensions ($91 times 109 times 91$
+voxels) due to standard template alignment, their large native size presented an
+unnecessary computational and memory burden. Therefore, spatial standardization
+and localized dimension reduction were required before feeding either image set
+into the neural networks. The following preprocessing steps were applied to all
+image sets, (also see @pipelinefig):
 
 + *Intensity normalization.* Each volume was normalized to zero mean and unit
   variance across its non-zero voxels, making intensities comparable across
   subjects and scanners.
-+ *Spatial cropping.* Volumes were center-cropped to a fixed spatial extent
-  using MONAI's `CenterSpatialCrop` transform. A crop size of #dims[76] voxels
-  was selected based on empirical comparison of #dims[64] and #dims[128] crops:
-  the 64-voxel crop risked clipping the striatal signal in some subjects, while
-  the 128-voxel cube imposed a prohibitive memory cost for 3D training; 76
-  voxels covered the full striatum in all subjects while remaining
-  computationally tractable.
++ *Spatial cropping.* Volumes were center-cropped using #smol[MONAI]’s
+  `CenterSpatialCrop` transform. For the raw dataset, this step served to
+  enforce a uniform input dimension across all subjects. For the registered
+  dataset, where dimensions were already uniform, cropping functioned to isolate
+  the Region of Interest (ROI) containing the striatum and discard irrelevant
+  background space. A crop size of #dims[76] voxels was selected based on an
+  empirical comparison of #dims[64] and #dims[128] crops: the 64-voxel crop
+  risked clipping the striatal signal in some subjects, while the 128-voxel cube
+  imposed a prohibitive memory cost for 3D training; 76 voxels covered the full
+  striatum in all subjects while remaining computationally tractable.
 
-For the 2.5D model specifically #redt[(see section CNN architectures)], maximum intensity projections (MIPs) were
+For the 2.5D model specifically, maximum intensity projections (MIPs) were
 computed from the preprocessed volume along each of the three anatomical axes
-(axial, coronal, sagittal) prior to cropping. Each MIP retains, at every pixel
-position, the maximum intensity encountered along the projection direction,
-preserving the peak striatal signal. The three resulting 2D projections were
-stacked as the three channels of a single 2D input tensor, matching the
-three-channel format expected by ImageNet-pretrained networks.
+(axial, coronal, sagittal) prior to cropping (see @mips). Each MIP retains, at
+every pixel position, the maximum intensity encountered along the projection
+direction. Using projections avoids the need to select specific anatomical
+slices and provides a compact representation of the full volume. This approach
+was derived after seeing success on other modalities with different projections
+of volumes to classify pulmonary nodules @setioPulmonary2016. The three
+resulting 2D projections were stacked as the three channels of a single 2D input
+tensor, matching the three-channel format expected by ImageNet-pretrained
+networks.
 
-=== Tabular Data Preprocessing <sec-preprocessing>
+
+
+#import fletcher.shapes: diamond
+#figure(
+  diagram(
+    node-stroke: 1pt,
+    node-corner-radius: 1pt,
+    // 2.5d
+    node((0,0), [3#smol[D] volume]),
+    edge("-|>"),
+    node((1,0), [3 $times$ MIPS]),
+    edge("-|>"),
+    node((2,0), [Stack channels]),
+    edge("-|>"),
+    node((3,0), [ResNet18]),
+    // 3d
+    node((0,.75), [raw NIfTI]),
+    edge("-|>"),
+    node((1,.75), [Normalization]),
+    edge("-|>"),
+    node((1.8,.75), [Cropping]),
+    edge("-|>"),
+    node((2.4,.75), [CNN])
+  ),
+  caption: [Preprocessing pipelines followed for both 2.5D
+  (imageNet) and 3D CNNs.]
+)<pipelinefig>
+
+#figure(
+    image("../assets/figures/methods/multi_axis_mip_rgb_concept.svg"),
+    caption: [Pipeline for converting 3D DaTscan volumes into multi-axis
+    pseudo-RGB representations for 2D convolutional neural networks. These three
+    independent 2D views are subsequently stacked together to serve as the Red,
+    Green, and Blue (RGB) input channels for a standard 2D RGB CNN architecture.]
+)<mips>
+
+=== Tabular Data Preprocessing 
 
 The curated PPMI spreadsheet provides semi-quantitative DaTscan binding values
 alongside clinical assessments. Preprocessing of the tabular data consisted of
@@ -233,12 +314,15 @@ imputation of clinical biomarkers risks introducing systematic bias.
 From the raw #smol[SBR] columns, four engineered features were derived to capture
 lateralization and overall binding:
 
+#[
+#set par(leading: 1em)
 $
-/*"AI"_"Caudate" = frac("SBR"_"caudate,L" - "SBR"_"caudate,R", "SBR"_"caudate,L"
-+ "SBR"_"caudate,R") */
-"AI"_" {caudate,putamen}" = frac("SBR"_" {caudate,putamen} L" -
-"SBR"_" {caudate,putamen} R", "SBR"_" {caudate,putamen} L"
-+ "SBR"_" {caudate,putamen} R") 
+"AI"_"caudate" = frac("SBR"_"caudate,L" - "SBR"_"caudate,R", "SBR"_"caudate,L"
++ "SBR"_"caudate,R")
+" ",\
+
+"AI"_"putamen" = frac("SBR"_"putamen,L" - "SBR"_"putamen,R", "SBR"_"putamen,L"
++ "SBR"_"putamen,R")
 
 " ",\
 
@@ -248,6 +332,7 @@ overline("SBR") = 1/4("SBR"_"caudate,L" + "SBR"_"caudate,R"
 
 "PCR" = frac(overline("SBR")_"putamen", overline("SBR")_"caudate") " ";
 $
+]
 
 where AI denotes the Asymmetry Index and PCR the Putamen-to-Caudate Ratio. These
 engineered features encode the asymmetric onset pattern characteristic of PD and
@@ -260,27 +345,33 @@ containing data extracted from the DaTscan images and other metadata. */
 
 The classical ML baseline was trained on the curated tabular data using
 scikit-learn @Scikitlearn. A set of classifiers were evaluated: a Support Vector
-Machine (SVM) with a radial basis function (RBF) kernel, a Logistic Regression
-(LR) with L2 regularization, #redt[Fill in with the others ion remember, need
-the server to be up]. Hyperparameters (regularization strength $C$ for
-both models; kernel coefficient $gamma$ for the SVM) were selected by nested
-cross-validation on the training folds.
+Machine (SVM) with a radial basis function (RBF) kernel and another using a
+linear kernel, a Random Forest classifier, a Gradient Boosting classifier and a
+Logistic Regression (LR) with L2 regularization /*what does this mean?*/.
+Hyperparameters were selected by nested cross-validation on the training
+folds.
 
 To understand how different feature groups contributed to classification
-performance, models were trained on a sequence of additive feature sets, each
-building on the previous one:
+performance, an additive approach was chosen for feature engineering to mirror
+the incremental nature of clinical diagnostic workflows, evaluating whether the
+addition of progressively more invasive or complex clinical markers yields
+marginal gains in predictive power over baseline imaging, see
+@tab-incremental-sets.
 
-+ raw SBR values for caudate and putamen only;
-+ the full PPMI-derived SBR set including contralateral, ipsilateral, and mean
-  binding for caudate, putamen, and striatum;
-+ the engineered features (asymmetry indices, mean SBR, putamen-to-caudate
-  ratio);
-+ the above plus demographic variables (age, sex);
-+ further augmented with motor assessments (MDS-UPDRS I–III, symptom flags,
-  Hoehn and Yahr scale, levodopa equivalent daily dose);
-+ with non-motor prodromal markers (UPSIT, REM sleep behavior score, Epworth
-  Sleepiness Scale, Geriatric Depression Scale, SCOPA-GI, SCOPA-AUT);
-+ with secondary biomarkers (alpha-synuclein, serum NfL, urate).
+#figure(
+  tablef(
+    columns: (auto, 10em, auto),
+[Set],[ Feature Group Added ],[ Specific Features Included ],
+[1],[ Baseline SBR ],[ Raw Specific Binding Ratio (SBR) values for caudate and putamen only. ],
+[2],[ Full SBR Set ],[ Full PPMI-derived SBR set (contralateral, ipsilateral, and mean binding for caudate, putamen, and striatum). ],
+[3],[ Engineered Features ],[ Asymmetry indices, mean SBR, and putamen-to-caudate ratio. ],
+[4],[ Demographics ],[ Patient age and biological sex. ],
+[5],[ Clinical Motor Assessments ],[ MDS-UPDRS Parts I to III, clinical symptom flags, Hoehn and Yahr (H&Y) scale, and Levodopa Equivalent Daily Dose (LEDD). ],
+[6],[ Non-Motor & Prodromal Markers ],[ University of Pennsylvania Smell Identification Test (UPSIT), REM Sleep Behavior Disorder (RBD) screening score, Epworth Sleepiness Scale (ESS), Geriatric Depression Scale (GDS), SCOPA-GI, and SCOPA-AUT. ],
+[ 7 ],[ Secondary Biomarkers ],[ Alpha-synuclein, serum Neurofilament Light chain (NfL), and urate. ]
+  ),
+  caption: [Additive Feature Set Sequences]
+)<tab-incremental-sets>
 
 The additive structure of these feature sets allowed the information gain of
 each clinical domain to be quantified by comparing AUC between successive steps.
@@ -289,11 +380,7 @@ applied to the best-performing classical model to identify the individual
 features contributing most to the classification decision, providing a basis for
 feature selection in the multimodal fusion experiments.
 
-#redt[I still need to run this independently instead of additively.]
-
 == Deep Learning strategies
-
-// idk what to explain here
 
 === CNN Architectures
 
@@ -338,7 +425,7 @@ information, and then explore transfer learning as a strategy to compensate for
 the limited training set size.
 
 *2D CNN (`2d_sum`).* A lightweight 2D CNN inspired by VGG-style stacked
-convolutions was implemented as a first baseline. The network
+convolutions was implemented as a first baseline @simonyanVery2015. The network
 comprises three convolutional blocks (16, 32, and 64 filters respectively, each
 with a $3 times 3$ kernel, batch normalization, and ReLU activation) followed by
 global average pooling and a fully connected classification head. The input is a
@@ -352,32 +439,32 @@ equivalents. The filter sequence (16 $arrow.r$ 32 $arrow.r$ 64) and the downstre
 classification head were kept identical to the 2D baseline to isolate the effect
 of dimensionality. A deeper variant (`3d_crop_deeper`) added a fourth
 convolutional block (128 filters) to probe whether increased depth improved
-performance; this variant exhibited near-perfect training metrics and degraded
-validation performance, confirming overfitting on the available dataset size,
-and was retained only for comparison purposes.
+performance.
 
 *2.5D ResNet18 with ImageNet pretraining (`25d_resnet`).* To leverage transfer
 learning from a large natural image dataset, a ResNet18 backbone pretrained on
-ImageNet (@dengImageNet2009) was fine-tuned for binary DaTscan classification. As
+ImageNet @dengImageNet2009 was fine-tuned for binary DaTscan classification. As
 described in @sec-preprocessing, the three orthogonal MIPs extracted from each
 volume were stacked as channels, producing a $3 times H times W$ input that
-matches the format expected by the pretrained network. The original ImageNet
+matches the format expected by the pretrained network (refer to @mips for a
+visualization). The original ImageNet
 classification head was replaced by a single linear layer with sigmoid output.
 During fine-tuning, all backbone weights were updated at a reduced learning rate
-($10^{-4}$) to avoid overwriting pretrained representations, while the new
-classification head was trained at the default rate ($10^{-3}$).
+($10^(-4)$) to avoid overwriting pretrained representations, while the new
+classification head was trained at the default rate ($10^(-3)$).
 
 *3D ResNet10 with MedicalNet pretraining (`med3d`).* As a domain-specific
 alternative to ImageNet pretraining, a ResNet-10 backbone from MedicalNet
 @chenMed3D2019, pretrained on 23 heterogeneous medical image segmentation datasets
-including SPECT volumes, was adapted for classification. The pretrained
-segmentation head was removed and replaced by global average pooling followed by
-a fully connected binary classification head. This architecture processes the
-full 3D volume and requires no projection step, making it the most
-architecturally faithful to the volumetric nature of the data.
+including SPECT volumes, was adapted for classification.
 
-#redt[I also used a different variant of the med3d, where instaed of only
-removing the head, it removes more layers earlier on.]
+Two adaptation strategies were evaluated. The first retained the original
+network structure and replaced the segmentation head with a binary
+classification head /*el meu primer intento*/. The second used only the pretrained encoder as a generic
+volumetric feature extractor, discarding the decoder and attaching a lightweight
+custom classification head /*Adrià's way*/. The latter approach reduces parameter count and
+allows greater flexibility in the design of the classification stage while
+preserving the pretrained feature representations.
 
 === Training Protocol <sec-training>
 
@@ -397,14 +484,28 @@ All CNN models were trained using the same script (`train.py`, see @app_code)
 and configuration to ensure comparability. The binary cross-entropy with logits
 loss (`BCEWithLogitsLoss`) was used throughout. The Adam optimizer was employed
 with default momentum parameters ($beta_1 = 0.9$, $beta_2 = 0.999$) and weight
-decay of $10^(-4)$. Training was run for a maximum of 80 epochs with early
-stopping based on validation AUC (patience of #redt[FILL] epochs). The model
+decay of $10^(-4)$. Training was run for a maximum of 100 epochs. The model
 checkpoint achieving the highest validation AUC within each fold was saved and
 used for evaluation.
 
-Training and evaluation were performed on the GPU infrastructure of the VICOROB
-research group at the Universitat de Girona. Another script was used to evaluate the best fold of each model, generating
-comparative boxplots on them.
+Training and evaluation were performed on the GPU infrastructure of the
+#smol[VICOROB] research group. A separate evaluation script loaded the saved
+checkpoints from each fold and computed aggregate metrics and boxplot
+visualizations across the cross-validation runs.
+
+All experiments used a batch size of 2. This small value was imposed by the
+memory constraints of the available hardware (NVIDIA GeForce GTX 1060), which
+limits the number of volumetric tensors that can reside in GPU memory
+simultaneously during a forward pass. The model checkpoint achieving the highest
+validation AUC within each fold was saved and used for final evaluation.
+
+For models with pretrained weights (the 25d_resnet and med3d variants), a
+differential learning rate schedule was applied: backbone parameters were
+updated at a rate of $10^(-5)$ (one tenth of the base rate) to avoid
+overwriting pretrained representations, while the newly initialized
+classification head was trained at the base rate of $10^(-4)$. All remaining
+architectures (2d_sum, 3d_crop, and 3d_crop_deeper) used a uniform learning
+rate of $10^(-4)$ throughout.
 
 === Cross-Validation Scheme
 
@@ -412,13 +513,21 @@ Stratified $k$-fold cross-validation was used throughout to produce performance
 estimates that are robust to the specific train-test split. An initial phase
 used 2-fold cross-validation across all architectures to rank models efficiently
 given the computational cost of full training runs. The best-performing
-architectures identified in were then re-evaluated with 5-fold cross-validation
-(image-net derived CNN, med3d net and 3d) to produce more reliable and statistically interpretable estimates. Performance
+architectures identified were then re-evaluated with 5-fold cross-validation
+to produce more reliable and statistically interpretable estimates. Performance
 is reported as the mean and standard deviation across folds.
 
-// FILL: list which architectures received the 5-fold treatment. Based on your
-// notes this is at minimum 25d_resnet on raw data.
+=== Reproducibility and Experiment Management
 
+To facilitate reproducibility, all experiments were managed through a unified
+training pipeline (`train.py`). Model configurations, preprocessing parameters,
+and hyperparameters were stored in `json` configuration files, and the global
+random seed for both numpy and PyTorch was set to 42 on all runs. Trained model
+weights were serialized as `.pth` checkpoints, while performance metrics were
+exported to `csv` files for subsequent statistical analysis and visualization.
+
+Source code was maintained under Git version control and is publicly available
+through the repository described in @app_code.
 
 == Multimodal Fusion
 
@@ -453,16 +562,15 @@ the multimodal analysis.
 === Fusion with CNNs
 
 For the CNN-based models, the best-performing architecture from the image-only
-experiments (`25d_resnet` on raw images #redt[and 3d cnn, not yet done] ) served as the backbone for all fusion
-experiments. Two fusion strategies were evaluated.
+experiments served as the backbone for all fusion experiments. Two fusion
+strategies were evaluated.
 
-/ Late fusion: The probability output of the frozen CNN was averaged with the
-  probability output of a Logistic Regression classifier trained independently
+/ Late fusion: The probability output of the frozen CNN was averaged with the probability output of a Logistic Regression classifier trained independently
   on the tabular features. No CNN retraining was performed. This approach is
   modular and computationally inexpensive, treating each modality as an
   independent expert whose judgements are combined at the decision level.
 
-/ Intermediate (feature-level) fusion: A Y-shaped architecture was constructed
+/ Intermediate (feature-level) fusion: A Y-shaped architecture (see @ydiag) was constructed
   in which the frozen CNN backbone produced a 512-dimensional image embedding,
   and a separate tabular branch, consisting of a fully connected layer (hidden
   size 16), ReLU activation, and dropout, produced a tabular embedding of the
@@ -478,32 +586,142 @@ screening (MoCA), and demographic variables (age, sex). This decomposition
 allows the marginal contribution of each clinical domain to be quantified
 separately from the others.
 
+#figure(
+  text(.75em, 
+  box(fill: luma(245), radius: 2pt, inset: 1em, outset: (x: 2em, y: 0em),
+  diagram(
+    edge-stroke: .5pt,
+    node-stroke: .5pt,
+    node-fill: white,
+    node-corner-radius: 1pt,
+    node((0,0), [MIP image \ $3 times H times W$]),
+    edge("->"),
+    node((0,.85), [ResNet18 \ backbone]),
+    edge("->"),
+    node((1,.85), [Identity]), 
+    edge("->"),
+    node((2,.85), name: <x>, [512-dim \ vector], shape: circle),
 
-// FILL: note whether 5-fold was completed for the fusion experiments. Based on
-// your notes, fusion results are currently 2-fold only and 5-fold validation is
+    node((0,2), [tabular input \ $n times 1$]),
+    edge("->"),
+    node((0,2.85), [Linear \ (n $arrow.r$ 16)]),
+    edge("->"),
+    node((0.65,2.85), [ReLu]),
+    edge("->"),
+    node((1.35,2.85), [Dropout]),
+    edge("->"),
+    node((2.3,2.85), [Linear \ (16 $arrow.r$ 16)]),
+    edge("->"),
+    node((3.2,2.85), [ReLu]),
+    edge("->"),
+    node((4.2,2.85), name: <y>, [16-dim \ vector], shape: circle),
+
+    node((5.5,1.75), name: <out>, [Concat \ 528-dim]),
+    {
+      let verts = ( // () means the previous vertex
+        ((), "-|", (<y.east>, 50%, <out.west>)),
+        ((), "|-", <out>),
+        <out>
+      )
+      edge(<x>, ..verts, "->") // () == <x>
+      edge(<y>, ..verts) // () == <y>
+    }
+  ))),
+  caption: [Y-shaped multimodal fusion architecture. The frozen ResNet18
+  backbone produces a 512-dimensional image embedding from the three-channel MIP
+  input; a two-layer tabular MLP produces a 16-dimensional clinical embedding.
+  The two embeddings are concatenated and passed through a shared classification
+  head to produce the final PD probability.]
+)<ydiag>
+
+
+
+The two fusion strategies were intentionally designed with different levels of
+model complexity. Late fusion combines the predictions of two independently
+trained models and therefore introduces no additional trainable parameters.
+Feature-level fusion attempts to learn a joint representation of the imaging and
+clinical modalities instead.
+
+The CNN backbone was kept frozen during feature-level fusion training. This
+decision was motivated by the limited size of the multimodal cohort, which
+increases the risk of overfitting when a large number of parameters are updated.
+Freezing the pretrained image encoder allows the network to preserve the visual
+representations learned during image-only training while restricting learning to
+the newly introduced fusion layers.
+
+Similarly, the tabular branch was deliberately kept small, consisting of a
+single hidden layer followed by dropout regularization. The objective was not
+to learn a complex clinical model, but rather to project the tabular variables
+into a compact latent representation that could be combined with the image
+embedding.
 
 == Evaluation Metrics
 
-Classification performance was assessed using four complementary metrics. The
-area under the receiver operating characteristic curve (AUC) is the primary
-reported metric; it summarizes discriminative ability across all decision
-thresholds and is robust to class imbalance. Accuracy, sensitivity (recall,
-the fraction of PD cases correctly identified), and specificity (the fraction
-of HC correctly identified) are reported as secondary metrics. Given the
-balanced class distribution enforced by downsampling, accuracy equals balanced
-accuracy in all experiments.
+To rigorously assess and validate the classification performance of the
+developed models, a comprehensive suite of evaluation metrics was employed. In
+binary classification tasks such as distinguishing between PD and HC cases.
+Model predictions fall into four distinct categories based on the ground truth
+alignment:
 
-All metrics are reported as mean $plus.minus$ standard deviation across
-cross-validation folds. Where comparison between models is made, performance
-distributions across folds are visualized as boxplots to convey fold-level
-variability alongside the aggregate mean.
+- _True Positives_ (TP): Positive cases (PD) correctly classified as positive.
+- _True Negatives_ (TN): Negative cases (HC) correctly classified as negative.
+- _False Positives_ (FP): Negative cases (HC) incorrectly classified as positive.
+- _False Negatives_ (FN): Positive cases (PD) incorrectly classified as negative.
 
-/*
-TO FILL in:
-- Raw cohort subject counts (confirm exact numbers)
-- Tabular cohort counts after dropna()
-- Maximum epochs
-- Which architectures 5-fold-ed (confirm it's at minimum `25d_resnet` raw)
-- Whether fusion experiments completed 5-fold (they did not, right?)
-- The BIDS directory tree (once the server is back)
-*/
+The primary metric reported in this study is the Area Under the Receiver
+Operating Characteristic curve (AUC-ROC, or simply AUC). The ROC curve is a
+graphical plot that illustrates the diagnostic ability of a binary classifier
+system as its discrimination threshold is varied. It is generated by plotting
+the True Positive Rate (TPR), or sensitivity, against the False Positive Rate
+(FPR) at various threshold settings. The True Positive Rate and False Positive
+Rate are defined as
+
+$
+"TPR" = "TP" / ("TP" + "FN") " " ,
+\
+"FPR" = "FP" / ( "TN" + "FP") = 1 - "Specifity (TPR)" " ".
+$
+
+The AUC measure provides a measure of performance across all possible
+classification thresholds. An AUC value of $1.0$ indicates a perfect classifier,
+whereas a value of $0.5$ signifies a performance no better than random guessing.
+To provide a granular view of model performance at the default operational
+threshold, accuracy, sensitivity, and specificity are reported as secondary
+metrics.
+
+- _Accuracy_ measures the proportion of total correct predictions (both positive
+  and negative) among the total number of cases examined and is defined as the
+  ratio of correct predictions against the total number of predictions:
+
+$ "Accuracy" = ("TP" + "TN") / ("TP" + "TN" + "FP" + "FN") " ". $
+
+Given the balanced class distribution enforced by the downsampling protocol in this work, the standard accuracy yields an identical value to the balanced accuracy across all experiments.
+
+- _Sensitivity_ (also referred to as recall) measures the model's ability to correctly identify actual positive cases (the fraction of true PD cases detected):
+
+$ "Sensitivity" = "TP" / ("TP" + "FN" ) " " . $
+
+- _Specificity_ (or True Negative Rate) measures the model's capacity to correctly identify actual negative cases (the fraction of true HC detected):
+
+$ "Specifity" = "TN" / ("TN" + "FP" ) " " . $
+
+
+- _Precision_ measures the proportion of predicted positive cases that are truly positive:
+
+$ "Precision" = "TP" / ("TP" + "FP") " ". $
+
+- _F1-score_ combines precision and recall into a single metric by computing
+  their harmonic mean:
+
+$ "F1" = 2 ("precision" dot "recall") / ("precision" + "recall") = 2"TP" / (2"TP" + "FP" + "FN") $
+
+The F1-score is particularly useful when both false positives and false
+negatives are clinically relevant, as it balances the trade-off between
+precision and recall. A value of $1.0$ indicates perfect classification,
+whereas lower values reflect decreasing agreement between predictions and the
+ground truth.
+
+
+To ensure reproducibility and statistical validity, all metrics are reported as
+the mean $plus.minus$ standard deviation ($sigma$) computed across the validation folds of the cross-validation architecture. Where direct performance comparisons between distinct model architectures are made, the complete performance distributions across folds are visualized using boxplots. This approach effectively conveys fold-level variability alongside the aggregate mean, offering insight into the stability and robustness of the models.
+

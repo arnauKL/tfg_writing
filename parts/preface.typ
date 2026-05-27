@@ -29,16 +29,20 @@
   #page()[
     #heading(numbering: none, outlined: false)[Acknowledgements]
     First and foremost, I would like to express my deepest gratitude to my
-    advisor, Adrià Casamitjana, for his invaluable guidance and patience,
-    throughout the development of this thesis; and to Xavier Lladó and Arnau
-    Oliver for putting me in contact with him and introducing me to medical
-    imaging.
+    tutor, Adrià Casamitjana, for his invaluable guidance and patience
+    throughout the development of this thesis, as well as to Xavier Lladó and Arnau
+    Oliver for putting me in contact with him and introducing me to the
+    field of medical imaging.
     I am also grateful to the staff at #smol[VICOROB] for providing the academic foundation
     and computational resources that made this thesis possible.
 
-    I'd also like to thank my acquaintances.
+    I would also like to extend my gratitude to the members of the evaluation
+    committee for taking the time to review this work.
 
-    //Finally, I want to thank my mom; I wish to be like her when I grow up./
+    I owe a special debt of gratitude to my friends, with whom I’ve had the
+    privilege of suffering during these years.
+
+    Finally, I want to thank my mom; I still aspire to be like her when I grow up.
     
     #v(1fr)
     // This is a requirement, PPMI mandates that this block is in the

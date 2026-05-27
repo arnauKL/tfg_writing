@@ -134,7 +134,7 @@
     first-line-indent: (amount: INDENT, all: false),
     justify: true,
     spacing: 1em,
-    leading: 0.5em + 1pt,
+    leading: 0.6em + 1pt,
     justification-limits: (
       // allow adjusting spaces to fix justification
       // spacing -> spaces between words
@@ -381,8 +381,9 @@
     set text(0.85em)
     smallcaps(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body
   }
-  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.where(kind: table): set figure.caption(position: bottom)
   show figure.where(kind: table): set figure(gap: 1em)
+  show figure.where(kind: table): set text(number-type: "lining")
   show figure.where(kind: table): it => { v(1.5em, weak: true) + it + v(2em, weak: true) }
 
   pagebreak()
@@ -493,17 +494,19 @@
 /// Custom table function.
 #let tablef(..args) = {
   set table.hline(stroke: 0.5pt)
+  set par(justify: false)
   table(
+    row-gutter: .35em,
     align: left,
     stroke: (x, y) => {
       if (y == 0) {
         (
-          top: 1pt,
-          bottom: 0.5pt,
+          top: 0pt,
+          bottom: (thickness: 0.75pt, cap: "round"),
         )
       }
     },
     ..args.named(),
-    ..(args.pos() + (table.hline(stroke: 1pt),)),
+    ..(args.pos() + (table.hline(stroke: 0pt),)),
   )
 }

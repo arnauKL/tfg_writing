@@ -10,7 +10,7 @@
 // projection to the striatum. Explain why dopamine loss in the striatum is
 // what DaTscan measures
 //== DaTscan (#super[123]Ioflupane)
-// Explain the mechanism (DAT transporter binding, SPECT imaging)
+// mechanism (DAT transporter binding, SPECT imaging)
 // what the resulting images look like (comma vs period visual)
 // why it produces the image pattern the CNN will learn to classify
 // The PPMI protocol docs and original validation papers are adequate here
@@ -35,24 +35,18 @@
 
 === Overview and Epidemiology
 
-// This paragraph is shit
-While the global scaling of Parkinson's disease presents a clear macroeconomic 
-crisis, its clinical footprint is highly dependent on demographic vectors. The 
-disorder exhibits a stark age-dependent incidence profile, with a median age of 
-onset centered around 60 years, though young-onset cases present distinct 
-clinical challenges. Furthermore, epidemiological data consistently reveal a 
-sex-based divergence, with men affected at an approximate ratio of 1.5:1
-compared to women @poeweParkinson2017. 
+Parkinson's disease (PD) is the second most common neurodegenerative disorder
+after Alzheimer's disease, affecting more than 10 million people worldwide. Its
+prevalence increases markedly with age, with onset typically occurring after 60
+years of age, although earlier forms also exist. Epidemiological studies
+consistently report a higher incidence in men than in women, with a
+male-to-female ratio of approximately 1.5:1. @poeweParkinson2017
 
-The structural burden of PD is characterized not only by healthcare-related 
-expenditures but also by the hidden economic toll of informal caregiving and 
-premature labor force departure. Because the clinical diagnosis is preceded by an 
-extended prodromal phase, patients frequently navigate a costly diagnostic
-journey before arriving at a confirmed classification @faulkEconomic. Developing
-highly objective, automated screening tools is therefore essential to alleviate
-both the clinical bottlenecks and the compounding economic strains on healthcare
-infrastructure.
-
+Clinically, PD is characterized by a progressive combination of motor and
+non-motor symptoms resulting from degeneration of the nigrostriatal dopaminergic
+system. As life expectancy increases globally, the number of individuals living
+with PD is expected to continue rising, creating a growing healthcare burden and
+motivating the development of objective diagnostic and monitoring tools.
 
 === Pathophysiology: The Nigrostriatal Dopaminergic System
 
@@ -106,15 +100,10 @@ provides additional diagnostic support.
 // onset is such a cool word
 
 PD also produces a range of non-motor symptoms that frequently predate the motor
-phase by years. Hyposmia (reduced olfactory sensitivity, assessed in this thesis
-using the UPSIT score), 
-// Should I explain UPSIT here or later
-REM sleep behavior disorder, constipation, and affective
-symptoms such as depression and anxiety belong to this prodromal syndrome and
-are increasingly used in research criteria for preclinical PD
-@tolosaChallenges2021. The presence of these markers in subjects without motor
-symptoms is of direct relevance to the #smol[PPMI] cohort structure and to the
-multimodal features used in this thesis (see #redt[_próximamente en cines_]).
+phase by years. Hyposmia, REM sleep behavior disorder, constipation, and
+affective symptoms such as depression and anxiety belong to this prodromal
+syndrome and are increasingly used in research criteria for preclinical PD
+@tolosaChallenges2021.
 
 The primary diagnostic challenge is the clinical overlap with conditions that
 mimic parkinsonism: essential tremor (#smol[ET]), drug-induced parkinsonism 
@@ -127,20 +116,9 @@ ambiguity, dopamine transporter (DaTscan) imaging has become a vital
 objective adjunct to confirm or rule out an underlying neurodegenerative 
 syndrome associated with dopamine deficiency (#smol[NSDD]).
 
-The real-world impact of this modality on clinical management was demonstrated
-by Isaacson et al., who examined a cohort of 201 consecutive patients
-presenting with clinically questionable #smol[NSDD]. The investigators
-identified that DaTscan imaging provides crucial clarity across an array of
-ambiguous clinical scenarios, including patients with subtle early symptoms,
-prominent action tremors, suspected #smol[DIP], or a suboptimal response to
-levodopa. Notably, imaging also unmasked misdiagnoses in individuals who had
-carried a PD label for three to five years but failed to show the expected
-clinical progression or motor fluctuations. Within this uncertain cohort,
-DaTscan categorized 58.7% of the cases as abnormal, 37.8% as normal, and only
-3.5% as inconclusive. Crucially, these objective findings reoriented clinical
-directions, altering the definitive diagnosis in 39.8% of patients and
-directly driving medication therapy modifications in 70.1% of cases @isaacsonImpact2021.
-
+Several studies have demonstrated that DaTscan imaging substantially influences
+clinical decision-making in diagnostically uncertain cases, frequently leading
+to changes in diagnosis and treatment strategy. @isaacsonImpact2021
 
 == DaTscan: Imaging the Dopamine Transporter
 
@@ -200,7 +178,6 @@ tremor and drug-induced parkinsonism, produce normal DaTscan images, making the
 scan a powerful discriminator between dopamine-deficiency and non-deficiency
 parkinsonism, even when clinical features are indistinguishable.
 
-
 // Add sentence explaining why posterior putamen is affected first clinically
 
 === Semi-Quantitative Analysis
@@ -221,14 +198,11 @@ within each hemisphere, as implemented in the DaTQUANT software utiliated by the
 
 Semi-quantitative #smol[SBR] provides an objective, reproducible numerical
 summary of tracer binding that correlates with disease severity and disease
-duration, and forms the basis of the classical machine learning baseline in this
-thesis. However, it compresses the full spatial information of the
+duration. However, it compresses the full spatial information of the
 three-dimensional #smol[SPECT] volume into at most a handful of regional means,
 inevitably discarding information about the spatial distribution of uptake
 within regions, asymmetry patterns, and subtle texture changes that may be
 diagnostically informative.
-
-These SBR-derived features constitute the basis of the classical ML baselines evaluated in this thesis.
 
 === Clinical Utility and Limitations
 
@@ -245,27 +219,20 @@ approaches.
 
 // pdt revisar
 
-/*
-
 == Classical ML for Parkinson's Classification
 
 Before the current era of deep learning, automated analysis of DaTscan images
 typically followed a two-stage pipeline: extract a compact set of handcrafted
-features from the image, then train a classical classifier on those features. In
-this thesis, the classical baseline operates on the semi-quantitative SBR
-features derived by DaTQUANT, putamen and caudate binding ratios and their
-hemispheric asymmetries, combined with multimodal clinical variables including
-MDS-UPDRS III (motor severity), UPSIT (olfaction), MoCA (cognition), age, and
-sex.
+features from the image, then train a classical classifier on those features.
 
-Three classical classifiers are employed:
+Several classical classifiers are commonly employed:
 
 *Support Vector Machine (SVM).* An SVM learns a maximum-margin hyperplane in the
 feature space that separates the two classes. For non-linearly separable data,
 the kernel trick implicitly maps features into a higher-dimensional space where
 a linear boundary suffices. SVMs generalize well in high-dimensional settings
 and with limited data, making them a natural baseline for medical applications
-//with small cohort sizes @cortes1995.
+with small cohort sizes @cortesSupportvector1995.
 
 *Logistic Regression (LR).* LR is a linear binary classifier
 that models the log-odds of class membership as a linear function of the input
@@ -273,32 +240,31 @@ features, producing calibrated probability estimates. Its simplicity and
 interpretability make it a standard reference point in clinical machine
 learning.
 
-These classical baselines serve a dual purpose: they establish the diagnostic
-information available from the handcrafted SBR features alone, and they provide
-the comparison against which the added complexity of end-to-end CNN learning
-must be justified. SHAP (SHapley Additive exPlanations) analysis applied to the
-trained classical models further quantifies the relative contribution of each
-feature to the classification decision, informing the feature selection strategy
-for the multimodal fusion experiments.
+*Random Forest.* Random Forest is an ensemble learning method that combines the
+predictions of multiple decision trees trained on random subsets of the data and
+features. By averaging across many trees, the model reduces variance and
+typically achieves better generalization than a single decision tree.
 
-== Convolutional Neural Networks
+*Gradient Boosting.* Gradient Boosting constructs an ensemble sequentially, with
+each new tree focusing on correcting the errors of the previous ones. This
+iterative process often produces highly accurate predictive models while
+remaining applicable to heterogeneous clinical data.
 
-=== From Perceptron to Spatial Feature Learning
+
+== Convolutional Neural Networks (CNN)
 
 The foundational processing unit of a neural network is the perceptron: a model
 that computes a weighted sum of its inputs and passes the result through a
 nonlinear activation function $sigma$:
 
-$ hat(y) = sigma(bold(w)^T bold(x) + b) $
+$ hat(y) = sigma(w^T x + b) " " , $
 
-where $bold(w)$ are learnable weights, $bold(x)$ is the input vector, and $b$ is
-a bias term. Stacking multiple layers of such units creates a multilayer
-perceptron (MLP), which can in principle approximate any continuous function.
-However, applying MLPs directly to images is impractical: a flat vector of pixel
+where $w$ are learnable weights, $x$ is the input vector, and $b$ is a bias
+term. Stacking multiple layers of such units creates a multilayer perceptron
+(MLP), which can in principle approximate any continuous function. However,
+applying MLPs directly to images is impractical: a flat vector of pixel
 intensities contains no spatial structure, and the number of parameters grows
-prohibitively with image resolution. A 128×128×128 voxel volume, such as those
-processed in this thesis, would require hundreds of millions of parameters in a
-single fully connected layer.
+exponentially with image resolution.
 
 === Convolutional Layers
 
@@ -314,62 +280,52 @@ encode powerful inductive biases about natural images. _Local connectivity_
 means each output value depends on only a small receptive field rather than the
 entire input, reflecting the fact that visual features are spatially local.
 _Weight sharing_ means the same filter is applied at every spatial location,
-which provides translation equivariance — a filter trained to detect a feature
-//in one part of the image can detect it anywhere @lecun1998. These properties
+which provides translation equivariance, a filter trained to detect a feature
+in one part of the image can detect it anywhere @lecunGradientbased1998. These properties
 allow CNNs to learn spatial patterns efficiently from far fewer parameters than
 a fully connected network would require.
 
 In practice, a convolutional layer learns many filters in parallel, each
 producing a separate feature map that highlights different local patterns. After
-convolution, a pointwise nonlinearity — typically the Rectified Linear Unit,
-ReLU: $sigma(x) = max(0, x)$ — is applied, followed optionally by a pooling
+convolution, a pointwise nonlinearity, typically the Rectified Linear Unit,
+ReLU: $sigma(x) = max(0, x)$, is applied, followed optionally by a pooling
 operation (usually max-pooling) that downsamples the feature map spatially,
 increasing the effective receptive field of subsequent layers and introducing
-//mild translation invariance @lecun1998.
-
-=== Hierarchical Feature Extraction
+mild translation invariance @lecunGradientbased1998.
 
 By stacking convolutional, activation, and pooling layers, a CNN progressively
 transforms raw voxel intensities into increasingly abstract representations.
-Early layers respond to primitive local patterns — edges, intensity gradients —
-while intermediate layers detect compound structures such as curved surfaces or
-locally textured regions. Deeper layers encode higher-level semantic concepts
-relevant to the classification task: in the DaTscan context, the shape and
-symmetry of the striatal uptake pattern, the relative intensity of the putamen
-relative to the caudate, and the sharpness of the boundary between specific and
-non-specific uptake. The final layers are typically fully connected and produce
-a probability distribution over the target classes via a sigmoid (binary case)
-or softmax (multiclass) output.
+Early layers respond to primitive local patterns such as edges and intensity
+gradients, while intermediate layers detect compound structures such as curved
+surfaces or locally textured regions.
+
+Deeper layers encode higher-level concepts relevant to the classification task:
+in the DaTscan context, the shape and symmetry of the striatal uptake pattern or
+the relative intensity of the putamen relative to the caudate. The final layers
+are typically fully connected and produce a probability distribution over the
+target classes via a sigmoid (binary case) or softmax (multiclass) output.
 
 === Landmark Architectures
 
 The deep learning revolution in computer vision is conventionally dated to 2012,
-//when AlexNet @krizhevsky2012 — an eight-layer CNN trained on 1.2 million
-ImageNet images using GPU-accelerated backpropagation — won the ImageNet
-Large-Scale Visual Recognition Challenge (ILSVRC) with a top-5 error rate that
-was approximately 10 percentage points below the prior state of the art. AlexNet
-demonstrated conclusively that deep end-to-end trained CNNs, given sufficient
-data and compute, vastly outperform handcrafted feature pipelines.
+when AlexNet @krizhevskyImageNet2017 @Google (an eight-layer CNN trained on 1.2 million
+ImageNet images) won the ImageNet Large-Scale Visual Recognition Challenge
+(ILSVRC) with a top-5 error rate that was approximately 10 percentage points
+below the prior state of the art. AlexNet demonstrated conclusively that deep
+end-to-end trained CNNs, given sufficient data and compute, vastly outperform
+handcrafted feature pipelines.
 
-//VGGNet @simonyan2014 extended this insight by showing that very deep networks
-(16--19 layers) built entirely from small 3×3 convolutional filters achieved
-strong performance, establishing architectural depth as a key design principle.
+VGGNet @simonyanVery2015 extended this insight by showing that very deep
+networks (16--19 layers) built entirely from small $3 times 3$ convolutional
+filters achieved strong performance, establishing architectural depth as a key
+design principle.
 
-//ResNet @he2016 then resolved the fundamental obstacle to training very deep
-networks: the vanishing gradient problem, in which gradients shrink
-exponentially as they backpropagate through many layers, preventing early layers
-from learning effectively. The ResNet solution — _residual connections_ (skip
-connections) -- adds the input of a block directly to its output:
-
-$ bold(y) = F(bold(x)) + bold(x) $
-
-where $F(bold(x))$ represents the residual mapping learned by the stacked
-layers. This identity shortcut allows gradients to flow directly to earlier
-layers during backpropagation, enabling stable training of networks with 50,
-//101, or 152 layers @he2016. ResNet-18 and ResNet-50 variants are used in this
-thesis, both as the backbone of the
-2.5D fusion model (pretrained on ImageNet) and as the architecture underlying
-MedicalNet.
+ResNet introduced residual connections, which allow information and gradients to
+bypass intermediate layers through identity shortcuts. These connections
+mitigate the vanishing gradient problem and enable the successful training of
+substantially deeper networks. ResNet architectures remain among the most widely
+used CNN backbones in both natural-image and medical-imaging applications
+@heDeep2016.
 
 == Deep Learning in Medical Imaging
 
@@ -377,102 +333,70 @@ MedicalNet.
 
 Following AlexNet's breakthrough, CNN-based methods rapidly displaced
 handcrafted feature pipelines across virtually every domain of medical image
-analysis. By the mid-2010s, deep learning was delivering state-of-the-art
-performance in chest X-ray classification, skin lesion grading, retinal disease
-detection, and neuroimaging analysis, as comprehensively surveyed by Litjens et
-//al. @litjens2017. Applied to DaTscan specifically, CNN classifiers trained on
-PPMI data have achieved AUC values above
-//0.95 across several published studies @kurmi2022 — motivating the present work.
+analysis /*source for this???*/. By the mid-2010s, deep learning was delivering
+state-of-the-art performance in chest X-ray classification, skin lesion grading,
+retinal disease detection, and neuroimaging analysis @litjensSurvey2017. Applied
+to DaTscan specifically, CNN classifiers trained on PPMI data have achieved AUC
+values above 0.95 across several published studies @kurmiEnsemble2022.
 
-However, medical imaging presents challenges that do not arise on natural image
-benchmarks. The most critical is data scarcity: expert-annotated medical images
-are expensive to acquire and curate, and most clinical datasets number in the
-hundreds of subjects rather than the millions available in ImageNet. This makes
-regularization, data augmentation, and transfer learning essential design
-choices rather than optional refinements. Class imbalance, domain shift across
-acquisition sites, and the three-dimensional nature of volumetric scans further
-complicate the naive application of architectures designed for 2D RGB
-photographs.
+However, medical imaging differs from conventional computer vision in several
+important respects. Datasets are typically smaller, annotations require expert
+clinicians, and images are frequently three-dimensional rather than
+two-dimensional. These constraints increase the risk of overfitting and make
+transfer learning particularly attractive.
 
-/*
 == Transfer Learning
 
 === Motivation
 
 Training a deep CNN from scratch requires large quantities of labeled data to
-achieve robust generalization. When labeled data are scarce — as is inherently
-the case in clinical imaging studies — the model can easily memorize the
-training set without learning generalizable representations. Transfer learning
-addresses this by initializing the network with weights learned on a large
-auxiliary dataset, rather than randomly, before fine-tuning on the target task
-@pan2010.
+achieve robust generalization. When labeled data are scarce the model can easily
+memorize the training set without learning generalizable representations.
+Transfer learning addresses this by initializing the network with weights
+learned on a large auxiliary dataset, rather than randomly, before fine-tuning
+on the target task @panSurvey2010.
 
-The justification is hierarchical feature reuse: the early and intermediate
-layers of a CNN trained on any large visual dataset learn to detect general
-patterns — edges, textures, color gradients — that are useful across diverse
-image domains. Only the deeper, task-specific layers need substantial
-adaptation. Beginning training from a good initialization rather than noise
-reduces the effective optimization problem to learning a relatively small
-correction to an already informative representation.
+The early and intermediate layers of a CNN trained on any large visual dataset
+learn to detect general patterns that are useful across diverse image domains.
+Only the deeper layers need adaptation. Beginning training from a done
+initialization rather than random weights reduces the optimization problem to
+learning a correction to an already informative representation.
 
 === Transfer from ImageNet
 
-The de facto source dataset for transfer learning is ImageNet @deng2009, a
+The de facto source dataset for transfer learning is ImageNet @dengImageNet2009, a
 corpus of approximately 1.3 million natural images across 1,000 object
 categories. Pretrained weights for ResNet, VGG, InceptionNet, and related
 architectures are freely available and have been shown in numerous studies to
-improve performance in data-limited medical imaging regimes @raghu2019. The
-domain gap between natural RGB photographs and medical scans is real — different
-intensity statistics, different image structure, grayscale rather than color —
-but low-level features such as edge detectors transfer across this gap, and the
-improved initialization reliably outperforms random initialization when data is
-limited @raghu2019.
-
-In this thesis, the 2.5D model fine-tunes a ResNet18 pretrained on ImageNet. The
-three MIP channels effectively mimic the RGB input format expected by the
-pretrained network, allowing the pretrained convolutional filters to be applied
-without architectural modification.
+improve performance in data-limited medical imaging regimes
+@raghuTransfusion2019. The
+domain gap between natural RGB photographs and medical scans is present 
+but low-level features such as edge detectors transfer across this gap.
 
 === Transfer from Medical Imaging Data: MedicalNet
 
 An alternative is to pretrain on medical imaging data directly, eliminating the
-domain gap. MedicalNet (also referred to as Med3D in the implementation) is a
-ResNet-10 backbone pretrained on 23 heterogeneous medical image segmentation
-datasets, including SPECT, MRI, and CT data @chen2019. Pretraining on in-domain
-data is expected to provide representations that are more semantically aligned
-with the target task than ImageNet features.
+domain gap. MedicalNet is a ResNet-10 backbone pretrained on 23 heterogeneous
+medical image segmentation datasets, including SPECT, MRI, and CT data
+@chenMed3D2019. Pretraining on in-domain data is expected to provide
+representations that are more semantically aligned with the target task than
+ImageNet features.
 
-In this thesis, a MedicalNet backbone is fine-tuned for binary DaTscan
-classification by replacing the segmentation head with a global average pooling
-layer followed by a fully connected classification head. Results are compared
-against the ImageNet- pretrained 2.5D approach to assess whether domain-specific
-pretraining compensates for the reduced dataset size used for the pretraining
-backbone relative to ImageNet.
-*/
-
-== Multimodal Learning: Combining Images with Clinical Data
+== Multimodal Learning
 
 === Rationale
 
 A DaTscan image captures a single modality of a fundamentally multidimensional
 clinical picture. The neurologist diagnosing PD synthesizes imaging findings
 with the motor examination, olfactory testing, cognitive screening, patient
-history, and demographic context — never relying on a single source of
-information. Multimodal machine learning formalizes this integration by
-combining representations from multiple data streams within a single predictive
-model, aiming to capture complementary information that no individual modality
-//fully provides @acosta2022.
-
-In the PPMI dataset, rich tabular clinical variables are available alongside
-DaTscan images for each subject. The features used in this thesis include
-MDS-UPDRS III (quantitative motor function), UPSIT (olfactory sensitivity, a
-well-validated prodromal PD marker), MoCA (cognitive screening), and demographic
-variables (age, sex). Each captures a different biological dimension of PD:
-motor, sensory, cognitive, and epidemiological.
+history, and demographic context. Multimodal machine learning formalizes this
+integration by combining representations from multiple data streams within a
+single predictive model, aiming to capture complementary information that no
+individual modality fully provides @doanBridging2026.
 
 === Fusion Strategies
 
-// Three main fusion paradigms are recognized in the literature @li2024:
+Three main fusion paradigms are recognized in the literature @liReview2024:
 
 *Early fusion* concatenates raw features from all modalities into a single input
 before any processing. In the image-plus-tabular setting this is rarely
@@ -483,9 +407,7 @@ spaces.
 output predictions, for example, by averaging predicted probabilities or
 learning a meta-classifier on the combined outputs. This approach is modular and
 computationally inexpensive: existing single-modality models can be reused
-without retraining. In this thesis, late fusion averages the probability output
-of the best CNN model with that of a logistic regression trained on the tabular
-features.
+without retraining. 
 
 // this is the guillem mode:
 *Intermediate (feature-level) fusion* extracts learned representations from each
@@ -494,32 +416,5 @@ produces a compact embedding vector from the CNN backbone; the tabular branch
 transforms clinical variables through a small MLP; the two embeddings are
 concatenated and passed through a joint classification head. This Y-shaped
 architecture allows each branch to learn a suitable representation of its
-modality before integration, and is the second fusion strategy evaluated in this
-thesis. The CNN backbone is frozen during fusion training, which limits
-overfitting on the small labeled dataset.
-
-potential figure here?
-fusion architecture diagram of the Y-shaped intermediate fusion
-network: CNN branch (frozen ResNet18 backbone) producing a 512-dim embedding,
-tabular MLP branch, concatenation, and shared classification head]
-
-== Evaluation Metrics
-
-Given the binary classification setup (PD vs. HC) and the use of balanced
-datasets, four standard metrics are reported throughout. The _Area Under the ROC
-Curve_ (AUC) provides a threshold-independent summary of discriminative
-performance, ranging from 0.5 (chance) to 1.0 (perfect separation); it is the
-primary reported metric. _Accuracy_ measures the fraction of correctly
-classified samples and is interpretable when classes are balanced. _Sensitivity_
-(recall) measures the fraction of true PD cases correctly identified —
-clinically the most important metric, since a missed PD diagnosis has serious
-consequences for the patient. _Specificity_ measures the fraction of healthy
-controls correctly classified as such. In settings where the dataset is balanced
-by downsampling, accuracy and balanced accuracy coincide.
-
-All experiments use stratified $k$-fold cross-validation (2-fold for initial
-architecture screening, 5-fold for final evaluation), with the best model per
-fold selected by validation AUC. Performance is reported as mean $plus.minus$ standard
-deviation across folds, and boxplots are used to visualize the fold-level
-distribution of each metric.
-*/
+modality before integration. The CNN backbone is frozen during fusion training,
+which limits overfitting on the small labeled dataset.
