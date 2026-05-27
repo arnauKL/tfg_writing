@@ -308,11 +308,11 @@ target classes via a sigmoid (binary case) or softmax (multiclass) output.
 === Landmark Architectures
 
 The deep learning revolution in computer vision is conventionally dated to 2012,
-when AlexNet @krizhevskyImageNet2017 @Google (an eight-layer CNN trained on 1.2 million
+when AlexNet @krizhevskyImageNet2017 @Google (an eight-layer #smol[CNN] trained on 1.2 million
 ImageNet images) won the ImageNet Large-Scale Visual Recognition Challenge
 (ILSVRC) with a top-5 error rate that was approximately 10 percentage points
 below the prior state of the art. AlexNet demonstrated conclusively that deep
-end-to-end trained CNNs, given sufficient data and compute, vastly outperform
+end-to-end trained #smol[CNN]s, given sufficient data and compute, vastly outperform
 handcrafted feature pipelines.
 
 VGGNet @simonyanVery2015 extended this insight by showing that very deep

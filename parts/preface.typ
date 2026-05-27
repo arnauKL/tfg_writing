@@ -42,7 +42,7 @@
     I owe a special debt of gratitude to my friends, with whom I’ve had the
     privilege of suffering during these years.
 
-    Finally, I want to thank my mom; I still aspire to be like her when I grow up.
+    //Finally, I want to thank my mom; I still aspire to be like her when I grow up.
     
     #v(1fr)
     // This is a requirement, PPMI mandates that this block is in the

@@ -92,6 +92,7 @@ multiple visits and from participants who did not undergo imaging at baseline.
 
 === Legal and Ethical Considerations
 
+// This section is a requirement
 
 Access to PPMI data was requested and granted through the official PPMI data use
 agreement, which restricts use to research purposes and prohibits
@@ -222,8 +223,8 @@ images were used as acquired, without spatial normalization.
 
 #figure(
   grid(
-    image("../assets/figures/methods/unregistered_images.svg", width: 80%),
-    image("../assets/figures/methods/registered_images.svg", width: 80%)
+    image("../assets/figures/methods/unregistered_images.svg", width: 100%),
+    image("../assets/figures/methods/registered_images.svg", width: 100%)
   ),
   placement: auto,
   caption: [Images from the `raw` set (above, multiple different sizes) compared to registered images

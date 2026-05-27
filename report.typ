@@ -20,8 +20,8 @@
 #include "parts/4_hypothesis_and_objectives.typ"
 #include "parts/5_materials_and_methods.typ"
 #include "parts/6_results.typ"
-//#include "parts/7_discussion.typ"
-//#include "parts/8_conclusions.typ"
+#include "parts/7_discussion.typ"
+#include "parts/8_conclusions.typ"
 
 #bibliography("assets/references.bib", title: [References])
 

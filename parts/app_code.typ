@@ -9,4 +9,4 @@ The repository contains the preprocessing pipeline, model implementations,
 training scripts, evaluation utilities, and experiment configuration files used
 throughout the thesis.
 
-The source code is distributed under the BSD 3-Clause License.
+//The source code is distributed under the BSD 3-Clause License.
