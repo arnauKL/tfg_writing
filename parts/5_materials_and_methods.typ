@@ -4,9 +4,9 @@
 #let dims(it) = {
   [ #it $times$ #it $times$ #it ]
 }
-#show regex("\bPPMI\b"): smol[ppmi]
+#show regex("\bPPMI\b"): smol[PPMI]
 #show regex("\bSWEDD\b"): smol[SWEDD]
-#show regex("\bBIDS\b"): smol[bids]
+#show regex("\bBIDS\b"): smol[BIDS]
 
 = Materials and Methods
 
@@ -21,9 +21,9 @@ under a standardized acquisition protocol. The dataset is openly accessible to
 qualified researchers at #link("www.ppmi-info.org").
 
 This work makes use of the three-dimensional DaTscan SPECT volumes and a curated
-tabular file (`PPMI_Curated_Data_Cut_Public_20240729.xlsx`) containing
-semi-quantitative image-derived features alongside clinical assessments
-collected at each visit. These two data types are available within PPMI.
+tabular file containing semi-quantitative image-derived features alongside
+clinical assessments collected at each visit. These two data types are available
+within PPMI.
 
 === Study Population and Cohort Selection
 
@@ -46,14 +46,14 @@ there.
 */
 
 Only subjects with a DaTscan image available and a confirmed diagnosis of either
-Parkinson's disease (PD) or healthy control (HC) were used. Subjects classified
-under other PPMI diagnostic categories such as prodromal or prodromal were
-excluded to avoid introducing ambiguous labels into the training set. SWEDD
-(Scans Without Evidence of Dopaminergic Deficit) patients were excluded from
-training as well but retained for later inference evaluation.
+Parkinson's disease (PD) or healthy control (HC) were used. Subjects with
+Parkinson's symptoms at prodromal stages  were excluded from the analysis to
+avoid introducing ambiguous labels into the training set. SWEDD (Scans Without
+Evidence of Dopaminergic Deficit) patients were excluded from training as well
+but retained for later inference evaluation.
 
 To limit each subject to a single observation and avoid temporal data leakage,
-only the baseline session (`sesBL` in BIDS notation, described in @sec-bids) was
+only the baseline session (`ses-BL` in BIDS notation, described in @sec-bids) was
 retained for each participant. As seen in @tab-dataset, the raw (unregistered)
 image set contained 158 HC and 618 PD subjects; the registered image set
 contained 124 HC and 561 PD subjects after applying the same filter. The
@@ -140,10 +140,11 @@ work and @BIDS_ppmi shows this structure in the server itself.
 
 
 #figure(
+  text(0.9em,
   tablef(
-    columns: (1fr, 1.5fr, 1fr),
+    columns: (auto, auto, auto),
     align: (left, left, left),
-    [*BIDS element*], [*Description*], [*Example*],
+    [BIDS element], [Description], [Example],
 
     [`sub-ID`], [Unique subject identifier], [`sub-3001`],
     [`ses-LABEL`], [Session label (timepoint)], [`ses-BL`],
@@ -151,7 +152,7 @@ work and @BIDS_ppmi shows this structure in the server itself.
     [`.nii.gz`], [Compressed NIfTI image volume], [`sub-3001_ses-BL_pet.nii.gz`],
     [`.json`], [Acquisition metadata sidecar], [`sub-3001_ses-BL_pet.json`],
     [`participants.tsv`/`.json`], [Subject-level metadata table], [age, sex, diagnosis],
-  ),
+  )),
   caption: [Key BIDS standard elements used in this work.],
 ) <tab-bids>
 
@@ -218,7 +219,8 @@ provides a composable, GPU-compatible pipeline of medical image transforms.
 Two parallel image sets were maintained throughout all experiments and never
 combined: `raw` (unregistered, native acquisition space) images and `registered`
 (spatially normalized) images (see @fig-compareraw-reg). Registered images were
-produced by the PPMI processing pipeline using affine registration to a standard
+produced by an in-house registration pipeline
+@casamitjanadiazAnatomicallyaware2024 using affine registration to a standard
 DaTscan template, making all volumes nominally comparable in voxel space. Raw
 images were used as acquired, without spatial normalization.
 
@@ -272,7 +274,7 @@ networks.
 
 #import fletcher.shapes: diamond
 #figure(
-  diagram(
+  text(0.8em, diagram(
     node-stroke: 1pt,
     node-corner-radius: 1pt,
     // 2.5d
@@ -291,9 +293,9 @@ networks.
     node((1.8,.75), [Cropping]),
     edge("-|>"),
     node((2.4,.75), [CNN])
-  ),
+  )),
   caption: [Preprocessing pipelines followed for both 2.5D
-  (imageNet) and 3D CNNs.]
+  (top) and 3D CNNs (bottom).]
 )<pipelinefig>
 
 #figure(
@@ -726,3 +728,13 @@ ground truth.
 To ensure reproducibility and statistical validity, all metrics are reported as
 the mean $plus.minus$ standard deviation ($sigma$) computed across the validation folds of the cross-validation architecture. Where direct performance comparisons between distinct model architectures are made, the complete performance distributions across folds are visualized using boxplots. This approach effectively conveys fold-level variability alongside the aggregate mean, offering insight into the stability and robustness of the models.
 
+== Post-hoc SWEDD Inference <sec-swedd-inference>
+
+To assess the specificity of the learned imaging representation, the
+best-performing trained model was applied post-hoc to the SWEDD cohort (Scans
+Without Evidence of Dopaminergic Deficit; $N = 57$), which was excluded from all
+training and model selection procedures. Inference was performed without
+retraining or fine-tuning, producing a predicted PD probability for each SWEDD
+patient. The resulting probability distributions were compared across HC, PD,
+and SWEDD cohorts using the Mann-Whitney U test. Statistical significance was
+assessed at $alpha = 0.05$.

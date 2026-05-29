@@ -2,12 +2,11 @@
 
 = Budget
 
-
 An estimation of costs has been tallied up in an effort to estimate what this
 project would cost to conduct from scratch. 
 
 As previously mentioned, the infrastructure used was a server with 3 GPUs
-provided by the research group #smol[VICOROB].
+provided by the research group VICOROB.
 
 As to the cost of personnel, an estimation has been done taking a biomedical
 engineer profile.
@@ -47,7 +46,7 @@ the IDEs, datasets and reference implementations).
     columns: 4,
     [Description],[Amount],[Price],[Total],
     [ASUS Laptop],[1],[1500 €],[1500 €],
-    [MIC1 server (VICOROB)],[300h],[10 €/h],[3000 €],
+    ["MIC1" server (VICOROB)],[300h],[10 €/h],[3000 €],
   )
 )
 

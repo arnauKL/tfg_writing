@@ -106,15 +106,15 @@ syndrome and are increasingly used in research criteria for preclinical PD
 @tolosaChallenges2021.
 
 The primary diagnostic challenge is the clinical overlap with conditions that
-mimic parkinsonism: essential tremor (#smol[ET]), drug-induced parkinsonism 
-(#smol[DIP]), and atypical parkinsonian syndromes such as multiple system 
-atrophy (#smol[MSA]), progressive supranuclear palsy (#smol[PSP]), and 
-corticobasal syndrome (#smol[CBS]). Consequently, the overall clinical accuracy of a 
+mimic parkinsonism: essential tremor (ET), drug-induced parkinsonism 
+(DIP), and atypical parkinsonian syndromes such as multiple system 
+atrophy (MSA), progressive supranuclear palsy (PSP), and 
+corticobasal syndrome (CBS). Consequently, the overall clinical accuracy of a 
 purely symptom-based PD diagnosis remains vulnerable to initial 
 misinterpretation, especially during early presentation. To resolve this diagnostic 
 ambiguity, dopamine transporter (DaTscan) imaging has become a vital 
 objective adjunct to confirm or rule out an underlying neurodegenerative 
-syndrome associated with dopamine deficiency (#smol[NSDD]).
+syndrome associated with dopamine deficiency (NSDD).
 
 Several studies have demonstrated that DaTscan imaging substantially influences
 clinical decision-making in diagnostically uncertain cases, frequently leading
@@ -135,7 +135,7 @@ DaTscan uses #super[123]I-ioflupane (#super[123]I-FP-CIT), a radiolabeled
 cocaine analogue with high affinity for the DAT. Following intravenous
 injection, the tracer crosses the blood-brain barrier and binds preferentially
 to DAT in the striatum. Single Photon Emission Computed Tomography
-(#smol[SPECT]) acquisition, typically performed 3–6 hours post-injection to
+(SPECT) acquisition, typically performed 3–6 hours post-injection to
 allow clearance of non-specific binding, reconstructs a three-dimensional map of
 tracer uptake. This map serves as a surrogate for the functional integrity of
 the nigrostriatal dopaminergic projection @booijAppropriate2013.
@@ -183,7 +183,7 @@ parkinsonism, even when clinical features are indistinguishable.
 === Semi-Quantitative Analysis
 
 The spatial complexity of DaTscan images is commonly reduced to a set of scalar
-metrics. The Striatal Binding Ratio (#smol[SBR]) is the most widely used
+metrics. The Striatal Binding Ratio (SBR) is the most widely used
 paradigm, defined as:
 
 $
@@ -191,18 +191,17 @@ $
 $
 
 where background activity is typically measured in the occipital cortex, a
-region demonstrating negligible #smol[DAT] expression. #smol[SBR] values are
-computed separately for the caudate, anterior putamen, and posterior putamen
-within each hemisphere, as implemented in the DaTQUANT software utiliated by the
-#smol[PPMI] dataset @neillPractical2021 @malyPerformance2025.
+region demonstrating negligible DAT expression. SBR values are computed
+separately for the caudate, anterior putamen, and posterior putamen within each
+hemisphere, as implemented in the DaTQUANT software utiliated by the PPMI
+dataset @neillPractical2021 @malyPerformance2025.
 
-Semi-quantitative #smol[SBR] provides an objective, reproducible numerical
-summary of tracer binding that correlates with disease severity and disease
-duration. However, it compresses the full spatial information of the
-three-dimensional #smol[SPECT] volume into at most a handful of regional means,
-inevitably discarding information about the spatial distribution of uptake
-within regions, asymmetry patterns, and subtle texture changes that may be
-diagnostically informative.
+Semi-quantitative SBR provides an objective, reproducible numerical summary of
+tracer binding that correlates with disease severity and disease duration.
+However, it compresses the full spatial information of the three-dimensional
+SPECT volume into at most a handful of regional means, inevitably discarding
+information about the spatial distribution of uptake within regions, asymmetry
+patterns, and subtle texture changes that may be diagnostically informative.
 
 === Clinical Utility and Limitations
 
@@ -214,8 +213,9 @@ differentiate PD from other neurodegenerative parkinsonian syndromes, all of
 which reduce nigrostriatal terminal density. Furthermore, like any imaging
 biomarker, DaTscan is normal in the presymptomatic phase before sufficient
 neurodegeneration has accumulated, and in rare cases may be normal even in
-clinically confirmed PD. These limitations motivate automated image-based
-approaches.
+clinically confirmed PD. These limitations motivate both automated image-based
+as well as multimodal approaches including other imaging and non-imaging
+biomarkers.
 
 // pdt revisar
 
@@ -308,11 +308,11 @@ target classes via a sigmoid (binary case) or softmax (multiclass) output.
 === Landmark Architectures
 
 The deep learning revolution in computer vision is conventionally dated to 2012,
-when AlexNet @krizhevskyImageNet2017 @Google (an eight-layer #smol[CNN] trained on 1.2 million
+when AlexNet @krizhevskyImageNet2017 @Google (an eight-layer CNN trained on 1.2 million
 ImageNet images) won the ImageNet Large-Scale Visual Recognition Challenge
 (ILSVRC) with a top-5 error rate that was approximately 10 percentage points
 below the prior state of the art. AlexNet demonstrated conclusively that deep
-end-to-end trained #smol[CNN]s, given sufficient data and compute, vastly outperform
+end-to-end trained CNNs, given sufficient data and compute, vastly outperform
 handcrafted feature pipelines.
 
 VGGNet @simonyanVery2015 extended this insight by showing that very deep
@@ -344,6 +344,31 @@ important respects. Datasets are typically smaller, annotations require expert
 clinicians, and images are frequently three-dimensional rather than
 two-dimensional. These constraints increase the risk of overfitting and make
 transfer learning particularly attractive.
+
+=== 2D, 2.5D, and 3D Architectures
+
+The most common approach in the literature converts the 3D SPECT volume
+into a 2D representation and applies architectures pretrained on ImageNet
+@dengImageNet2009. Variants include selecting axial slices that prominently
+display the striatum, computing maximum intensity projections (MIPs)
+along anatomical axes, or summing voxel intensities along the depth dimension.
+These strategies enable the use of standard 2D backbones with large pretrained
+weight libraries, reducing the effective number of parameters that must be
+learned from limited data. The trade-off is that collapsing a 3D volume into a
+2D representation necessarily discards information encoded in the full spatial
+arrangement of uptake.
+
+A practical middle ground, sometimes called a 2.5D approach, stacks projections
+from multiple anatomical axes as separate input channels, supplying the network
+with complementary views of the volume while retaining compatibility with
+standard 2D architectures @setioPulmonary2016. An extension of this approach has
+been used to train with ImageNet in this thesis.
+
+Volumetric 3D CNNs process the full SPECT volume directly and
+preserve all spatial context, which is in principle better suited to capture the
+pattern of striatal degeneration. In practice, however, 3D models lead to
+substantially higher memory usage and computational costs while requiring larger
+training sets to avoid overfitting.
 
 == Transfer Learning
 

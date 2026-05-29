@@ -50,9 +50,9 @@
   }
 }
 
-// #let smol(it) = { if debug { text(orange, smallcaps(lower(it))) } else {
-//   smallcaps(lower(it)) } }
-#let smol(it) = { it } 
+#let smol(it) = { if debug { text(orange, smallcaps(all: true, it)) } else {
+  smallcaps(all: true, it) } }
+//#let smol(it) = { it } 
 #let caps(it) = { if debug { text(green, upper(it)) } else { upper(it) } }
 
 #let redt(it) = { if show_red { text(red, it) } }
@@ -130,6 +130,10 @@
   set text(font: text-font, 12pt, fill: rgb("#141414"))
   set text(number-type: "old-style")
   show math.equation: set text(font: math-font, number-type: "lining")
+  show math.equation: it => {
+    show regex("\\b[A-Z]{3,}\\b"): it => math.upright(upper(it.text))
+    it
+  }
 
   set par(
     first-line-indent: (amount: INDENT, all: false),
@@ -166,7 +170,7 @@
   // inline raw
   show raw: it => h(1pt) + box(it , outset: 1.5pt, fill: luma(240), radius: 3pt)+ h(1pt)
 
-  set document(author: if author != none { author } else { () }, title: title)
+  set document(author: if author != none { author } else { () }, title: shorttitle)
 
   set bibliography(style: "ieee", title: [References])
 
@@ -357,7 +361,7 @@
     counter(footnote).update(0)
     counter("moussethm-thmlike").update(0)
     counter("moussethm-example").update(0)
-    counter(figure.where(kind: table)).update(0)
+    //counter(figure.where(kind: table)).update(0)
     block(
       inset: (left: -0.2em),
       height: 10%,
@@ -517,7 +521,7 @@
   set par(justify: false)
   table(
     row-gutter: .35em,
-    align: (x, y) => { if (y == 0 and x != 0) {center} else {left}},
+    align: (x, y) => { if (y == 0 and x != 0) {center} else {center}},
     stroke: (x, y) => {
       if (y == 0) {
         (

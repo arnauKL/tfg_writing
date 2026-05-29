@@ -11,11 +11,11 @@ semester.
 
 == LLM use
 
-LLMs have been used for the revisions of this document and to generate code
-snippets. That being said, all content in this thesis and in the final code
-submitted to the repository has been read and validated.
-Ideas on the design of #smol[CNN]s, algorithms, scripts or methodologies are
-either my own or inspired by scientific documentation.
+Usage of LLM tools has been limited to aid in the revisions of this document and
+specific code snippets. That being said, all content in this thesis and in the
+final code submitted to the repository has been read and validated. Ideas on the
+design of CNNs, algorithms, scripts or methodologies are either my own or
+inspired by scientific documentation.
 
 The online translation tool #link("https://www.deepl.com/en/translator",
 "DeepL"), which uses some LLM tool in its pipeline, has been used to refine

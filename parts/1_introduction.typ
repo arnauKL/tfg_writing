@@ -1,8 +1,8 @@
+// Revision done
+
 #import "../assets/ak_tfg_lib.typ": *
 
-
 = Introduction
-
 
 Parkinson's Disease (PD) is the world's fastest-growing neurological disorder
 and the second most common neurodegenerative disease globally, affecting an
@@ -13,7 +13,6 @@ burden: in the United States alone, annual costs, including direct medical
 expenditure, caregiving, and lost productivity, reached \$82.2 billion in 2024,
 surpassing projections that had not been expected until 2037 @faulkEconomic.
 
-
 This diagnostic barrier stems directly from the pathophysiology of the disease.
 PD is characterized by the progressive degeneration of dopaminergic neurons in
 the _substantia nigra pars compacta_ (SNpc), whose axons project to the striatum
@@ -22,7 +21,7 @@ degeneration is slow and irreversible, meaning that by the time the motor
 symptoms, such as resting tremor or rigidity, become clinically apparent,
 substantial damage has already been done.
 
-Dopamine transporter (DaT) imaging with #super[123]I-ioflupane #smol[SPECT],
+Dopamine transporter (DaT) imaging with #super[123]I-ioflupane SPECT,
 commercially known as DaTscan, has become a key diagnostic tool in this effort.
 By radiolabeling the dopamine transporter protein on presynaptic terminals,
 DaTscan provides a direct, functional map of the integrity of the nigrostriatal
@@ -36,23 +35,17 @@ documented, particularly in borderline cases, where early-stage putaminal
 thinning produces only subtle deviations form normal patterns
 @jakobsonmoAccuracy2015.
 
-Semi-quantitative tools can provide a more objective summary of tracer binding.
-However, they compress the spatial information of the 3D scan into a few
-regional averages, potentially discarding diagnostically relevant patterns that
-a more expressive model could exploit @jakobsonmoAccuracy2015
-@tinazSemiquantitative2018.
-
 The rapid maturation of deep learning offers a compelling path toward addressing
-these limitations. Convolutional neural networks (#smol[CNN]s), trained
-end-to-end on large labeled image datasets, can learn to detect subtle spatial
-patterns in medical images without relying on manually engineered features, and
-have demonstrated expert-level performance across a wide range of diagnostic
-imaging tasks @litjensSurvey2017. Applied to DaTscan classification,
-#smol[CNN]-based approaches may provide more consistent and quantitative
-diagnostic support, particularly in the early and prodromal stages where visual
-assessment is least reliable.
+these limitations. Convolutional neural networks (CNNs), trained end-to-end on
+large labeled image datasets, can learn to detect subtle spatial patterns in
+medical images without relying on manually engineered features, and have
+demonstrated expert-level performance across a wide range of diagnostic imaging
+tasks @litjensSurvey2017. Applied to DaTscan classification, CNN-based
+approaches may provide more consistent and quantitative diagnostic support,
+particularly in the early and prodromal stages where visual assessment is least
+reliable.
 
 This thesis investigates deep learning-based binary classification of manifest
 PD versus healthy controls utilizing DaTscan images. The data are drawn from the
-Parkinson's Progression Markers Initiative (#smol[PPMI]) dataset, which
-represents one of the largest cohorts available @marekParkinson2011.
+Parkinson's Progression Markers Initiative (PPMI) dataset, which represents one
+of the largest cohorts available @marekParkinson2011.

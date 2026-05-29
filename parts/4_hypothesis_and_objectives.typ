@@ -8,13 +8,13 @@
 
 Current clinical interpretation of DaTscan images relies on subjective visual
 assessment by nuclear medicine specialists, supplemented in research settings by
-semi-quantitative metrics such as the Striatal Binding Ratio (#smol[SBR])
+semi-quantitative metrics such as the Striatal Binding Ratio (SBR)
 computed from predefined regions of interest. The issue, as mentioned, is that
 traditional semi-quantitative metrics may discard diagnostically relevant
 spatial information. This thesis addresses the following research question:
 
 #quote[
-  Can end-to-end #smol[CNN]s operating on the complete DaTscan image volume
+  Can end-to-end CNNs operating on the complete DaTscan image volume
   perform better than traditional machine learning methods that use manually
   crafted semi-quantitative features for the binary classification of
   Parkinson's disease compared to healthy controls? Additionally, does
@@ -24,23 +24,23 @@ spatial information. This thesis addresses the following research question:
 
 == Hypothesis
 
-The central hypothesis is that a #smol[CNN] trained end-to-end on DaTscan images
+The central hypothesis is that a CNN trained end-to-end on DaTscan images
 will learn richer and more discriminative spatial representations than those
-captured by semi-quantitative #smol[SBR] features, and that performance can be
+captured by semi-quantitative SBR features, and that performance can be
 further improved by incorporating complementary clinical information that is not
 visible in the image. This can be rewritten into the following specific
 hypotheses:
 
-/ H1: #smol[CNN] superiority over classical baselines. A #smol[CNN] classifier
+/ #smol[H1]: CNN superiority over classical baselines. A CNN classifier
   operating on the raw DaTscan volume will achieve higher AUC and
   classification accuracy than classical machine learning models (SVM, Logistic
-  Regression) trained on #smol[SBR]-derived features.
+  Regression) trained on SBR-derived features.
 
-/ H2: Transfer learning compensates for data scarcity. In a data-limited regime,
+/ #smol[H2]: Transfer learning compensates for data scarcity. In a data-limited regime,
   leveraging pretrained weights will improve generalization relative to training
-  a 3D #smol[CNN] from scratch.
+  a 3D CNN from scratch.
 
-/ H3: Multimodal fusion improves upon imaging alone. Combining DaTscan-derived
+/ #smol[H3]: Multimodal fusion improves upon imaging alone. Combining DaTscan-derived
   markers with tabular clinical variables will yield higher classification
   performance than either modality alone.
 
@@ -49,18 +49,18 @@ hypotheses:
 === General Objective
 
 To systematically evaluate deep learning-based approaches for automated
-classification of Parkinson's disease from DaTscan #smol[SPECT] images, and to
+classification of Parkinson's disease from DaTscan SPECT images, and to
 quantify the diagnostic information gain achievable through multimodal fusion
-with clinical variables, using the #smol[PPMI] dataset as a standardized benchmark.
+with clinical variables, using the PPMI dataset as a standardized benchmark.
 
 === Specific Objectives
 
 + *Establish a classical ML baseline.* Train and evaluate classical machine
-  learning classifiers on semi-quantitative DaTscan features (#smol[SBR] values)
-  and multimodal clinical variables from the #smol[PPMI] dataset.
+  learning classifiers on semi-quantitative DaTscan features (SBR values)
+  and multimodal clinical variables from the PPMI dataset.
 
-+ *Compare #smol[CNN] architectures of different dimensionality and pretraining
-  strategy.* Implement and evaluate multiple #smol[CNN] variants. Identify
++ *Compare CNN architectures of different dimensionality and pretraining
+  strategy.* Implement and evaluate multiple CNN variants. Identify
   which combination of dimensionality and pretraining strategy best suits the
   available data size.
 

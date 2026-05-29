@@ -1,7 +1,6 @@
 #import "../assets/ak_tfg_lib.typ": *
 
 /* Capítol 8. Conclusions 
- 
 Aquí cal diferenciar l’assoliment dels objectius del TFG i l’assoliment d’aquests a través 
 dels desenvolupaments i resultats obtinguts. També s’han d’explicar les desviacions dels 
 objectius originals i comentar-ne els motius. 
@@ -12,3 +11,7 @@ tècniques, objectius més ambiciosos, etc.).
 */
 
 = Conclusions
+
+
+No vaig tenir els prodromals que volia ( i que vaig dir que tendria a la part de
+la proposta).

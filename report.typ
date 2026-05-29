@@ -8,10 +8,14 @@
   author: "Arnau K. Deprez Santamaria",
 )
 
+// ------- typst regexes -------
+#import "assets/regex.typ": apply-regex-rules
+#show: apply-regex-rules
+
+// ---------- preface ----------
 #include "parts/preface.typ"
 #set page(numbering: "1") // this forces reset on pdf viewers too
 #counter(page).update(1) // Reset page num to 1
-
 
 // ---------- document ----------
 #include "parts/1_introduction.typ"
@@ -26,8 +30,8 @@
 #bibliography("assets/references.bib", title: [References])
 
 #show: appendix
-#include "parts/app_planning.typ"
-#include "parts/app_code.typ"
-#include "parts/app_budget.typ"
-#include "parts/app_ethics.typ"
+#include "parts/app_A_planning.typ"
+#include "parts/app_B_code.typ"
+#include "parts/app_C_budget.typ"
+#include "parts/app_D_ethics.typ"
 #include "parts/app_colophon.typ"
