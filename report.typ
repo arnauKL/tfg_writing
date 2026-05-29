@@ -34,4 +34,5 @@
 #include "parts/app_B_code.typ"
 #include "parts/app_C_budget.typ"
 #include "parts/app_D_ethics.typ"
+#include "parts/app_extended_results.typ"
 #include "parts/app_colophon.typ"

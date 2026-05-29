@@ -53,12 +53,13 @@
 
     
     #v(1fr)
+    #line(length: 100%, stroke: (paint: black,
+    cap: "round", thickness: .75pt))
+
     // This is a requirement, PPMI mandates that this block is in the
     // acknowledgements
-    #line(length: 100%, stroke: (paint: black, cap: "round"))
-
-    #text(10pt, [
-      Data used in the preparation of this article were obtained from the
+    #text(9pt, [
+      Data used in the preparation of this work were obtained from the
       Parkinson’s Progression Markers Initiative (#smol[PPMI]) database
       (#link("www.ppmi-info.org/data")). For up-to-date information on the study,
       visit #link("www.ppmi-info.org"). #smol[PPMI] --- a public-private

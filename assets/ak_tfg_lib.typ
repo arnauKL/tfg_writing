@@ -127,7 +127,7 @@
   let math-font = "Libertinus Math" // same as text
   let mono-font = "BlexMono Nerd Font"
 
-  set text(font: text-font, 12pt, fill: rgb("#141414"))
+  set text(font: text-font, 11pt, fill: rgb("#141414"))
   set text(number-type: "old-style")
   show math.equation: set text(font: math-font, number-type: "lining")
   show math.equation: it => {
@@ -139,7 +139,7 @@
     first-line-indent: (amount: INDENT, all: false),
     justify: true,
     spacing: 1em,
-    leading: 0.6em + 1pt,
+    leading: 0.5em + 1pt,
     justification-limits: (
       // allow adjusting spaces to fix justification
       // spacing -> spaces between words
@@ -166,7 +166,7 @@
   )
   show raw.where(block: true): set text(size: 0.8em)
   show raw.where(block: true): it => align(center)[#it]
-  show raw: set text(font: mono-font, weight: 400, number-type: "lining")
+  show raw: set text(font: mono-font, number-type: "lining")
   // inline raw
   show raw: it => h(1pt) + box(it , outset: 1.5pt, fill: luma(240), radius: 3pt)+ h(1pt)
 
@@ -521,7 +521,7 @@
   set par(justify: false)
   table(
     row-gutter: .35em,
-    align: (x, y) => { if (y == 0 and x != 0) {center} else {center}},
+    align: (x, y) => { if (y != 0 and x == 0) {left} else {center}},
     stroke: (x, y) => {
       if (y == 0) {
         (

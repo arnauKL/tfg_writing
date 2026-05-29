@@ -18,8 +18,8 @@ Given how imbalanced the PPMI dataset was towards PD patients, one of the first
 major steps was evaluating how different balancing methods affected classifier
 behavior (refer to @eng-vs-raw-manual-vs-auto). The two compared approaches were
 manually balancing the dataset by dropping extra PD patients until achieving a
-strict 1:1 ratio for HC:PD, and using sklearn's `compute_sample_weight` utility to
-automatically adjust weights inversely proportional to class frequencies
+strict 1:1 ratio for HC:PD, and using sklearn's `compute_sample_weight` utility
+to automatically adjust weights inversely proportional to class frequencies
 @Compute_sample_weight.
 
 Under automatic sample weighting, a systematic divergence between macro
@@ -29,15 +29,15 @@ yielded comparatively high precision but markedly lower recall, indicating a
 residual bias toward the majority class despite the reweighting. In contrast,
 manually balanced datasets (green and red boxes in @eng-vs-raw-manual-vs-auto)
 produced a consistent improvement in macro recall and a stabilization of
-performance across both metrics, resulting in higher balanced accuracy and F1
-scores, most notably for the Random Forest and Gradient Boosting classifiers.
-Based on these findings, manually balanced datasets were used in all subsequent
-experiments.
+performance across both metrics, resulting in higher accuracy (balanced
+accuracy) and F1 scores, most notably for the Random Forest and Gradient
+Boosting classifiers. Based on these findings, manually balanced datasets were
+used in all subsequent experiments.
 
 With respect to feature set composition, the addition of four engineered
 features derived from the primary DaTscan-derived indicators (orange and red
 variants) consistently outperformed the raw four-feature sets (blue and green
-variants) across all metrics and classifiers. In the balanced accuracy and F1
+variants) across all metrics and classifiers. In the accuracy and F1
 panels, the engineered variants additionally exhibited tighter interquartile
 ranges, indicating reduced fold-to-fold variance and improved model stability,
 particularly for the tree-based classifiers.
@@ -46,8 +46,8 @@ In the Balanced Accuracy and F1 plots, the red bars generally have higher
 medians and tighter interquartile ranges (IQRs) than the green bars and orange
 better more so than blue bars, indicating that feature engineering reduces
 variance and stabilizes the tree-based models (RF and GB). This shows feature
-engineering explicitly helps models separate the classes better under weighted
-conditions.
+engineering produced higher accuracy and F1 scores across all evaluated
+classifiers.
 
 #figure(
   image("../assets/figures/results/classic_ml_compare_all_models_raw_deriv_eng_raw.svg"),
@@ -61,7 +61,7 @@ conditions.
 Restricting the comparison to the engineered, manually balanced condition
 (@only_man_eng_allmodels), the SVM with a non-linear RBF kernel achieved the
 highest and most consistent performance across all metrics, with a median
-ROC-AUC of $0.998$, a mean balanced accuracy of $0.974 plus.minus 0.014$, and a
+ROC-AUC of $0.998$, a mean accuracy of $0.974 plus.minus 0.014$, and a
 mean F1 of $0.983 plus.minus 0.012$. It also exhibited the narrowest
 interquartile range of all classifiers, indicating stable performance regardless
 of the specific train-test split.
@@ -79,7 +79,7 @@ of the specific train-test split.
 === All Architectures: Raw and Registered
 
 Before integrating multimodal clinical characteristics, a comprehensive
-architectural exploration was conducted using standalone CNNs on the 3D DaTSCAN
+architectural exploration was conducted using standalone CNNs on the 3D DaTscan
 images. This baseline evaluation serves to establish the raw diagnostic capacity
 of the imaging data alone and adresses the the impact of spatial registration
 pipelines on deep features, and the scalability of custom architectures compared
@@ -115,14 +115,6 @@ from $0.865$ (raw) to $0.818$ (registered), while the deeper variant
 (`3d_crop_deeper`) dropped from a median F1 of $0.962$ to $0.931$ following
 spatial normalization.
 
-see #redt[some discussion section where I
-explain why this might be (registration losing finer details, messing with the
-signal, etc)].
-
-#redt[in discussions too, comment how this is actually something very positive
-since it means that time can be spent on something else provided that these
-models work better on raw images where no human does work to make them fit a
-certain atlas, orientation, grid size, intensity range.]
 
 === Custom Networks vs. 3D Transfer Learning
 
@@ -134,38 +126,61 @@ domain-pretrained MedicalNet baselines (`med3d` and `med3d_encoder`, see
 The results demonstrate that the moderately parameterized custom architectures
 generalize more effectively to this cohort than the large pretrained networks.
 The `3d_crop_deeper` model achieved the highest image-only performance across
-all architectures on raw data, with a median ROC-AUC of $0.993$ and a median F1
-of $0.962$. The MedicalNet-based variants produced lower median scores and wider
+all architectures on raw data, with a median ROC-AUC of $0.991$ and a median F1
+of $0.951$. The MedicalNet-based variants produced lower median scores and wider
 variance distributions across folds on this dataset.
 
-=== GradCAM Visualisation
+Boxplots provide a detailed view of fold-to-fold variability across
+architectures. For completeness, @table_winners summarizes the mean performance
+obtained by each evaluated CNN architecture during the final 5-fold
+cross-validation experiments.
 
-To assess whether the top-performing network's classification decisions are
-grounded in anatomically meaningful regions, Gradient-weighted Class Activation
-Mapping (Grad-CAM) was applied to the `25d_resnet` architecture. Saliency maps
-were computed for the three orthogonal projections (axial, sagittal, and
-coronal, see @sec-deep-learning-strategies) used as input to this model.
+The `3d_crop_deeper` architecture achieved the highest overall performance,
+reaching a mean ROC-AUC of $0.991 plus.minus 0.015$ and an F1-score of $0.951
+plus.minus 0.021$. The
+`25d_resnet` model achieved the second-highest performance, while the remaining
+architectures formed a lower-performing group with ROC-AUC values between
+$0.944$ and $0.954$.
 
-@gradcam_mean shows the cohort-averaged attention heatmap for PD and HC patients
-separately. For images classified as PD, saliency is concentrated at the centre
-of the projection, corresponding to the anatomical location of the striatum. For
-images classified as HC, saliency is diffuse and distributed more spread out
-across the projection, consistent with the absence of a focal pathological
-signal. The HC average represents the residual low-confidence attention map for
-the PD class; its diffuse character reflects the absence of a concentrated
-activating signal.
+#figure(
+  tablec(
+    columns: (auto, auto, auto, auto),
+    [ Model          ],[ AUC             ],[ Acc           ],[ F1              ],
+    [ 3d_crop_deeper ],[ 0.991 $plus.minus$ 0.015 ],[ 0.952 $plus.minus$ 0.021 ],[ 0.951 $plus.minus$ 0.021 ],
+    [ 25d_resnet     ],[ 0.979 $plus.minus$ 0.021 ],[ 0.943 $plus.minus$ 0.064 ],[ 0.943 $plus.minus$ 0.073 ],
+    [ med3d_encoder  ],[ 0.954 $plus.minus$ 0.039 ],[ 0.877 $plus.minus$ 0.028 ],[ 0.871 $plus.minus$ 0.026 ],
+    [ med3d          ],[ 0.946 $plus.minus$ 0.028 ],[ 0.859 $plus.minus$ 0.061 ],[ 0.870 $plus.minus$ 0.052 ],
+    [ 2d_sum         ],[ 0.945 $plus.minus$ 0.017 ],[ 0.876 $plus.minus$ 0.047 ],[ 0.875 $plus.minus$ 0.056 ],
+    [ 3d_crop        ],[ 0.944 $plus.minus$ 0.016 ],[ 0.871 $plus.minus$ 0.060 ],[ 0.865 $plus.minus$ 0.046 ],
+  ),
+  caption: [Summary of final 5-fold cross-validation performance for all
+  evaluated CNN architectures in the HC versus PD classification task.]
+)<table_winners>
+
+=== Explainability Analysis (Grad-CAM) <sec-gradcam>
+
+To assess whether each architecture's classification decisions are grounded in anatomically meaningful regions, Grad-CAM visualizations were generated for all
+evaluated architectures and inspected at both the cohort-average and
+individual-patient level.
+
+@d25_gradcam_mean shows the cohort-averaged attention heatmap for the `25d_resnet`
+on PD and HC patients separately. For images classified as PD, saliency is
+concentrated at the centre of the projection, corresponding to the anatomical
+location of the striatum. For images classified as HC, attention is diffuse and
+spread broadly across the projection, consistent with the absence of a focal
+pathological signal.
 
 #figure(
   grid(
     columns: 2,
-    image("../assets/figures/results/pretty/gradcam_mean_25d_raw_PD.svg"),
-    image("../assets/figures/results/pretty/gradcam_mean_25d_raw_HC.svg")
+    image("../assets/figures/results/25d_gradcam/gradcam_mean_25d_raw_PD.svg"),
+    image("../assets/figures/results/25d_gradcam/gradcam_mean_25d_raw_HC.svg")
   ),
   caption: [Mean Grad-CAM attention heatmaps for the `25d_resnet` model on raw
   images. Left: mean activation across PD patients. Right: mean activation
   across HC patients. Higher coefficient values indicate regions to which the
   model assigned greater weight when computing the PD classification score.]
-)<gradcam_mean>
+)<d25_gradcam_mean>
 
 This spatial pattern is further confirmed by individual patient examples
 (@gradcam_panel_PD and @gradcam_panel_HC). In correctly classified PD cases,
@@ -174,18 +189,68 @@ projection. In HC cases, where the model assigns a low PD probability, attention
 is distributed broadly across the image with no focal striatal concentration.
 
 #figure(
-  image("../assets/figures/results/pretty/gradcam_25d_raw_PD_panel.svg"),
+  image("../assets/figures/results/25d_gradcam/gradcam_25d_raw_PD_panel.svg"),
   caption: [Grad-CAM activation maps to the right of their corresponding DaTscan
-  projections for three representative PD patients. Each column shows one
-  patient; rows correspond to the axial, sagittal, and coronal projections.]
+  projections for three representative PD patients (`25d_resnet`, raw). Each
+  column shows one patient; rows correspond to the axial, sagittal, and coronal
+  projections.]
 )<gradcam_panel_PD>
 
 #figure(
-  image("../assets/figures/results/pretty/gradcam_25d_raw_HC_panel.svg"),
+  image("../assets/figures/results/25d_gradcam/gradcam_25d_raw_HC_panel.svg"),
   caption: [Grad-CAM activation maps to the right of their corresponding DaTscan
-  projections for three representative HC patients. Each column shows one
-  patient; rows correspond to the axial, sagittal, and coronal projections.]
+  projections for three representative HC patients (`25d_resnet`, raw). Each
+  column shows one patient; rows correspond to the axial, sagittal, and coronal
+  projections.]
 )<gradcam_panel_HC>
+
+In contrast, none of the remaining architectures produced anatomically grounded
+attention. @gradcam_other_mean shows the cohort-averaged PD activation maps for
+the four 3D architectures. The `3d_crop` model produced spatially inconsistent
+activation, occasionally overlapping with the striatal region but more often
+localising to small areas at image edges with no reproducible anatomical
+correspondence. The `3d_crop_deeper` and `med3d` variants exhibited strikingly
+similar activation patterns despite their architectural differences: both
+produced diffuse maps characterised by scattered pankake-like structures
+with no consistent focal point. The `med3d_encoder` produced a distinctive
+ring-shaped activation pattern centred on the image but not localised to the
+striatum itself (it can be seen more clearly in #redt[figure for med3d_encoder
+showing donut]).
+
+// This paragraph might belong in the discussions section
+In all four cases, the attention maps provide no interpretable anatomical basis
+for the classification decision, suggesting these models exploit image-level
+shortcuts such as background intensity structure or acquisition geometry rather
+than the dopaminergic signal.
+
+#figure(
+  grid(
+    columns: 2,
+    gutter: 1em,
+    image("../assets/figures/results/3d_gradcam/gradcam_3d_crop_PD_scatter_mean.svg"),
+    image("../assets/figures/results/3d_gradcam/gradcam_3d_deeper_PD_scatter_mean.svg"),
+    image("../assets/figures/results/3d_gradcam/gradcam_med3d_PD_scatter_mean.svg"),
+    image("../assets/figures/results/3d_gradcam/gradcam_med3d_encoder_PD_scatter_mean.svg"),
+  ),
+  caption: [Cohort-averaged Grad-CAM attention maps for PD patients across the
+  four 3D architectures. Top-left: `3d_crop`; top-right: `3d_crop_deeper`;
+  bottom-left: `med3d`; bottom-right: `med3d_encoder`. None of the four
+  architectures produces attention concentrated at the striatum. #redt[Individual
+  patient panels for each architecture are provided in @app-gradcam.]]
+)<gradcam_other_mean>
+
+This interpretability analysis qualifies the quantitative ranking in
+@table_winners: although `3d_crop_deeper` achieved the highest aggregate AUC,
+its Grad-CAM maps indicate that this performance is not driven by the
+diagnostically relevant dopaminergic signal. The `25d_resnet` is the only
+architecture whose attention is consistently and anatomically grounded in the
+striatum, making it the more trustworthy model and the natural choice as backbone
+for the multimodal fusion experiments that follow.
+
+
+Among all evaluated architectures, the 2.5D ResNet exhibited the strongest
+qualitative correspondence between highlighted regions and the expected
+anatomical location of dopaminergic uptake.
 
 == Multimodal Fusion: Classical ML
 
@@ -197,7 +262,6 @@ each modality.
 
 === Information Gain by Feature Group
 
-
 @tab_info_gain reports the cross-validated performance of the SVM RBF
 classifier, the best-performing model from the previous section, across all
 seven feature sets. The addition of the full PPMI SBR panel and the engineered
@@ -205,26 +269,25 @@ features produced modest but consistent improvements over the four-indicator
 baseline (AUC $0.992$ to $0.995$). The inclusion of demographic variables (age
 and sex) yielded no measurable gain. The largest single-step improvement was
 observed upon adding the motor assessment battery (UPDRS, and symptom
-flags), which raised the mean AUC from $0.995$ to $0.999$ and balanced accuracy
+flags), which raised the mean AUC from $0.995$ to $0.999$ and accuracy
 from $0.978$ to $0.990$. Subsequent addition of non-motor prodromal markers
 (UPSIT, RBD, ESS, GDS, SCOPA) produced a further marginal improvement in
-balanced accuracy ($0.993$). The addition of secondary biomarkers
+accuracy ($0.993$). The addition of secondary biomarkers
 (alpha-synuclein, NfL, urate) resulted in no further gain, with performance
 remaining stable at $0.998$ AUC.
 
 /*mutli_pretty.py script*/
 #figure(
-  text(0.9em, 
-  tablef(columns: (auto, auto, auto, auto, auto, auto),
-  [ Modality Set],[Feat. ],[   Samples ],[AUC],[B_Acc],[F1],
-  [ DaTscan raw         ],[          4 ],[       592 ],[ 0.992 $plus.minus$ 0.012 ],[ 0.975 $plus.minus$ 0.015 ],[ 0.975 $plus.minus$ 0.015 ],
-  [ DaTscan full SBR    ],[         13 ],[       592 ],[ 0.994 $plus.minus$ 0.008 ],[ 0.976 $plus.minus$ 0.015 ],[ 0.976 $plus.minus$ 0.015 ],
-  [ DaTscan engineered  ],[         17 ],[       592 ],[ 0.995 $plus.minus$ 0.007 ],[ 0.978 $plus.minus$ 0.014 ],[ 0.978 $plus.minus$ 0.014 ],
-  [\+ Demographics      ],[         19 ],[       592 ],[ 0.995 $plus.minus$ 0.006 ],[ 0.978 $plus.minus$ 0.016 ],[ 0.978 $plus.minus$ 0.016 ],
-  [\+ Motor (UPDRS)     ],[         27 ],[       592 ],[ 0.999 $plus.minus$ 0.003 ],[ 0.990 $plus.minus$ 0.014 ],[ 0.990 $plus.minus$ 0.014 ],
-  [\+ Non-motor (UPSIT) ],[         33 ],[       592 ],[ 0.998 $plus.minus$ 0.003 ],[ 0.993 $plus.minus$ 0.008 ],[ 0.993 $plus.minus$ 0.008 ],
-  [\+ Biomarkers        ],[         36 ],[       592 ],[ 0.998 $plus.minus$
-  0.004 ],[ 0.990 $plus.minus$ 0.014 ],[ 0.990 $plus.minus$ 0.014 ])),
+  tablec(columns: (auto, auto, auto, auto, auto),
+  [ Modality Set],[Feat. ],[AUC],[B_Acc],[F1],
+  [ DaTscan raw         ],[          4 ],[ 0.992 $plus.minus$ 0.012 ],[ 0.975 $plus.minus$ 0.015 ],[ 0.975 $plus.minus$ 0.015 ],
+  [ DaTscan full SBR    ],[         13 ],[ 0.994 $plus.minus$ 0.008 ],[ 0.976 $plus.minus$ 0.015 ],[ 0.976 $plus.minus$ 0.015 ],
+  [ DaTscan engineered  ],[         17 ],[ 0.995 $plus.minus$ 0.007 ],[ 0.978 $plus.minus$ 0.014 ],[ 0.978 $plus.minus$ 0.014 ],
+  [\+ Demographics      ],[         19 ],[ 0.995 $plus.minus$ 0.006 ],[ 0.978 $plus.minus$ 0.016 ],[ 0.978 $plus.minus$ 0.016 ],
+  [\+ Motor (UPDRS)     ],[         27 ],[ 0.999 $plus.minus$ 0.003 ],[ 0.990 $plus.minus$ 0.014 ],[ 0.990 $plus.minus$ 0.014 ],
+  [\+ Non-motor (UPSIT) ],[         33 ],[ 0.998 $plus.minus$ 0.003 ],[ 0.993 $plus.minus$ 0.008 ],[ 0.993 $plus.minus$ 0.008 ],
+  [\+ Biomarkers        ],[         36 ],[ 0.998 $plus.minus$
+  0.004 ],[ 0.990 $plus.minus$ 0.014 ],[ 0.990 $plus.minus$ 0.014 ]),
   caption: [SVM RBF cross-validated performance (mean $plus.minus$ std, 5-fold)
   across the seven additive feature sets. Performance is reported for the
   manually balanced dataset.]
@@ -238,8 +301,14 @@ multimodal configuration, SHAP (SHapley Additive exPlanations) analysis
 @lundbergUnified2017 was conducted on the SVM RBF model trained on the full
 feature set. Results are shown in @shap_multimodal.
 
+Features from motor, imaging, and olfactory domains appeared among the
+highest-ranked variables. The model prioritizes continuous motor impairment
+(`updrs3_score`), specifically targets the established biological pattern of
+putaminal-first dopaminergic degradation (`Putamen_Caudate_Ratio`), and
+integrates known non-motor prodromal indicators (`upsit`).
+
 #figure(
-  image("../assets/figures/results/shap_summary_multimodal_pt.svg", width: 70%),
+  image("../assets/figures/results/shap_summary_multimodal_pt.svg", width: 80%),
   caption: [SHAP beeswarm plot for the SVM RBF classifier trained on the full
   multimodal feature set (PD class). Each point represents one patient,
   positioned horizontally by its SHAP value and coloured by the corresponding
@@ -247,36 +316,35 @@ feature set. Results are shown in @shap_multimodal.
   SHAP value.]
 )<shap_multimodal>
 
-The model successfully identifies a multi-domain parkinsonian signature. It
-prioritizes continuous motor impairment (updrs3_score), specifically targets the
-established biological pattern of putaminal-first dopaminergic degradation
-(Putamen_Caudate_Ratio), and integrates known non-motor prodromal indicators
-(upsit).
 
 The three highest-ranked features by mean absolute SHAP value were
-`updrs3_score`,
-`Putamen_Caudate_Ratio`, and `con_putamen`. The motor score (`updrs3_score`)
-contributed the largest individual SHAP magnitudes, with low values (blue)
-strongly pushing predictions toward HC (negative SHAP) and high values (red)
-pushing toward PD. The `Putamen_Caudate_Ratio`, an engineered DaTscan-derived
-feature, ranked second, with high values (red) pushing toward HC and low values
-(blue, indicating preferential putaminal loss) associated with PD predictions.
-The contralateral putamen binding (`con_putamen`) ranked third, following a
-similar pathophysiological trend where lower dopamine transporter binding pushed
-the model toward a PD diagnosis. While global summary metrics like `Mean_SBR`
-ranked at the very bottom, specific regional and asymmetric DaTscan indicators
-remained highly influential even when clinical and motor features were present.
+`updrs3_score`, `Putamen_Caudate_Ratio`, and `con_putamen`. The motor score
+(`updrs3_score`) contributed the largest individual SHAP magnitudes, with low
+values (blue) strongly pushing predictions toward HC (negative SHAP) and high
+values (red) pushing toward PD. The `Putamen_Caudate_Ratio`, an engineered
+DaTscan-derived feature, ranked second, with high values (red) pushing toward HC
+and low values (blue, indicating preferential putaminal loss) associated with PD
+predictions. The contralateral putamen binding (`con_putamen`) ranked third,
+following a similar pathophysiological trend where lower dopamine transporter
+binding pushed the model toward a PD diagnosis. While global summary metrics
+like `Mean_SBR` ranked at the very bottom, specific regional and asymmetric
+DaTscan indicators remained highly influential even when clinical and motor
+features were present.
 
 == Multimodal Fusion: CNN
 
 Following the classical ML multimodal evaluation, clinical features were
-integrated with the best-performing image-only CNN (`25d_resnet`, raw images) to
-assess whether fusion improves over imaging alone. The fusion cohort comprised
-$N = 306$ ($153$ HC, $153$ PD) patients after the intersection of available
-image and tabular data was computed and class balancing was applied. A 5-fold
-cross-validation scheme was used throughout this section.
+integrated with the `25d_resnet` (raw images) to assess whether fusion improves
+over imaging alone. Although `3d_crop_deeper` achieved a marginally higher
+aggregate AUC in the image-only evaluation, the `25d_resnet` was selected as the
+fusion backbone on interpretability grounds: as shown in @sec-gradcam, it is the
+only architecture whose Grad-CAM activations are anatomically localised to the
+striatum, a prerequisite for clinically meaningful integration.
 
-@multi_cnn presents the performance distributions across the four clinical
+The fusion cohort comprised $N = 306$ ($153$ HC, $153$ PD) patients after the
+intersection of available image and tabular data was computed and class
+balancing was applied. A 5-fold cross-validation scheme was used throughout this
+section. @multi_cnn presents the performance distributions across the four clinical
 feature groups (motor, olfactory, cognitive, and demographic) and their
 combination (ALL), for both late fusion and feature-level fusion configurations.
 
@@ -341,6 +409,7 @@ exception to this pattern was a marginal advantage for feature-level fusion in
 the demographic AUC, which did not generalise to other metrics.
 
 == SWEDD Inference and CNN validation
+
 To further characterise the specificity of the imaging signal learned by the
 best-performing model, post-hoc inference was performed on the SWEDD cohort
 (Scans Without Evidence of Dopaminergic Deficit; $N = 57$). As described in
@@ -349,18 +418,19 @@ selection procedures; the trained `25d_resnet` (raw) classifier was applied
 directly without retraining or fine-tuning.
 
 @tab_swedd_inference and @violin_swedd jointly summarise the predicted PD
-probability distributions across all three cohorts. The model separated PD
-from HC with high confidence: HC patients received a mean predicted PD
-probability of $0.029$ (median $0.003$; $1.9%$ classified as PD), while PD
-patients received a mean of $0.954$ (median $0.994$; $97.5%$ classified as
-PD). SWEDD patients received a mean probability of $0.113$ (median $0.004$;
-$10.5%$ classified as PD). The standard deviation for the SWEDD group
+probability distributions across all three cohorts. The model separated PD from
+HC with high confidence: HC patients received a mean predicted PD probability of
+$0.029$ (median $0.003$; $1.9%$ classified as PD), while PD patients received a
+mean of $0.954$ (median $0.994$; $97.5%$ classified as PD). SWEDD patients
+received a mean probability of $0.113$ (median $0.004$; $10.5%$ classified as
+PD). This value is substantially lower than the 97.5% observed in the PD cohort
+and closer to the HC distribution. The standard deviation for the SWEDD group
 ($sigma = 0.267$) was notably higher than for HC ($sigma = 0.136$) and PD
-($sigma = 0.145$), reflecting greater heterogeneity within the SWEDD cohort.
-The violin plot in @violin_swedd makes this distribution particularly visible:
-the bulk of SWEDD predictions cluster near zero, alongside HC, while a
-small subset of patients receives substantially elevated PD probabilities
-(furhter commented in #redt[discussion section about why SWEDDs could be
+($sigma = 0.145$), reflecting greater heterogeneity within the SWEDD cohort. The
+violin plot in @violin_swedd makes this distribution particularly visible: the
+bulk of SWEDD predictions cluster near zero, alongside HC, while a small subset
+of patients receives substantially elevated PD probabilities (furhter commented
+in #redt[discussion section about why SWEDDs could be
 misdiagnosed]).
 
 #figure(

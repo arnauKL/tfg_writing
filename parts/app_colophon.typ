@@ -13,6 +13,14 @@ The main text is set in
 #link("https://www.linuxlibertine.org/")[Libertinus Serif], while code listings
 use #link("https://github.com/IBM/plex")[IBM Plex Mono].
 
+Writing and editing were supported by several language and reference resources,
+including #link("https://www.deepl.com/en/translator", "DeepL"),
+#link("https://www.wordreference.com/", "WordReference"),
+#link("https://www.thesaurus.com/", "Thesaurus.com"),
+#link("https://practicaltypography.com/", "Practical Typography"), and
+#link("https://academic-englishuk.com/", "Academic English UK"). These tools were used exclusively for translation
+assistance, vocabulary refinement, stylistic guidance, and proofreading.
+
 All software used during the development and writing of this thesis is free and
 open-source software.
 

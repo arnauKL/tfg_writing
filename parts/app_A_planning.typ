@@ -35,5 +35,18 @@ semester, while the template itself was finalised around April.
 #figure(
   include "../assets/figures/gantt.typ",
   caption: [Gantt chart summarizing the main development stages of the thesis
-project.],
+    project.],
 )<gantt>
+
+
+== Timeline
+
+/ Initial planning and proposal (3 weeks): Work started mid-january, when I
+  first got together with my tutor. We met a few times to write and define a
+  concrete thesis proposal. At this same time I worked on learning about
+  Parkinson's Disease and Convolutional Neural Networks.
+/ Literature review and State of the Art (2 weeks): Once defined the proposal
+  and being accepted by the committee in early march, work started on
+
+
+TODO

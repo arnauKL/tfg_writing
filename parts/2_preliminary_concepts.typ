@@ -140,10 +140,10 @@ allow clearance of non-specific binding, reconstructs a three-dimensional map of
 tracer uptake. This map serves as a surrogate for the functional integrity of
 the nigrostriatal dopaminergic projection @booijAppropriate2013.
 
-The European Medicines Agency approved #super[123]I-ioflupane in 2000 (trade
-name DaTscan); the U.S. FDA followed in 2011 (trade name DaTscan). It remains
-the only approved in vivo imaging biomarker for parkinsonian syndromes in
-clinical practice.
+The European Medicines Agency approved #super[123]I-ioflupane in 2000 under the
+trade name DaTscan); the United States' FDA followed in 2011. It remains the
+only approved in vivo imaging biomarker for parkinsonian syndromes in clinical
+practice.
 
 
 === Image Characteristics
@@ -219,7 +219,7 @@ biomarkers.
 
 // pdt revisar
 
-== Classical ML for Parkinson's Classification
+== Classical machine learning for PD Classification
 
 Before the current era of deep learning, automated analysis of DaTscan images
 typically followed a two-stage pipeline: extract a compact set of handcrafted

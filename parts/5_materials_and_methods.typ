@@ -362,6 +362,13 @@ addition of progressively more invasive or complex clinical markers yields
 marginal gains in predictive power over baseline imaging, see
 @tab-incremental-sets.
 
+The additive structure of these feature sets allowed the information gain of
+each clinical domain to be quantified by comparing AUC between successive steps.
+SHAP (SHapley Additive exPlanations) analysis @lundbergUnified2017 was subsequently
+applied to the best-performing classical model to identify the individual
+features contributing most to the classification decision, providing a basis for
+feature selection in the multimodal fusion experiments.
+
 #figure(
   tablef(
     columns: (auto, 10em, auto),
@@ -377,12 +384,6 @@ marginal gains in predictive power over baseline imaging, see
   caption: [Additive Feature Set Sequences]
 )<tab-incremental-sets>
 
-The additive structure of these feature sets allowed the information gain of
-each clinical domain to be quantified by comparing AUC between successive steps.
-SHAP (SHapley Additive exPlanations) analysis @lundbergUnified2017 was subsequently
-applied to the best-performing classical model to identify the individual
-features contributing most to the classification decision, providing a basis for
-feature selection in the multimodal fusion experiments.
 
 == Deep Learning strategies
 
@@ -427,7 +428,7 @@ learning baseline, extend it to three dimensions to exploit volumetric
 information, and then explore transfer learning as a strategy to compensate for
 the limited training set size.
 
-*2D CNN (`2d_sum`).* A lightweight 2D CNN inspired by VGG-style stacked
+*2D CNN* (`2d_sum`). A lightweight 2D CNN inspired by VGG-style stacked
 convolutions was implemented as a first baseline @simonyanVery2015. The network
 comprises three convolutional blocks (16, 32, and 64 filters respectively, each
 with a $3 times 3$ kernel, batch normalization, and ReLU activation) followed by
@@ -436,7 +437,7 @@ single 2D image obtained by summing the preprocessed volume along the depth
 axis, producing a projection that preserves the gross spatial layout of striatal
 uptake while reducing memory and parameter count.
 
-*3D CNN (`3d_crop`).* The 2D architecture was extended to three spatial
+*3D CNN* (`3d_crop`). The 2D architecture was extended to three spatial
 dimensions by replacing all 2D convolutional operators with their 3D
 equivalents. The filter sequence (16 $arrow.r$ 32 $arrow.r$ 64) and the downstream
 classification head were kept identical to the 2D baseline to isolate the effect
@@ -444,30 +445,30 @@ of dimensionality. A deeper variant (`3d_crop_deeper`) added a fourth
 convolutional block (128 filters) to probe whether increased depth improved
 performance.
 
-*2.5D ResNet18 with ImageNet pretraining (`25d_resnet`).* To leverage transfer
+*2.5D ResNet18 with ImageNet pretraining* (`25d_resnet`). To leverage transfer
 learning from a large natural image dataset, a ResNet18 backbone pretrained on
 ImageNet @dengImageNet2009 was fine-tuned for binary DaTscan classification. As
 described in @sec-preprocessing, the three orthogonal MIPs extracted from each
 volume were stacked as channels, producing a $3 times H times W$ input that
 matches the format expected by the pretrained network (refer to @mips for a
-visualization). The original ImageNet
-classification head was replaced by a single linear layer with sigmoid output.
-During fine-tuning, all backbone weights were updated at a reduced learning rate
-($10^(-4)$) to avoid overwriting pretrained representations, while the new
-classification head was trained at the default rate ($10^(-3)$).
+visualization). The original ImageNet classification head was replaced by a
+single linear layer with sigmoid output. During fine-tuning, all backbone
+weights were updated at a reduced learning rate ($10^(-4)$) to avoid overwriting
+pretrained representations, while the new classification head was trained at the
+default rate ($10^(-3)$).
 
-*3D ResNet10 with MedicalNet pretraining (`med3d`).* As a domain-specific
+*3D ResNet10 with MedicalNet pretraining* (`med3d`). As a domain-specific
 alternative to ImageNet pretraining, a ResNet-10 backbone from MedicalNet
 @chenMed3D2019, pretrained on 23 heterogeneous medical image segmentation datasets
 including SPECT volumes, was adapted for classification.
 
-Two adaptation strategies were evaluated. The first retained the original
-network structure and replaced the segmentation head with a binary
-classification head /*el meu primer intento*/. The second used only the pretrained encoder as a generic
-volumetric feature extractor, discarding the decoder and attaching a lightweight
-custom classification head /*Adrià's way*/. The latter approach reduces parameter count and
-allows greater flexibility in the design of the classification stage while
-preserving the pretrained feature representations.
+Two adaptation strategies were evaluated. The first (`med3d`) retained the
+original network structure and replaced the segmentation head with a binary
+classification head. The second (`med3d_encoder`) used only the pretrained
+encoder as a generic volumetric feature extractor, discarding the decoder and
+attaching a lightweight custom classification head. The latter approach reduces
+parameter count and allows greater flexibility in the design of the
+classification stage while preserving the pretrained feature representations.
 
 === Training Protocol <sec-training>
 
@@ -502,13 +503,13 @@ limits the number of volumetric tensors that can reside in GPU memory
 simultaneously during a forward pass. The model checkpoint achieving the highest
 validation AUC within each fold was saved and used for final evaluation.
 
-For models with pretrained weights (the 25d_resnet and med3d variants), a
+For models with pretrained weights (the `25d_resnet` and `med3d` variants), a
 differential learning rate schedule was applied: backbone parameters were
-updated at a rate of $10^(-5)$ (one tenth of the base rate) to avoid
-overwriting pretrained representations, while the newly initialized
-classification head was trained at the base rate of $10^(-4)$. All remaining
-architectures (2d_sum, 3d_crop, and 3d_crop_deeper) used a uniform learning
-rate of $10^(-4)$ throughout.
+updated at a rate of $10^(-5)$ (one tenth of the base rate) to avoid overwriting
+pretrained representations, while the newly initialized classification head was
+trained at the base rate of $10^(-4)$. All remaining architectures (`2d_sum`,
+`3d_crop`, and `3d_crop_deeper`) used a uniform learning rate of $10^(-4)$
+throughout.
 
 === Cross-Validation Scheme
 
@@ -527,7 +528,7 @@ training pipeline (`train.py`). Model configurations, preprocessing parameters,
 and hyperparameters were stored in `json` configuration files, and the global
 random seed for both numpy and PyTorch was set to 42 on all runs. Trained model
 weights were serialized as `.pth` checkpoints, while performance metrics were
-exported to `csv` files for subsequent statistical analysis and visualization.
+exported to csv files for subsequent statistical analysis and visualization.
 
 Source code was maintained under Git version control and is publicly available
 through the repository described in @app_code.
@@ -716,7 +717,8 @@ $ "Precision" = "TP" / ("TP" + "FP") " ". $
 - _F1-score_ combines precision and recall into a single metric by computing
   their harmonic mean:
 
-$ "F1" = 2 ("precision" dot "recall") / ("precision" + "recall") = 2"TP" / (2"TP" + "FP" + "FN") $
+$ "F1" = 2 thick ("precision" dot "recall") / ("precision" + "recall") =
+(2 "TP") / (2 "TP" + "FP" + "FN") $
 
 The F1-score is particularly useful when both false positives and false
 negatives are clinically relevant, as it balances the trade-off between
