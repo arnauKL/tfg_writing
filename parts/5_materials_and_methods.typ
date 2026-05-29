@@ -47,9 +47,10 @@ there.
 
 Only subjects with a DaTscan image available and a confirmed diagnosis of either
 Parkinson's disease (PD) or healthy control (HC) were used. Subjects classified
-under other PPMI diagnostic categories such as SWEDD (Scans Without Evidence of
-Dopaminergic Deficit) or prodromal were excluded to avoid introducing ambiguous
-labels into the training set.
+under other PPMI diagnostic categories such as prodromal or prodromal were
+excluded to avoid introducing ambiguous labels into the training set. SWEDD
+(Scans Without Evidence of Dopaminergic Deficit) patients were excluded from
+training as well but retained for later inference evaluation.
 
 To limit each subject to a single observation and avoid temporal data leakage,
 only the baseline session (`sesBL` in BIDS notation, described in @sec-bids) was
@@ -367,7 +368,7 @@ marginal gains in predictive power over baseline imaging, see
 [2],[ Full SBR Set ],[ Full PPMI-derived SBR set (contralateral, ipsilateral, and mean binding for caudate, putamen, and striatum). ],
 [3],[ Engineered Features ],[ Asymmetry indices, mean SBR, and putamen-to-caudate ratio. ],
 [4],[ Demographics ],[ Patient age and biological sex. ],
-[5],[ Clinical Motor Assessments ],[ MDS-UPDRS Parts I to III, clinical symptom flags, Hoehn and Yahr (H&Y) scale, and Levodopa Equivalent Daily Dose (LEDD). ],
+[5],[ Clinical Motor Assessments ],[ MDS-UPDRS Parts I to III, clinical symptom flags, and Levodopa Equivalent Daily Dose (LEDD). ],
 [6],[ Non-Motor & Prodromal Markers ],[ University of Pennsylvania Smell Identification Test (UPSIT), REM Sleep Behavior Disorder (RBD) screening score, Epworth Sleepiness Scale (ESS), Geriatric Depression Scale (GDS), SCOPA-GI, and SCOPA-AUT. ],
 [ 7 ],[ Secondary Biomarkers ],[ Alpha-synuclein, serum Neurofilament Light chain (NfL), and urate. ]
   ),
@@ -383,8 +384,7 @@ feature selection in the multimodal fusion experiments.
 
 == Deep Learning strategies
 
-=== CNN Architectures
-
+=== CNN Architectures <sec-deep-learning-strategies>
 /*
 // Tried approaches: 2d, 3D, 3D-deeper (more layers), mednet3d, imagenet
 // (2.5d)

@@ -511,3 +511,22 @@
     ..(args.pos() + (table.hline(stroke: 0pt),)),
   )
 }
+
+#let tablec(..args) = {
+  set table.hline(stroke: 0.5pt)
+  set par(justify: false)
+  table(
+    row-gutter: .35em,
+    align: (x, y) => { if (y == 0 and x != 0) {center} else {left}},
+    stroke: (x, y) => {
+      if (y == 0) {
+        (
+          top: 0pt,
+          bottom: (thickness: 0.75pt, cap: "round"),
+        )
+      }
+    },
+    ..args.named(),
+    ..(args.pos() + (table.hline(stroke: 0pt),)),
+  )
+}

@@ -21,6 +21,7 @@ sostenible/
 /*
 * Contibutions to SDG
 * #link("https://www.un.org/sustainabledevelopment/", "SDG")
+* 3 and 9
 
 = Discussion
 
@@ -39,12 +40,59 @@ uncertainty at the boundary.
 motor severity is almost perfectly correlated with diagnosis label --- discuss
 whether this is a useful clinical addition or circularity.
 
+
+== Transfer Learning vs tailored networks
+
+The Failure of Transfer Learning Baselines:
+
+Models leveraging the foundational
+med3d weights demonstrated the poorest overall performance and widest metric
+instability. The baseline med3d (registered) model collapsed to a median
+F1-score of 0.851. Even when freezing the encoder layers (medencoder) to
+preserve pre-trained features, the model failed to match the custom networks,
+showing wide, volatile performance boxes across cross-validation splits.
+
+
+
+The underperformance of med3d architectures highlights a classic domain-mismatch
+challenge in medical deep learning. The weights for med3d were pre-trained on
+the Medical Segmentation Decathlon, a dataset dominated by high-resolution,
+structural macro-anatomy from CT and MRI scans (e.g., organ boundaries, tumors).
+
+When these heavy filters are transferred to a highly specialized, functional
+nuclear medicine modality like DaTSCAN, the pre-trained features fail to
+generalize. The over-parameterization of deep ResNet-3D blocks overfits to
+non-clinical noise within small-sample cohorts, whereas custom architectures
+like 3d_crop_deeper maintain a compact parameter footprint that enforces strict
+regularization.
+
+
+
 == Raw vs registered:
 
-whether spatial normalisation helps or hurts, and why.
+In traditional neuroimaging, spatial registration is essential to ensure
+voxel-wise alignment across heterogeneous subjects for statistical parametric
+mapping. However, for deep convolutional neural networks, the interpolation,
+spatial warping, and intensity smoothing inherent to non-rigid registration
+pipelines introduce distinct morphological degradations.
+
+DaTSCAN images are highly functional rather than purely structural; the primary
+diagnostic signal is a sharp, localized intensity gradient within the striatum
+relative to a dark background. Spatial warping smooths these high-frequency
+contrast boundaries and dilutes localized voxel densities. Because the networks
+rely precisely on these raw, pixel-level intensity gradients to quantify
+dopaminergic transporter uptake, the unaltered, raw bounding-box extractions
+preserve a cleaner, unadulterated optimization landscape for gradient descent.
 
 == GradCAM putamen activation:
 
 connect to the SHAP finding that Mean_SBR and PCR dominate --- both methods
 point to the same anatomical signal.
+
+== Multimodal CNNs
+
+The flatness in figures shown in the prev section #redt[pdt posar-les] is great.
+It demonstrates extreme architectural stability. It proves that the model's
+performance isn't fluctuating wildly depending on how the data is split; rather,
+it is performing with identical, predictable accuracy across the entire cohort.
 */
