@@ -7,9 +7,6 @@
   #heading(numbering: none, outlined: false)[Contents]
   #v(-3em)
   #outline(title: none, depth: 3)
-  // List of Figures and List of Tables
-  //#lof
-  //#lot
 
   #v(1fr)
 

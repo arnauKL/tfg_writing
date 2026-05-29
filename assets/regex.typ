@@ -33,5 +33,13 @@
     show regex("\\b\\d+(?:\\.\\d+)?[A-Z]+s?\\b"): it => math.upright(it.text)
     it
   }
+
+  // link
+  show link: it => {
+    show regex("\\b[A-Z]{2,}s?\\b"): it => smallcaps.with(all:true)(it.text)
+    show regex("\\b\\d+(?:\\.\\d+)?[A-Z]+s?\\b"): it => smallcaps.with(all:true)(it.text)
+    it
+  }
+
   body
 }
