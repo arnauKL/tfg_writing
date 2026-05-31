@@ -11,25 +11,13 @@ intended to be tested in the TFG.
 
 = State of the art
 
-/* draft index:
-*
-* == Clinical interpretation of DaTscan
-* == Deep Learning for DaTscan
-* === From classical ML to CNNs
-* === 2D, 2.5D, and 3D Architectures
-* === Transfer learning
-* == Multimodal Fusion with Clinical Variables
-* == Research gap
-*/
-
 The application of machine learning to DaTscan neuroimaging for Parkinson's
 disease diagnosis draws on three intersecting research areas: clinical nuclear
-medicine/*subsect 1*/, which has established DaTscan as a validated diagnostic biomarker;
-deep learning/*subsect 2*/, which provides the architectures and training strategies used to
-process imaging data; and multimodal learning/*subsect 3*/, which investigates the
-principled combination of heterogeneous data sources. This section reviews
-relevant prior work across these areas and positions the present project within
-them.
+medicine, which has established DaTscan as a validated diagnostic biomarker;
+deep learning, which provides the architectures and training strategies used to
+process imaging data; and multimodal learning, which investigates the principled
+combination of heterogeneous data sources. This section reviews relevant prior
+work across these areas and positions the present project within them.
 
 
 == Clinical Interpretation of DaTscan
@@ -49,18 +37,18 @@ not public currently and, as such, canoot be used freely to process data.
 Visual interpretation of DaTscan is performed by trained nuclear medicine
 specialists, who classify scans as normal or abnormal based on the shape and
 symmetry of striatal tracer uptake. Despite being the established clinical
-standard, visual assessment is inherently subjective and suffers from well-documented
-limitations. Inter-rater variability is a primary concern: agreement between
-readers degrades considerably in early-stage presentations, where putaminal
-thinning produces only subtle deviations from the normal bilateral comma-shaped
-pattern @jakobsonmoAccuracy2015. Beyond reproducibility, visual reads are
-not easily generalizable across sites and reader experience levels, and provide
-no structured numerical output that can be tracked longitudinally or
-compared across cohorts. A 2021 systematic review confirmed that DaTscan led
-to a change in clinical management in approximately half of patients tested and
-altered the final diagnosis in roughly one third @begaClinical2021,
-underscoring both its practical impact and the uncertainty inherent in current
-interpretive practice.
+standard, visual assessment is inherently subjective and suffers from
+well-documented limitations. Inter-rater variability is a primary concern:
+agreement between readers degrades considerably in early-stage presentations,
+where putaminal thinning produces only subtle deviations from the normal
+bilateral comma-shaped pattern @jakobsonmoAccuracy2015. Beyond reproducibility,
+visual reads are not easily generalizable across sites and reader experience
+levels, and provide no structured numerical output that can be tracked
+longitudinally or compared across cohorts. A 2021 systematic review confirmed
+that DaTscan led to a change in clinical management in approximately half of
+patients tested and altered the final diagnosis in roughly one third
+@begaClinical2021, underscoring both its practical impact and the uncertainty
+inherent in current interpretive practice.
 
 /*problems w/ semiquantitative*/
 Semi-quantitative analysis through the Striatal Binding Ratio (SBR) was
@@ -78,7 +66,7 @@ regional means discards spatial information about the distribution of uptake
 within regions, asymmetry texture, and subtle intensity patterns that may carry
 diagnostic value @tinazSemiquantitative2018.
 
-/*això per lestat de datquant i basgan*/
+/* this mentions the state of datquant & basgan*/
 Commercial implementations of semi-quantitative analysis, such as DaTQUANT
 @brogleyDaTQUANT2019 and BasGANv2, automate parts of this pipeline but are not
 publicly available: DaTQUANT is a paid proprietary tool, and BasGANv2 is not
@@ -92,6 +80,7 @@ these assessments are least reliable. These considerations motivate data-driven
 approaches that operate directly on the full image volume rather than on derived
 scalar summaries.
 
+// done up to here
 
 == Deep Learning for neuroimaging classification
 
@@ -127,7 +116,8 @@ In fact, most published DaTscan deep-learning studies rely on the publicly
 available PPMI cohort, making it the de facto benchmark dataset for
 methodological comparisons.
 
-/* reference some papers/works here, there have to be */
+/* reference some papers/works here, there have to be some that you have not
+* found, this section needs some more references. */
 
 === Transfer Learning
 

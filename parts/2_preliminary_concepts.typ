@@ -152,7 +152,7 @@ In a healthy brain, DaTscan produces a characteristic pattern of high bilateral
 tracer uptake forming "comma" shapes: the dense head of each comma corresponds
 to the caudate nucleus, and the tapered body to the posterior putamen. In PD,
 because neurodegeneration begins predominantly in the posterior putamen (the
-subregion receiving projections from the motor cortex) the comma loses its tail
+subregion receiving projections from the motor cortex), the comma loses its tail
 before it loses its head, resulting in an asymmetric pattern progressively
 reduced to isolated caudate @booijAppropriate2013. In advanced disease, uptake
 is globally and bilaterally diminished. This topographic progression is the

@@ -224,16 +224,6 @@ produced by an in-house registration pipeline
 DaTscan template, making all volumes nominally comparable in voxel space. Raw
 images were used as acquired, without spatial normalization.
 
-#figure(
-  grid(
-    image("../assets/figures/methods/unregistered_images.svg", width: 100%),
-    image("../assets/figures/methods/registered_images.svg", width: 100%)
-  ),
-  placement: auto,
-  caption: [Images from the `raw` set (above, multiple different sizes) compared to registered images
-  from the `derivatives` set (below, $91 times 109 times 91$ across).]
-)<fig-compareraw-reg>
-
 A practical challenge was that volumes within the raw dataset differed in
 spatial dimensions across subjects, preventing their direct use as CNN input,
 which requires a fixed input shape. Conversely, while volumes within the
@@ -257,6 +247,17 @@ image sets, (also see @pipelinefig):
   risked clipping the striatal signal in some subjects, while the 128-voxel cube
   imposed a prohibitive memory cost for 3D training; 76 voxels covered the full
   striatum in all subjects while remaining computationally tractable.
+
+#figure(
+  grid(
+    image("../assets/figures/methods/unregistered_images.svg", width: 100%),
+    image("../assets/figures/methods/registered_images.svg", width: 100%)
+  ),
+  placement: auto,
+  caption: [Images from the `raw` set (above, multiple different sizes) compared to registered images
+  from the `derivatives` set (below, $91 times 109 times 91$ across).]
+)<fig-compareraw-reg>
+
 
 For the 2.5D model specifically, maximum intensity projections (MIPs) were
 computed from the preprocessed volume along each of the three anatomical axes
@@ -590,6 +591,19 @@ screening (MoCA), and demographic variables (age, sex). This decomposition
 allows the marginal contribution of each clinical domain to be quantified
 separately from the others.
 
+The two fusion strategies were intentionally designed with different levels of
+model complexity. Late fusion combines the predictions of two independently
+trained models and therefore introduces no additional trainable parameters.
+Feature-level fusion attempts to learn a joint representation of the imaging and
+clinical modalities instead.
+
+The CNN backbone was kept frozen during feature-level fusion training. This
+decision was motivated by the limited size of the multimodal cohort, which
+increases the risk of overfitting when a large number of parameters are updated.
+Freezing the pretrained image encoder allows the network to preserve the visual
+representations learned during image-only training while restricting learning to
+the newly introduced fusion layers.
+
 #figure(
   text(.75em, 
   box(fill: luma(245), radius: 2pt, inset: 1em, outset: (x: 2em, y: 0em),
@@ -640,18 +654,6 @@ separately from the others.
 
 
 
-The two fusion strategies were intentionally designed with different levels of
-model complexity. Late fusion combines the predictions of two independently
-trained models and therefore introduces no additional trainable parameters.
-Feature-level fusion attempts to learn a joint representation of the imaging and
-clinical modalities instead.
-
-The CNN backbone was kept frozen during feature-level fusion training. This
-decision was motivated by the limited size of the multimodal cohort, which
-increases the risk of overfitting when a large number of parameters are updated.
-Freezing the pretrained image encoder allows the network to preserve the visual
-representations learned during image-only training while restricting learning to
-the newly introduced fusion layers.
 
 Similarly, the tabular branch was deliberately kept small, consisting of a
 single hidden layer followed by dropout regularization. The objective was not

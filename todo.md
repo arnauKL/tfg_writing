@@ -1,11 +1,9 @@
 - [ ] Finish revision of the SOTA section
-- [ ] Finish the "6_results" section in full 
-- [ ] Add the "7_discussion" section
-- [ ] Add the "8_conclusion" section
-- [ ] Fill in appendixes:
+- [x] Finish the "6_results" section in full 
+- [x] Add the "7_discussion" section
+- [x] Add the "8_conclusion" section
+- [x] Fill in appendixes:
     - [x] Code
     - [ ] Planification
-    - [ ] Budget
-    - [ ] Ethics committee
-
-- [ ] Confirm the need for a `parts/app_extended_results.typ` appendix.
+    - [x] Budget
+    - [x] Ethics committee

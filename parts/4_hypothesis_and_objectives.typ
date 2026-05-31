@@ -22,7 +22,7 @@ spatial information. This thesis addresses the following research question:
   advantage over imaging alone?
 ]
 
-== Hypothesis
+== Hypothesis <sec-hypothesis>
 
 The central hypothesis is that a CNN trained end-to-end on DaTscan images
 will learn richer and more discriminative spatial representations than those
@@ -31,16 +31,18 @@ further improved by incorporating complementary clinical information that is not
 visible in the image. This can be rewritten into the following specific
 hypotheses:
 
-/ #smol[H1]: CNN superiority over classical baselines. A CNN classifier
+//#show terms.where(item: "term"): set text(weight: "regular", style: "italic")
+
+/ H1: CNN superiority over classical baselines. A CNN classifier
   operating on the raw DaTscan volume will achieve higher AUC and
   classification accuracy than classical machine learning models (SVM, Logistic
   Regression) trained on SBR-derived features.
 
-/ #smol[H2]: Transfer learning compensates for data scarcity. In a data-limited regime,
+/ H2: Transfer learning compensates for data scarcity. In a data-limited regime,
   leveraging pretrained weights will improve generalization relative to training
   a 3D CNN from scratch.
 
-/ #smol[H3]: Multimodal fusion improves upon imaging alone. Combining DaTscan-derived
+/ H3: Multimodal fusion improves upon imaging alone. Combining DaTscan-derived
   markers with tabular clinical variables will yield higher classification
   performance than either modality alone.
 

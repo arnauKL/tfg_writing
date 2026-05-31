@@ -66,14 +66,6 @@ mean F1 of $0.983 plus.minus 0.012$. It also exhibited the narrowest
 interquartile range of all classifiers, indicating stable performance regardless
 of the specific train-test split.
 
-#figure(
-  image("../assets/figures/results/comparison_models_only.svg"),
-  caption: [Five-fold cross-validation performance of all classical ML
-  classifiers trained on the manually balanced, feature-engineered dataset.
-  Tighter distributions indicate greater consistency across folds.]
-)<only_man_eng_allmodels>
-
-
 == CNN Architecture Comparison
 
 === All Architectures: Raw and Registered
@@ -92,6 +84,15 @@ architectures to rank models under a reduced computational budget; the
 top-performing architectures were subsequently re-evaluated using 5-fold
 cross-validation to obtain more reliable performance estimates. Results are
 presented in @basic_cnn_comp.
+
+#figure(
+  image("../assets/figures/results/comparison_models_only.svg"),
+  caption: [Five-fold cross-validation performance of all classical ML
+  classifiers trained on the manually balanced, feature-engineered dataset.
+  Tighter distributions indicate greater consistency across folds.]
+)<only_man_eng_allmodels>
+
+
 
 #figure(
   image("../assets/figures/results/cnn_unimodal_baselines_brief.svg"),
@@ -146,12 +147,12 @@ $0.944$ and $0.954$.
   tablec(
     columns: (auto, auto, auto, auto),
     [ Model          ],[ AUC             ],[ Acc           ],[ F1              ],
-    [ 3d_crop_deeper ],[ 0.991 $plus.minus$ 0.015 ],[ 0.952 $plus.minus$ 0.021 ],[ 0.951 $plus.minus$ 0.021 ],
-    [ 25d_resnet     ],[ 0.979 $plus.minus$ 0.021 ],[ 0.943 $plus.minus$ 0.064 ],[ 0.943 $plus.minus$ 0.073 ],
-    [ med3d_encoder  ],[ 0.954 $plus.minus$ 0.039 ],[ 0.877 $plus.minus$ 0.028 ],[ 0.871 $plus.minus$ 0.026 ],
-    [ med3d          ],[ 0.946 $plus.minus$ 0.028 ],[ 0.859 $plus.minus$ 0.061 ],[ 0.870 $plus.minus$ 0.052 ],
-    [ 2d_sum         ],[ 0.945 $plus.minus$ 0.017 ],[ 0.876 $plus.minus$ 0.047 ],[ 0.875 $plus.minus$ 0.056 ],
-    [ 3d_crop        ],[ 0.944 $plus.minus$ 0.016 ],[ 0.871 $plus.minus$ 0.060 ],[ 0.865 $plus.minus$ 0.046 ],
+    [ `3d_crop_deeper` ],[ 0.991 $plus.minus$ 0.015 ],[ 0.952 $plus.minus$ 0.021 ],[ 0.951 $plus.minus$ 0.021 ],
+    [ `25d_resnet`     ],[ 0.979 $plus.minus$ 0.021 ],[ 0.943 $plus.minus$ 0.064 ],[ 0.943 $plus.minus$ 0.073 ],
+    [ `med3d_encoder`  ],[ 0.954 $plus.minus$ 0.039 ],[ 0.877 $plus.minus$ 0.028 ],[ 0.871 $plus.minus$ 0.026 ],
+    [ `med3d`          ],[ 0.946 $plus.minus$ 0.028 ],[ 0.859 $plus.minus$ 0.061 ],[ 0.870 $plus.minus$ 0.052 ],
+    [ `2d_sum`         ],[ 0.945 $plus.minus$ 0.017 ],[ 0.876 $plus.minus$ 0.047 ],[ 0.875 $plus.minus$ 0.056 ],
+    [ `3d_crop`        ],[ 0.944 $plus.minus$ 0.016 ],[ 0.871 $plus.minus$ 0.060 ],[ 0.865 $plus.minus$ 0.046 ],
   ),
   caption: [Summary of final 5-fold cross-validation performance for all
   evaluated CNN architectures in the HC versus PD classification task.]
@@ -214,14 +215,27 @@ similar activation patterns despite their architectural differences: both
 produced diffuse maps characterised by scattered pankake-like structures
 with no consistent focal point. The `med3d_encoder` produced a distinctive
 ring-shaped activation pattern centred on the image but not localised to the
-striatum itself (it can be seen more clearly in #redt[figure for med3d_encoder
-showing donut]).
+striatum itself (it can be seen more clearly in @panel_med3d_encoder in
+@app_extended_results).
 
 // This paragraph might belong in the discussions section
 In all four cases, the attention maps provide no interpretable anatomical basis
 for the classification decision, suggesting these models exploit image-level
 shortcuts such as background intensity structure or acquisition geometry rather
 than the dopaminergic signal.
+
+This interpretability analysis qualifies the quantitative ranking in
+@table_winners: although `3d_crop_deeper` achieved the highest aggregate AUC,
+its Grad-CAM maps indicate that this performance is not driven by the
+diagnostically relevant dopaminergic signal. The `25d_resnet` is the only
+architecture whose attention is consistently and anatomically grounded in the
+striatum, making it the more trustworthy model and the natural choice as backbone
+for the multimodal fusion experiments that follow.
+
+Among all evaluated architectures, the 2.5D ResNet exhibited the strongest
+qualitative correspondence between highlighted regions and the expected
+anatomical location of dopaminergic uptake.
+
 
 #figure(
   grid(
@@ -235,22 +249,9 @@ than the dopaminergic signal.
   caption: [Cohort-averaged Grad-CAM attention maps for PD patients across the
   four 3D architectures. Top-left: `3d_crop`; top-right: `3d_crop_deeper`;
   bottom-left: `med3d`; bottom-right: `med3d_encoder`. None of the four
-  architectures produces attention concentrated at the striatum. #redt[Individual
-  patient panels for each architecture are provided in @app-gradcam.]]
+  architectures produces attention concentrated at the striatum. Individual
+  patient panels for each architecture are provided in @app-gradcam.]
 )<gradcam_other_mean>
-
-This interpretability analysis qualifies the quantitative ranking in
-@table_winners: although `3d_crop_deeper` achieved the highest aggregate AUC,
-its Grad-CAM maps indicate that this performance is not driven by the
-diagnostically relevant dopaminergic signal. The `25d_resnet` is the only
-architecture whose attention is consistently and anatomically grounded in the
-striatum, making it the more trustworthy model and the natural choice as backbone
-for the multimodal fusion experiments that follow.
-
-
-Among all evaluated architectures, the 2.5D ResNet exhibited the strongest
-qualitative correspondence between highlighted regions and the expected
-anatomical location of dopaminergic uptake.
 
 == Multimodal Fusion: Classical ML
 
@@ -307,16 +308,6 @@ highest-ranked variables. The model prioritizes continuous motor impairment
 putaminal-first dopaminergic degradation (`Putamen_Caudate_Ratio`), and
 integrates known non-motor prodromal indicators (`upsit`).
 
-#figure(
-  image("../assets/figures/results/shap_summary_multimodal_pt.svg", width: 80%),
-  caption: [SHAP beeswarm plot for the SVM RBF classifier trained on the full
-  multimodal feature set (PD class). Each point represents one patient,
-  positioned horizontally by its SHAP value and coloured by the corresponding
-  feature value (red = high, blue = low). Features are ranked by mean absolute
-  SHAP value.]
-)<shap_multimodal>
-
-
 The three highest-ranked features by mean absolute SHAP value were
 `updrs3_score`, `Putamen_Caudate_Ratio`, and `con_putamen`. The motor score
 (`updrs3_score`) contributed the largest individual SHAP magnitudes, with low
@@ -330,6 +321,16 @@ binding pushed the model toward a PD diagnosis. While global summary metrics
 like `Mean_SBR` ranked at the very bottom, specific regional and asymmetric
 DaTscan indicators remained highly influential even when clinical and motor
 features were present.
+
+#figure(
+  image("../assets/figures/results/shap_summary_multimodal_pt.svg", width: 80%),
+  caption: [SHAP beeswarm plot for the SVM RBF classifier trained on the full
+  multimodal feature set (PD class). Each point represents one patient,
+  positioned horizontally by its SHAP value and coloured by the corresponding
+  feature value (red = high, blue = low). Features are ranked by mean absolute
+  SHAP value.]
+)<shap_multimodal>
+
 
 == Multimodal Fusion: CNN
 
@@ -348,14 +349,6 @@ section. @multi_cnn presents the performance distributions across the four clini
 feature groups (motor, olfactory, cognitive, and demographic) and their
 combination (ALL), for both late fusion and feature-level fusion configurations.
 
-#figure(
-  image("../assets/figures/results/multimodal_cnn.svg"),
-  caption: [Multimodal fusion performance across clinical feature groups and
-  fusion strategies (late fusion and feature-level fusion). Results are based on
-  5-fold cross-validation with the `25d_resnet` (raw) as the frozen CNN backbone;
-  $N = 306$.]
-)<multi_cnn>
-
 The motor feature group (`motor_updrs`) achieved the highest overall performance
 of all evaluated configurations: under late fusion, it yielded a median AUC of
 $0.999$ with an exceptionally narrow interquartile range, indicating highly
@@ -367,6 +360,15 @@ In contrast, models incorporating cognitive scores (`moca`) and demographic
 variables exhibited wider fold-to-fold variance, particularly within the
 feature-level fusion pipeline, suggesting that these features introduce greater
 uncertainty into the fusion head relative to the motor and olfactory domains.
+
+#figure(
+  image("../assets/figures/results/multimodal_cnn.svg"),
+  caption: [Multimodal fusion performance across clinical feature groups and
+  fusion strategies (late fusion and feature-level fusion). Results are based on
+  5-fold cross-validation with the `25d_resnet` (raw) as the frozen CNN backbone;
+  $N = 306$.]
+)<multi_cnn>
+
 
 The combination of all feature groups (ALL) did not yield the highest overall
 diagnostic performance despite incorporating the full available clinical
@@ -430,8 +432,7 @@ and closer to the HC distribution. The standard deviation for the SWEDD group
 violin plot in @violin_swedd makes this distribution particularly visible: the
 bulk of SWEDD predictions cluster near zero, alongside HC, while a small subset
 of patients receives substantially elevated PD probabilities (furhter commented
-in #redt[discussion section about why SWEDDs could be
-misdiagnosed]).
+in (further commented in @sec-swedd-discussion).
 
 #figure(
   tablec(
@@ -446,7 +447,7 @@ misdiagnosed]).
 )<tab_swedd_inference>
 
 #figure(
-  image("../assets/figures/results/swedd_probabilities_violin.svg", width: 60%),
+  image("../assets/figures/results/swedd_probabilities_violin.svg", width: 50%),
   caption: [Violin plot of predicted PD probabilities for HC, PD, and SWEDD
   cohorts. Individual patient predictions are overlaid as markers. A
   well-calibrated model assigning purely image-based decisions would place HC

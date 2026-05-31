@@ -23,133 +23,246 @@ Contibutions to SDG
 
 = Discussion
 
-== classical ML results prior to multimodal
+The experiments reported in this thesis pursued three questions: whether CNNs
+operating on the full DaTscan volume outperform classical models trained on
+semi-quantitative features; whether transfer learning compensates for the
+limited dataset size; and whether multimodal fusion with clinical variables adds
+diagnostic value. Read in isolation, the quantitative results support all three
+hypotheses. Read alongside the interpretability analyses, a more nuanced picture
+emerges: most of the CNN gain in raw AUC is not driven by the diagnostically
+relevant signal, and the largest apparent multimodal improvement raises a
+circularity concern. This section discusses each finding in turn.
 
-SVM with non-linear kernel seems to do best.
+== Classical ML Baseline
 
-== CNNs
+The SVM with a non-linear RBF kernel achieved a remarkably strong performance on
+DaTscan semi-quantitative features alone, reaching a median AUC of $0.998$ on
+the engineered feature set. This result is consistent with prior work showing
+that SBRs are already near-perfectly discriminative for manifest PD versus
+healthy controls in cohorts like PPMI, where diagnoses are expert-confirmed and
+imaging quality is controlled @palermoDopamine2021. The practical implication is
+that the binary classification task as formulated here is not especially
+difficult for a well-tuned classical model given clean semi-quantitative inputs.
 
-They were able to learn to predict with very high precisions. The issue was once
-the Grad-CAM showed that they were pretty much just looking at random noise or
-features on the edges or background of the images instead of learning about the
-DaT differences in different patients and its relationship with Parkinson's.
+Feature engineering consistently outperformed raw SBR values across all
+classifiers. The Putamen-to-Caudate Ratio and asymmetry indices, which encode
+the direction and lateralisation of dopaminergic loss rather than its absolute
+magnitude, proved particularly discriminative. This aligns with the known
+pathophysiology of PD, in which putaminal degeneration precedes and exceeds
+caudate involvement, making the ratio a more specific indicator of nigrostriatal
+damage than either region's absolute binding value alone
+@tinazSemiquantitative2018.
 
-=== Transfer Learning vs tailored networks
+The finding that demographic variables (age, sex) added no measurable information
+over the imaging baseline is noteworthy: despite their variability across the
+PPMI cohort, they do not reduce classification error, suggesting that the DaTscan
+signal alone is sufficient to separate the two groups at this disease stage and
+that demographic confounders are not introducing systematic bias. /* which could
+probably be more of an issue if j'd use MRI too */
 
-ImageNet performed best.
+== CNN Architecture Comparison
 
-MedNet, which I had high hopes for since it's seen a lot of medical data, which
-I lacked (the dataset I worked with during the thesis had a relatively low
-number of 3d DaTscans). Maybe that was the issue, too little images for it to
-effectively transfer its knowledge.
+=== Quantitative performance and its caveats
 
-Since the ImageNet has seen all sorts of images it is possible that the fact
-that it was the best performant one (while retaining the attention where it
-mattered, see #redt[figure of 2.5D Grad-CAM].
+All CNN architectures achieved AUC values above $0.94$, with the custom
+`3d_crop_deeper` reaching $0.991 plus.minus 0.015$. On quantitative metrics
+alone, this would suggest that deeper volumetric architectures offer meaningful
+gains. The Grad-CAM analysis, however, reveals a fundamental problem with this
+interpretation.
 
-On the mednet:
-Models leveraging the foundational med3d weights demonstrated the poorest
-overall performance and widest metric instability. The baseline med3d
-(registered) model collapsed to a median F1-score of 0.851. Even when freezing
-the encoder layers (`medencoder`) to preserve pre-trained features, the model
-failed to match the custom networks, showing wide, volatile performance boxes
-across cross-validation splits.
+With the sole exception of the `25d_resnet`, none of the evaluated architectures
+produced attention patterns grounded in the striatum. The `3d_crop` model showed
+spatially inconsistent activation, occasionally overlapping with the striatal
+region but more often localising to small image-edge areas with no reproducible
+anatomical correspondence. The `3d_crop_deeper` and `med3d` variants, despite
+their architectural differences, produced virtually indistinguishable attention
+maps: diffuse, dot- and line-like patterns without any consistent anatomical
+focus. The `med3d_encoder` produced a distinctive ring-shaped activation
+encircling the image centre, but not localised to the striatum itself.
 
-The underperformance of MedNet architectures highlights a classic domain-mismatch
-challenge in medical deep learning. The weights for med3d were pre-trained on
-the Medical Segmentation Decathlon, a dataset dominated by high-resolution,
-structural macro-anatomy from CT and MRI scans (e.g., organ boundaries, tumors).
+Achieving high AUC without attending to the diagnostically relevant anatomical
+region suggest that the models learned a shortcut. In a multicentre dataset like
+PPMI, plausible elements include site-specific acquisition differences, scanner
+intensity distributions, and background characteristics that may covary
+systematically with diagnosis group membership. The `25d_resnet`, ranking second
+in aggregate AUC at $0.979 plus.minus 0.021$, is the only architecture whose
+classification decisions are anatomically grounded, and therefore the only
+result that can be interpreted with clinical confidence.
 
-When these heavy filters are transferred to a highly specialized, functional
-nuclear medicine modality like DaTscan, the pre-trained features fail to
-generalize. The over-parameterization of deep ResNet-3D blocks overfits to
-non-clinical noise within small-sample cohorts, whereas custom architectures
-like 3d_crop_deeper maintain a compact parameter footprint that enforces strict
-regularization.
+=== Transfer learning: ImageNet and MedicalNet
 
-== Raw vs registered data:
+The superior interpretability of the `25d_resnet` relative to the 3D
+architectures likely reflects the nature of its pretraining rather than its
+dimensionality alone. ImageNet pretraining supplies low-level feature detectors
+(edge filters, texture responses, ...) that transfer broadly across image
+domains @raghuTransfusion2019. Applied to the maximum intensity projections of
+DaTscan volumes, these features map directly to detecting the high-contrast
+boundary between striatal uptake and the surrounding background, which is
+precisely the signal distinguishing PD from healthy controls. The network is
+thus biased toward the relevant spatial gradients from the very start of
+fine-tuning.
 
-In traditional neuroimaging, spatial registration is essential to ensure
-voxel-wise alignment across heterogeneous subjects for statistical parametric
-mapping. However, for deep convolutional neural networks, the interpolation,
-spatial warping, and intensity smoothing inherent to non-rigid registration
-pipelines introduce distinct morphological degradations.
+MedicalNet pretraining, despite being domain-specific, did not confer an
+equivalent advantage. Its weights were acquired from the Medical Segmentation
+Decathlon, a collection of high-resolution structural CT and MRI volumes. These
+structural anatomy segmentation tasks require specific detectors, different to
+those required to detect localised intensity peaks of functional SPECT tracer.
+When transferred to DaTscan classification, these structural detectors appear to
+produce both poorer quantitative performance and non-anatomical attention. The
+limited size of the available 3D DaTscan cohort further reduced the capacity of
+fine-tuning to correct this initial misalignment.
 
-DaTscan images are highly functional rather than purely structural; the primary
-diagnostic signal is a sharp, localized intensity gradient within the striatum
-relative to a dark background. Spatial warping smooths these high-frequency
-contrast boundaries and dilutes localized voxel densities. Because the networks
-rely precisely on these raw, pixel-level intensity gradients to quantify
-dopaminergic transporter uptake, the unaltered, raw bounding-box extractions
-preserve a cleaner, unadulterated optimization landscape for gradient descent.
+== Raw versus Registered Images
 
-If we refer to the left-most registered slice in @fig-compareraw-reg, it seems
-like there could be some artifact of registration, which manifests in this kind
-of _streaks_ artifact. This could be both introducing false signal and smearing
-real information away.
+The consistent advantage of raw images over spatially registered volumes is
+perhaps the most practically significant methodological finding of this work.
+Template registration is standard practice in voxel-based statistical
+neuroimaging, where group comparisons require precise voxel-wise alignment. For
+a CNN classifier, however, this alignment could be not only unnecessary but
+potentially harmful.
 
-// the registration process was made by adrià (my tutor) himself so maybe not dis too much
-// on the techniques used
+DaTscan is primarily a functional modality: the diagnostic signal is a,
+localised intensity contrast between striatal uptake and the surrounding
+background, rather than the precise spatial coordinates of the striatum. The
+interpolation and spatial warping intrinsic to registration smooth these
+high-frequency intensity boundaries and dilute peak striatal signal. The
+registered volumes in this dataset additionally appear to carry streak-like
+intensity artefacts visible in some volumes (see leftmost slice in
+@fig-compareraw-reg), which may introduce deceitful spatial patterns that
+compete with the true signal during training.
 
-This could be beneficial if studied in a more in-depth study. If models were
-found to perform better on images that require less manual work to prepare then
-that could lead to cost and compute savings.
+The practical consequence is that the preprocessing step requiring the most
+manual effort, spatial registration, degraded rather than improved CNN
+performance. For DaTscan classification specifically, a center-cropped raw
+volume provides a cleaner optimisation landscape, and future work in this area
+need not invest in registration pipelines.
 
-== GradCAM putamen activation:
+== Multimodal Fusion: Classical ML
 
-connect to the SHAP finding that Mean_SBR and PCR dominate --- both methods
-point to the same anatomical signal.
+The additive feature set experiment confirmed that DaTscan-derived SBR features
+alone provide a strong baseline, with marginal gains from progressively richer
+tabular data until the motor assessment battery (MDS-UPDRS) is added. The
+inclusion of UPDRS scores produced the single largest step improvement, raising
+mean AUC from $0.995$ to $0.999$.
 
-== classical multimodal: UPDRS jump 
+/* is this too daring of me to say? */
+The MDS-UPDRS Part III is a clinician-administered motor examination whose score
+constitutes one of the primary criteria by which PD is formally diagnosed. In a
+cohort like PPMI, where diagnoses are expert-confirmed and UPDRS scores are
+collected at the same clinical visit as imaging, the motor score is not an
+independent predictor: it is, to a significant degree, a re-expression of the
+diagnostic label. The performance improvement from adding UPDRS therefore
+reflects circularity rather than genuine multimodal complementarity. A model
+requiring UPDRS to classify PD provides no utility in early or prodromal
+settings, precisely where automated tools are most needed and where motor signs
+may not yet be manifest.
 
-motor severity is almost perfectly correlated with diagnosis label --- discuss
-whether this is a useful clinical addition or circularity.
+The olfactory test (UPSIT), by contrast, represents a genuinely complementary
+non-motor prodromal marker. Its position among the top SHAP-ranked features is
+clinically meaningful: hyposmia predates motor symptoms by years in many
+patients @tolosaChallenges2021 and does not form part of the formal diagnostic
+criteria.
 
-== Multimodal CNNs
+== Multimodal Fusion: CNN
 
-The flatness in figures shown in the prev section #redt[pdt posar-les] is great.
-It demonstrates extreme architectural stability. It proves that the model's
-performance isn't fluctuating wildly depending on how the data is split; rather,
-it is performing with identical, predictable accuracy across the entire cohort.
+=== Late versus feature-level fusion
 
-Now, this is only meaningful on the nets where the DaTscan shows real attention
-rather than finding cheats
+Late fusion consistently matched or outperformed feature-level fusion across all
+clinical feature groups, with notably lower fold-to-fold variance. This outcome
+is interpretable in terms of model complexity relative to available data.
+Feature-level fusion introduces a tabular branch and joint classification head
+that must be optimised on a fusion cohort of $N = 306$ subjects, a quite small
+effective training set once split across five folds. Late fusion averages the
+output probabilities of two independently pre-trained models, introducing no
+additional learnable parameters. In a data-limited regime, the joint head can
+overfit to fold-specific covariance structure between the image and tabular
+branches. Late fusion avoids this entirely by treating each modality as an
+independent expert. The gap was most pronounced for the cognitive (MoCA) feature
+group, where feature-level fusion showed a substantially elongated lower whisker
+in AUC. Cognitive scores carry weaker signal for binary PD versus HC
+classification than motor or olfactory features.
 
-=== Different fusion modalities
+It is worth noting that the overall CNN multimodal performance is remarkably
+stable across folds: the IQR are extremely narrow for the motor and olfactory
+configurations. This architectural stability confirms that the model's
+performance is not an artifact of a particular data split, but reflects a
+consistent signal across the cohort. This interpretation is only meaningful,
+however, for configurations built on the `25d_resnet` backbone, which has been
+shown to attend to the correct anatomical region.
 
-Also comment on the late-stage fusion performing better than feature-fusion
+=== ALL feature group underperforms motor-only
 
-Why could this be?
+The combination of all available clinical features did not yield the highest
+CNN multimodal performance; the motor-only configuration outperformed it on
+most metrics. This mirrors the classical ML finding and carries a consistent
+explanation: with a small fusion cohort, the classification head cannot learn
+to discount the noisier contribution of demographic and cognitive features.
+When all groups are concatenated, uninformative variables partially cancel the
+signal carried by the motor and olfactory domains.
 
-=== ALL being outscored by motor-only in mutlimodal CNN fusion
+The same UPDRS circularity caveat applies here. The strong performance of the
+motor-only CNN multimodal configuration reflects the near-tautological
+relationship between motor examination scores and a clinician-confirmed PD
+diagnosis, rather than independent informational gain.
 
-the fact that ALL underperforms motor-only is a meaningful finding, it suggests
-the fusion head does not successfully learn to discount the noisier features
-when the cohort is small. 
+== SWEDD Inference <sec-swedd-discussion>
 
-== On SWEDDs inference
+Post-hoc application of the trained `25d_resnet` to the SWEDD cohort ($N = 57$)
+provides an independent validation of the imaging signal the model has learned.
+SWEDD patients, by definition, present normal dopamine transporter imaging
+despite clinical parkinsonism, and were excluded from all training procedures.
+The model assigned them a mean predicted PD probability of $0.113$, which is
+statistically indistinguishable from the HC distribution
+($U = 3765$, $p = 0.077$) and far below the PD distribution ($p < 0.001$). A
+classifier that genuinely learned dopaminergic signal should behave exactly this
+way: if the DAT is intact, the image-based model should classify the patient as
+HC regardless of their clinical presentation.
 
-Dopamine transporter integrity is normal in SWEDD by definition, so a model
-trained on DaTscan signal correctly separates them.
+/* I made up 3 possible explanations for 10% swedds and higher std: */
+The 10.5% of SWEDD patients classified as PD (P(PD)$ > 0.5$) warrants
+further consideration. Three explanations are plausible and not mutually
+exclusive. A subset of SWEDD patients may harbour a genuine but subtle DAT
+deficit, below the clinical diagnostic threshold but detectable by a CNN
+operating on the full image volume. Some SWEDD diagnoses may represent
+misclassified early PD. Finally, some cases may fall at the boundary of the
+model's decision surface, receiving elevated probabilities due to image features
+unrelated to DAT loss. The notably higher standard deviation in this group
+($sigma = 0.267$, versus $0.136$ for HC and $0.145$ for PD) reflects genuine
+heterogeneity within the SWEDD population and is consistent with the first two
+explanations.
 
-=== The 10.5% SWEDD classified as PD:
+== Limitations
 
-Possible genuine DAT deficit in a subset, misdiagnosed SWEDD, or model
-uncertainty at the boundary.
+Several limitations of this study should be acknowledged. The analysis is
+restricted to binary classification of manifest PD versus healthy controls using
+a single cross-sectional timepoint. This formulation, while standard in the
+methodological literature, does not address the most pressing clinical
+challenge: distinguishing early or prodromal PD or PD from atypical
+parkinsonian syndromes, where diagnostic uncertainty is greatest.
+
+The cohort was drawn exclusively from PPMI, a multicentre study with
+standardised acquisition protocols and expert-confirmed diagnoses. Performance
+on routine clinical data, where acquisition parameters and image quality vary
+more widely, may differ substantially.
+
+Class imbalance required majority-class downsampling, reducing the effective
+training set size and discarding informative PD cases. Alternative strategies
+such as data augmentation or oversampling were not systematically evaluated.
+
+Finally, the Grad-CAM analysis demonstrates that the high AUC values of the 3D
+custom architectures are not backed by anatomically meaningful attention. Their
+reported performance should not be taken as evidence of generalisable
+classification, and only the `25d_resnet` has been shown to learn the correct
+diagnostic signal on this dataset.
 
 == Contributions to the Unitaed Nations' SDGs
 
-This thesis primarily contributes to *SDG 3*: Good Health and Well-being, 
-which seeks to ensure healthy lives and promote well-being for people of all ages. By 
-advancing research into ..., this work aligns with efforts to improve 
-diagnostic accuracy and facilitate timely intervention strategies. 
-
-
-#figure(
-  box(width: 50%,grid(columns: 2,
-  column-gutter: 1em,
-    image("../assets/figures/ods/E_WEB_03.png"),
-    image("../assets/figures/ods/E_WEB_09.png")
-  )),
-  caption: [SDGs this thesis is contributing towards. Obtained from @martinCommunications.]
-)
+This thesis primarily contributes to *SDG 3: Good Health and Well-being*, which
+aims to ensure healthy lives and promote well-being for people of all ages.
+Parkinson's disease affects an estimated 10 million people worldwide and its
+prevalence is projected to nearly double over the coming decades as populations
+age @poeweParkinson2017. By developing and critically evaluating automated tools
+for DaTscan interpretation, this work addresses a concrete bottleneck in the
+diagnostic pathway: the dependence on subjective visual assessment by specialist
+readers, which limits access, introduces inter-rater variability, and delays
+diagnosis in centres where nuclear medicine expertise is scarce.

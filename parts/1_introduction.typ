@@ -36,16 +36,16 @@ thinning produces only subtle deviations form normal patterns
 @jakobsonmoAccuracy2015.
 
 The rapid maturation of deep learning offers a compelling path toward addressing
-these limitations. Convolutional neural networks (CNNs), trained end-to-end on
-large labeled image datasets, can learn to detect subtle spatial patterns in
-medical images without relying on manually engineered features, and have
-demonstrated expert-level performance across a wide range of diagnostic imaging
-tasks @litjensSurvey2017. Applied to DaTscan classification, CNN-based
-approaches may provide more consistent and quantitative diagnostic support,
-particularly in the early and prodromal stages where visual assessment is least
-reliable.
+these limitations. Convolutional neural networks (CNNs), trained
+end-to-end on large labeled image datasets, can learn to detect subtle spatial
+patterns in medical images without relying on manually engineered features, and
+have demonstrated expert-level performance across a wide range of diagnostic
+imaging tasks @litjensSurvey2017. Applied to DaTscan classification,
+CNN-based approaches may provide more consistent and quantitative
+diagnostic support, particularly in the early and prodromal stages where visual
+assessment is least reliable.
 
 This thesis investigates deep learning-based binary classification of manifest
 PD versus healthy controls utilizing DaTscan images. The data are drawn from the
-Parkinson's Progression Markers Initiative (PPMI) dataset, which represents one
-of the largest cohorts available @marekParkinson2011.
+Parkinson's Progression Markers Initiative (PPMI) dataset, which
+represents one of the largest cohorts available @marekParkinson2011.

@@ -13,6 +13,7 @@
 //#let debug = true
 #let show_red = true
 
+
 #let appendix(body) = {
   set heading(numbering: "A.1.1 a", supplement: [Appendix])
   counter(heading).update(0)
@@ -175,8 +176,8 @@
   set bibliography(style: "ieee", title: [References])
 
   set page(
-    // https://practicaltypography.com/page-margins.html
-    //margin: (left: 16.3%, right: 16.3%),
+    // https://practicaltypography.com/page-margins.html, welp I ended up
+    // shrinking them bcs I had too many pages :(
     margin: (x: 3cm, y: 2.5cm),
     footer: context {
       let current_chapter = query(selector(heading.where(level: 1)).before(here())).at(-1, default: none)

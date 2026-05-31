@@ -1,3 +1,5 @@
+// Done
+
 #import "../assets/ak_tfg_lib.typ": *
 
 = Budget
@@ -44,29 +46,19 @@ because they constitute essential technological resources for the development
 and reproducibility of the work.
 
 #figure(
-  tablef(
+  tablec(
     columns: 5,
     row-gutter: 0pt,
-    [ Resource               ],[ Quantity ],[ Cost ],[ Total   ],[ Observations ],
-    [ Linux Operating System ],[ 1        ],[ 0 €  ],[ 0 €     ],[ Used on both
-  laptop and server],
-    [ Python                 ],[ 1        ],[ 0 €  ],[ 0 €     ],[ Main language
-  used ],
-    [ PyTorch                ],[ 1        ],[ 0 €  ],[ 0 €     ],[ Deep learning
-    framework used ],
-    [ MONAI                  ],[ 1        ],[ 0 €  ],[ 0 €     ],[ Medical
-    imaging framework ],
-    [ Scikit-learn           ],[ 1        ],[ 0 €  ],[ 0 €     ],[Classical
-    machine learning
-  library],
-    [ Git                    ],[ 1        ],[ 0 €  ],[ 0 €     ],[ Version
-    control system ],
-    [ Vim                    ],[ 1        ],[ 0 €  ],[ 0 €     ],[ Primary text and
-    code
-  editor],
-    [ Codium                 ],[ 1        ],[ 0 €  ],[ 0 €     ],[ Remote
-    development environment ],
-    [ *Total*              ],[          ],[      ],[ *0 €* ],[ ],
+    [ Resource ],[ Quantity ],[ Cost ],[ Total ],[ Observations ],
+    [ Linux-based OS ],[ 1 ],[ 0 € ],[ 0 € ],[ Used on both laptop and server],
+    [ Python         ],[ 1 ],[ 0 € ],[ 0 € ],[ Main language used ],
+    [ PyTorch        ],[ 1 ],[ 0 € ],[ 0 € ],[ Deep learning framework used ],
+    [ MONAI          ],[ 1 ],[ 0 € ],[ 0 € ],[ Medical imaging framework ],
+    [ Scikit-learn   ],[ 1 ],[ 0 € ],[ 0 € ],[Classical ML library],
+    [ Git            ],[ 1 ],[ 0 € ],[ 0 € ],[ Version control system ],
+    [ Vim            ],[ 1 ],[ 0 € ],[ 0 € ],[ Primary text and code editor],
+    [ Codium         ],[ 1 ],[ 0 € ],[ 0 € ],[ Remote development ],
+    [ *Total*        ],[   ],[     ],[ *0 €* ],[ ],
   ),
   caption: [Software Resources.]
 )

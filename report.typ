@@ -8,6 +8,7 @@
   author: "Arnau K. Deprez Santamaria",
 )
 
+#set page(numbering: "i") // this forces reset on pdf viewers too
 // ------- typst regexes -------
 #import "assets/regex.typ": apply-regex-rules
 #show: apply-regex-rules
