@@ -71,7 +71,13 @@ stable performance regardless of the specific train-test split.
   image("../assets/figures/results/comparison_models_only.svg"),
   caption: [Five-fold cross-validation performance of all classical ML
   classifiers trained on the manually balanced, feature-engineered dataset.
-  Tighter distributions indicate greater consistency across folds.]
+  Tighter distributions indicate greater consistency across folds. Evaluation
+  is restricted to ROC-AUC, Balanced Accuracy, and F1 (macro) performance
+  scores. Because manual downsampling establishes a rigid 50/50 class balance
+  across all validation folds, and the classifiers display highly symmetric
+  error behavior (False Positives $approx$ False Negatives), Balanced Accuracy,
+  F1, Precision (macro), and Recall (macro) converge to identical values.
+]
 )<only_man_eng_allmodels>
 
 
@@ -431,7 +437,7 @@ the demographic AUC, which did not generalize to other metrics.
 
 To further characterize the specificity of the imaging signal learned by the
 best-performing model, post-hoc inference was performed on the SWEDD cohort
-(Scans Without Evidence of Dopaminergic Deficit; $N = 57$). As described in
+(Scans Without Evidence of Dopaminergic Deficit; $N = 56$). As described in
 @sec-swedd-inference, SWEDD patients were excluded from all training and model
 selection procedures; the trained `25d_resnet` (raw) classifier was applied
 directly without retraining or fine-tuning.

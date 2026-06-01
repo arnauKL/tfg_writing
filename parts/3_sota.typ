@@ -72,7 +72,7 @@ Commercial implementations of semi-quantitative analysis, such as DaTQUANT
 publicly available: DaTQUANT is a paid proprietary tool, and BasGANv2 is not
 currently accessible for independent research use. This limits their utility for
 open, reproducible research and precludes their free application to datasets
-such as PPMI @marekParkinson2011.
+such as PPMI.
 
 Both limitations are most consequential where automated tools would have the
 greatest clinical impact: in borderline and early-stage presentations where
@@ -246,7 +246,7 @@ pretrained on ImageNet applied to 2D slices from PPMI volumes, demonstrating
 competitive classification performance with substantially reduced training cost.
 Kurmi et al. @kurmiEnsemble2022 extended this line of work into a fuzzy ensemble
 of four pretrained 2D architectures (VGG16, ResNet50, InceptionV3, and Xception)
-achieving AUC values above 0.95 on PPMI. More recently, Pant et al.
+achieving AUC values above $0.95$ on PPMI. More recently, Pant et al.
 @pantDeep2025 combined CNN-based feature extraction with classical downstream
 classifiers in a hybrid pipeline, again evaluated on PPMI. The near-universal
 reliance on PPMI across these works makes it the de facto benchmark for DaTscan
@@ -341,7 +341,7 @@ combining structural MRI with cognitive test scores and genetic risk factors has
 consistently outperformed single-modality approaches @youngAccurate2013. For PD
 specifically, Ding et al. @dingParkinsons2024 proposed a contrastive graph
 cross-view learning framework that jointly processes DaTscan SPECT images and
-clinical features, reporting an AUC of $92.8%$ in five-fold cross-validation on
+clinical features, reporting an AUC of $0.928$ in five-fold cross-validation on
 PPMI. The PPMI dataset @marekParkinson2011 provides a uniquely rich resource for
 such experiments: alongside DaTscan SPECT volumes, it collects motor assessments
 (MDS-UPDRS), olfactory testing (UPSIT), cognitive screening, and biospecimen

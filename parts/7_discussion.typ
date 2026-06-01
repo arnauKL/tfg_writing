@@ -185,40 +185,6 @@ diagnosis, rather than independent informational gain.
 
 == Inference on SWEDD patients <sec-swedd-discussion>
 
-/*
-Post-hoc application of the trained `25d_resnet` to the SWEDD cohort provides an
-independent validation of the imaging signal the model has learned. Patients in
-this cohort, by definition, present normal DAT imaging despite exhibiting
-clinical parkinsonism. Operating strictly on image volumes ($N = 56$), the model
-assigned them a low mean predicted PD probability of $0.097$ (median $0.004$),
-rendering them statistically indistinguishable from the HC distribution ($U =
-3765$, $p = 0.077$). A classifier that genuinely isolates a structural
-dopaminergic signature should behave exactly this way: if the DAT is
-biologically intact, the image-only model treats the patient as healthy
-regardless of their clinical presentation.
-
-However, transitioning to a multimodal late fusion configuration ($alpha = 0.5$)
-unmasks the clinical reality of these patients as symptomatic mimics. As
-detailed in @swedd_app, the integration of baseline clinical variables pulls the
-structurally normal SWEDD cohort into an intermediate diagnostic space, shifting
-their median predicted PD probability to $0.450$ and tripling their
-classification rate from $8.9\%$ to $30.4\%$. This divergence exposes a conflict
-between objective imaging biomarkers and phenotypic severity (driven by elevated
-UPDRS3 scores), forcing the multimodal model to exhibit highly significant
-statistical separation from both pure HC ($U = 424.0, p < 0.001$) and pure PD
-cohorts ($U = 31304.0, p < 0.001$).
-
-This dual-modality shows the high heterogeneity observed within the SWEDD
-population ($sigma = 0.267$). While the clinical features exert a strong
-positive diagnostic pull across the group, the subset of patients receiving high
-PD probabilities suggests that some individuals may harbor subtle, sub-threshold
-DAT deficits that the volumetric CNN begins to detect before clinical visual
-reading thresholds, or represent early PD cases misclassified at recruitment.
-Rather than a failure of classification, this boundary behavior highlights how
-late fusion successfully characterizes SWEDD as a distinct clinical entity
-trapped between a healthy brain structure and a symptomatic phenotype.
-*/
-
 Post-hoc application of the trained `25d_resnet` to the SWEDD cohort provides an
 independent validation of the imaging signal learned by the model. Patients in
 this cohort, by definition, present normal DAT imaging despite exhibiting

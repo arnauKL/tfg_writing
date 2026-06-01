@@ -238,12 +238,12 @@ features, producing calibrated probability estimates. Its simplicity and
 interpretability make it a standard reference point in clinical machine
 learning.
 
-*Random forest.* Random Forest is an ensemble learning method that combines the
+*Random forest (RF).* Random forest is an ensemble learning method that combines the
 predictions of multiple decision trees trained on random subsets of the data and
 features. By averaging across many trees, the model reduces variance and
 typically achieves better generalization than a single decision tree.
 
-*Gradient boosting.* Gradient Boosting constructs an ensemble sequentially, with
+*Gradient boosting (GB).* Gradient boosting constructs an ensemble sequentially, with
 each new tree focusing on correcting the errors of the previous ones. This
 iterative process often produces highly accurate predictive models while
 remaining applicable to heterogeneous clinical data.
@@ -335,7 +335,7 @@ analysis. By the mid-2010s, deep learning was delivering
 state-of-the-art performance in chest X-ray classification, skin lesion grading,
 retinal disease detection, and neuroimaging analysis @litjensSurvey2017. Applied
 to DaTscan specifically, CNN classifiers trained on PPMI data have achieved AUC
-values above 0.95 across several published studies @kurmiEnsemble2022.
+values above $0.95$ across several published studies @kurmiEnsemble2022.
 
 However, medical imaging differs from conventional computer vision in several
 important respects. Datasets are typically smaller, annotations require expert

@@ -24,24 +24,6 @@ within PPMI.
 
 === Study population and cohort selection
 
-/* draft:
-// ill comment on the available data, how many of each, ages, etc.
-// Maybe also describe image acquisition
-
-As I mentioned, only the *sesBL* (baseline session) session was used (BIDS, see
-@bids for more) to avoid repeating the same patients in different timelines,
-introducing accidental biases.
-
-This left me with a dataset of a total of ... nanana
-
-This imbalance was present in the tabular data too. I tried fixing it both
-automatically with weighted samplers and manually (dropping enough PD so that
-there are the same PD as HC), which is what ended up working best on all cases.
-
-When it came to the tabular data (not DaTscan images), thouhg, a total of "PD: 3066, HC: 296" were
-there.
-*/
-
 Only subjects with a DaTscan image available and a confirmed diagnosis of either
 Parkinson's disease (PD) or healthy control (HC) were used. Subjects with
 Parkinson's symptoms at prodromal stages  were excluded from the analysis to
@@ -66,7 +48,7 @@ experiments.
     [Dataset], [HC], [PD],
     [rawdata], [158], [618],
     [registered], [124], [561],
-    [tabular], [296], [3066],
+    [tabular], [290], [1346],
   ),
   caption: [Distribution of patients in selected datasets.]
 )<tab-dataset>
@@ -80,8 +62,8 @@ performance across architectures.
 
 For the tabular experiments (classical ML baseline, tabular row in @tab-dataset), the same diagnostic filter
 was applied to the curated spreadsheet. After removing rows with missing values
-in the feature columns of interest, the tabular cohort comprised 3066 PD and
-296 HC subjects. The substantially larger tabular counts relative to the
+in the feature columns of interest, the tabular cohort comprised 1346 PD and
+290 HC subjects. The substantially larger tabular counts relative to the
 image cohort reflect the fact that PPMI collects clinical assessments at
 multiple visits and from participants who did not undergo imaging at baseline.
 
@@ -307,13 +289,12 @@ networks.
 
 The curated PPMI spreadsheet provides semi-quantitative DaTscan binding values
 alongside clinical assessments. Preprocessing of the tabular data consisted of
-two steps: row filtering and feature engineering. Rows with missing values in
-any column belonging to the active feature set were dropped. No imputation was
-performed, as the missingness rate was low for the primary feature sets and
-imputation of clinical biomarkers risks introducing systematic bias.
-
-From the raw SBR columns, four engineered features were derived to capture
-lateralization and overall binding:
+two steps: row filtering and feature engineering. Rows with missing values and
+repeating patients in any column belonging to the active feature set were
+dropped. No imputation was performed, as the missingness rate was low for the
+primary feature sets and imputation of clinical biomarkers risks introducing
+systematic bias. From the raw SBR columns, four engineered features were
+derived to capture lateralization and overall binding:
 
 #[
 #set par(leading: 1em)
@@ -446,8 +427,9 @@ volume were stacked as channels, producing a $3 times H times W$ input that
 matches the format expected by the pretrained network (refer to @mips). The
 original ImageNet classification head was replaced by a single linear layer with
 sigmoid output. During fine-tuning, all backbone weights were updated at a
-reduced learning rate ($1e^(-5)$, a tenth of the default) to avoid overwriting
+reduced learning rate ($10^(-5)$, a tenth of the default) to avoid overwriting
 pretrained representations. 
+
 *3D ResNet10 with MedicalNet pretraining* (`med3d`). As a domain-specific
 alternative to ImageNet pretraining, a ResNet-10 backbone from MedicalNet
 @chenMed3D2019, pretrained on 23 heterogeneous medical image segmentation datasets
@@ -718,15 +700,19 @@ precision and recall. A value of $1.0$ indicates perfect classification,
 whereas lower values reflect decreasing agreement between predictions and the
 ground truth.
 
-
 To ensure reproducibility and statistical validity, all metrics are reported as
-the mean $plus.minus$ standard deviation ($sigma$) computed across the validation folds of the cross-validation architecture. Where direct performance comparisons between distinct model architectures are made, the complete performance distributions across folds are visualized using boxplots. This approach effectively conveys fold-level variability alongside the aggregate mean, offering insight into the stability and robustness of the models.
+the mean $plus.minus$ standard deviation ($sigma$) computed across the
+validation folds of the cross-validation architecture. Where direct performance
+comparisons between distinct model architectures are made, the complete
+performance distributions across folds are visualized using boxplots. This
+approach effectively conveys fold-level variability alongside the aggregate
+mean, offering insight into the stability and robustness of the models.
 
 == Post-hoc SWEDD inference <sec-swedd-inference>
 
 To assess the specificity of the learned imaging representation, the
 best-performing trained model was applied post-hoc to the SWEDD cohort (Scans
-Without Evidence of Dopaminergic Deficit; $N = 57$), which was excluded from all
+Without Evidence of Dopaminergic Deficit; $N = 56$), which was excluded from all
 training and model selection procedures. Inference was performed without
 retraining or fine-tuning, producing a predicted PD probability for each SWEDD
 patient. The resulting probability distributions were compared across HC, PD,

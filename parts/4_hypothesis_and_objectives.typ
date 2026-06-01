@@ -78,7 +78,7 @@ with clinical variables, using the PPMI dataset as a standardized benchmark.
   the top-performing networks are leveraging clinically sound anatomical regions
   (the striatum) or relying on confounding background shortcuts.
 
-+ *Evaluate Generalizability on Unseen Clinical Mimics*. Validate the
++ *Evaluate generalizability on unseen clinical mimics*. Validate the
   physiological specificity of the learned imaging representations via
   inference on an independent SWEDD cohort, ensuring the network captures
   structural dopaminergic deficits rather than clinical confounding factors.
