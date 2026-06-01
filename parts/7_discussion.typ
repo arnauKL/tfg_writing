@@ -1,26 +1,5 @@
 #import "../assets/ak_tfg_lib.typ": *
 
-/*
-En aquest capítol s’explicaran els resultats obtinguts respecte als objectius del projecte 
-(beneficis).  
- 
-Caldrà incloure dues seccions:  
-
-- Limitacions: es descriuran les limitacions dels resultats obtinguts, com ara per 
-exemple, la generalitat dels resultats respecte a l’abast de l’experimentació 
-(i.e. s’han fet proves amb persones sanes, i no es poden extrapolar els 
-resultats a tota la població).   
- 
-- Contribucions als objectius de desenvolupament sostenible (ODS) de les 
-Nacions Unides: identificació d’almenys un ODS i com el TFG està contribuint-
-hi.
-
-Contibutions to SDG
-#link("https://www.un.org/sustainabledevelopment/", "SDG")
-3 and 9
-*/
-
-
 = Discussion
 
 The experiments reported in this thesis pursued three questions: whether CNNs
@@ -38,11 +17,11 @@ circularity concern. This section discusses each finding in turn.
 The SVM with a non-linear RBF kernel achieved a remarkably strong performance on
 DaTscan semi-quantitative features alone, reaching a median AUC of $0.998$ on
 the engineered feature set. This result is consistent with prior work showing
-that SBRs are already near-perfectly discriminative for manifest PD against HC in
-cohorts like PPMI, where diagnoses are expert-confirmed and imaging quality is
-controlled @palermoDopamine2021. The practical implication is that the binary
-classification task as formulated here is not especially difficult for a
-well-tuned classical model given clean semi-quantitative inputs.
+that SBRs are already near-perfectly discriminative for manifest PD against HC
+in cohorts like PPMI, where diagnoses are expert-confirmed and imaging quality
+is controlled @palermoDopamine2021. The binary classification task is therefore
+not especially difficult for a well-tuned classical model given clean
+semi-quantitative inputs.
 
 Feature engineering consistently outperformed raw SBR values across all
 classifiers. The Putamen-to-Caudate Ratio and asymmetry indices, which encode
@@ -89,21 +68,6 @@ group membership. The `25d_resnet`, ranking second in aggregate AUC at $0.979
 plus.minus 0.021$, is the only architecture whose classification decisions seem
 to be anatomically grounded, and therefore can be interpreted with clinical
 confidence.
-
-Achieving high AUC without apparent attention to the diagnostically relevant
-anatomical region raises the concern that these models may have learned to
-exploit dataset-specific confounds, such as site-related acquisition
-differences, scanner intensity distributions, or background characteristics that
-covary with diagnosis in the PPMI cohort. Whether this reflects genuine shortcut
-learning or a limitation of Grad-CAM as an interpretability tool cannot be
-established conclusively from this analysis alone; Grad-CAM provides a coarse,
-gradient-weighted approximation that does not guarantee a complete picture of
-what drives model decisions. Nevertheless, the finding motivates caution
-regarding out-of-distribution generalizability. The `25d_resnet`, ranking second
-in aggregate AUC at $0.979 plus.minus 0.021$, is the only architecture whose
-attention is consistently localized to the striatum, and is therefore the more
-conservative and clinically interpretable choice.
-
 
 === Transfer learning: ImageNet and MedicalNet
 
@@ -199,8 +163,7 @@ classification than motor or olfactory features.
 
 It is worth noting that the overall CNN multimodal performance is remarkably
 stable across folds: the IQR are extremely narrow for the motor and olfactory
-configurations. This architectural stability confirms that the model's
-performance is not an artifact of a particular data split, but reflects a
+configurations. This stability suggests that the model's performance reflects a
 consistent signal across the cohort. This interpretation is only meaningful,
 however, for configurations built on the `25d_resnet` backbone, which has been
 shown to attend to the correct anatomical region.
@@ -222,29 +185,65 @@ diagnosis, rather than independent informational gain.
 
 == Inference on SWEDD patients <sec-swedd-discussion>
 
-Post-hoc application of the trained `25d_resnet` to the SWEDD cohort ($N = 57$)
-provides an independent validation of the imaging signal the model has learned.
-patients in the SWEDD cohort, by definition, present normal dopamine transporter
-imaging despite clinical parkinsonism, and were excluded from all training
-procedures. The model assigned them a mean predicted PD probability of $0.113$,
-which is statistically indistinguishable from the HC distribution ($U = 3765$,
-$p = 0.077$) and far below the PD distribution ($p < 0.001$). A classifier that
-genuinely learned dopaminergic signal should behave exactly this way: if the DAT
-is intact, the image-based model should classify the patient as HC regardless of
-their clinical presentation.
+/*
+Post-hoc application of the trained `25d_resnet` to the SWEDD cohort provides an
+independent validation of the imaging signal the model has learned. Patients in
+this cohort, by definition, present normal DAT imaging despite exhibiting
+clinical parkinsonism. Operating strictly on image volumes ($N = 56$), the model
+assigned them a low mean predicted PD probability of $0.097$ (median $0.004$),
+rendering them statistically indistinguishable from the HC distribution ($U =
+3765$, $p = 0.077$). A classifier that genuinely isolates a structural
+dopaminergic signature should behave exactly this way: if the DAT is
+biologically intact, the image-only model treats the patient as healthy
+regardless of their clinical presentation.
 
-/* I made up 3 possible explanations for 10% swedds and higher std: */
-The 10.5% of SWEDD patients classified as PD (P(PD)$ > 0.5$) warrants
-further consideration. Three explanations are plausible and not mutually
-exclusive. A subset of SWEDD patients may harbor a genuine but subtle DAT
-deficit, below the clinical diagnostic threshold but detectable by a CNN
-operating on the full image volume. Some SWEDD diagnoses may represent
-misclassified early PD. Finally, some cases may fall at the boundary of the
-model's decision surface, receiving elevated probabilities due to image features
-unrelated to DAT loss. The notably higher standard deviation in this group
-($sigma = 0.267$, compared to $0.136$ for HC and $0.145$ for PD) reflects genuine
-heterogeneity within the SWEDD population and is consistent with the first two
-explanations.
+However, transitioning to a multimodal late fusion configuration ($alpha = 0.5$)
+unmasks the clinical reality of these patients as symptomatic mimics. As
+detailed in @swedd_app, the integration of baseline clinical variables pulls the
+structurally normal SWEDD cohort into an intermediate diagnostic space, shifting
+their median predicted PD probability to $0.450$ and tripling their
+classification rate from $8.9\%$ to $30.4\%$. This divergence exposes a conflict
+between objective imaging biomarkers and phenotypic severity (driven by elevated
+UPDRS3 scores), forcing the multimodal model to exhibit highly significant
+statistical separation from both pure HC ($U = 424.0, p < 0.001$) and pure PD
+cohorts ($U = 31304.0, p < 0.001$).
+
+This dual-modality shows the high heterogeneity observed within the SWEDD
+population ($sigma = 0.267$). While the clinical features exert a strong
+positive diagnostic pull across the group, the subset of patients receiving high
+PD probabilities suggests that some individuals may harbor subtle, sub-threshold
+DAT deficits that the volumetric CNN begins to detect before clinical visual
+reading thresholds, or represent early PD cases misclassified at recruitment.
+Rather than a failure of classification, this boundary behavior highlights how
+late fusion successfully characterizes SWEDD as a distinct clinical entity
+trapped between a healthy brain structure and a symptomatic phenotype.
+*/
+
+Post-hoc application of the trained `25d_resnet` to the SWEDD cohort provides an
+independent validation of the imaging signal learned by the model. Patients in
+this cohort, by definition, present normal DAT imaging despite exhibiting
+clinical parkinsonism. Operating strictly on image volumes ($N = 56$), the model
+assigned them a low mean predicted PD probability of $0.097$ (median $0.004$),
+rendering them statistically indistinguishable from the HC distribution ($U =
+3765$, $p = 0.077$). A classifier that genuinely isolates dopaminergic signal
+should behave exactly this way: if the DAT is unaffected, the image-only model
+treats the patient as healthy regardless of clinical presentation.
+
+However, transitioning to a multimodal late fusion configuration ($alpha = 0.5$)
+reveals the clinical reality of these patients as symptomatic mimics. As
+detailed in @swedd_app, integrating baseline clinical variables shifts their
+median predicted PD probability to $0.450$ and triples the classification rate
+from $8.9%$ to $30.4%$. Consequently, the multimodal model separates SWEDD from
+both HC ($U = 424.0, p < 0.001$) and PD cohorts ($U = 31304.0, p < 0.001$).
+
+This behavior reflects the marked heterogeneity of the SWEDD population ($sigma
+= 0.267$). While clinical features exert a positive diagnostic pull, patients
+receiving high PD probabilities may harbor subtle DAT deficits below visual
+reading thresholds or represent early PD cases misclassified at recruitment.
+Rather than a classification failure, this boundary behavior supports viewing
+SWEDD as an intermediate entity between healthy brain structure and symptomatic
+phenotype.
+
 
 == Limitations
 
@@ -257,11 +256,10 @@ syndromes, where diagnostic uncertainty is greatest.
 
 A key limitation is that all models were trained and evaluated exclusively on
 PPMI. External validation on independent cohorts acquired with different
-scanners and protocols is required before clinical deployment
-
-Class imbalance required majority-class downsampling, reducing the effective
-training set size and discarding informative PD cases. Alternative strategies
-such as data augmentation or oversampling were not systematically evaluated.
+scanners and protocols is required before clinical deployment. Also, class
+imbalance required majority-class downsampling, reducing the effective training
+set size and discarding informative PD cases. Alternative strategies such as
+data augmentation or oversampling were not systematically evaluated.
 
 Finally, Grad-CAM analysis suggests that the high AUC values of the 3D custom
 architectures may not be backed by anatomically meaningful attention, raising
@@ -269,10 +267,9 @@ generalizability concerns for datasets acquired outside the PPMI protocol. It
 should be acknowledged that Grad-CAM itself is an approximation and may not
 fully reflect the features a model relies upon. These observations should
 therefore be treated as a signal for caution rather than a definitive
-characterization of model behavior. Only the 25d_resnet produced attention
-consistently localized to the striatum
+characterization of model behavior. Only the `25d_resnet` produced attention
+consistently localized to the striatum.
 
-#v(-4pt)
 == Contributions to the United Nations' SDGs
 
 This thesis primarily contributes to *SDG 3: Good Health and Well-being*, which

@@ -2,8 +2,6 @@
 
 = Extended results <app_extended_results>
 
-#import "../assets/ak_tfg_lib.typ": *
-
 == Supplementary interpretability map analysis <app-gradcam>
 
 Extended Grad-CAM saliency maps generated across all alternative 3D CNN
@@ -60,14 +58,14 @@ onto, the unconstrained 3D models demonstrate arbitrary spatial convergence,
 frequently highlighting peripheral reconstruction limits or zero-padding noise
 boundaries.
 
-=== Case-by-Case Individual Patient Panels
+=== Case-by-case individual patient panels
 
 To verify that the aggregate cohort tendencies reflect persistent geometric
 biases rather than smoothing artifacts, individual patient panels are provided
 below. Each figure contrasts three representative patient examinations for both
 the HC and PD categories across orthogonal viewing planes.
 
-==== Custom 3D Baseline Models (`3d_crop` and `3d_crop_deeper`)
+==== Custom 3D baseline models (`3d_crop` and `3d_crop_deeper`)
 
 @panel_3d_crop and @panel_3d_deeper document the localized predictions of the
 custom-parameterized 3D architectures. Despite the high cross-validated
@@ -108,7 +106,7 @@ cohorts.
 )<panel_3d_deeper>
 
 
-==== Pretrained MedicalNet Architectures (`med3d` and `med3d_encoder`)
+==== Pretrained MedicalNet architectures (`med3d` and `med3d_encoder`)
 
 @panel_med3d and @panel_med3d_encoder illustrate the feature maps produced by
 domain-transfer baselines. The large parameter space inherent to these transfer
@@ -147,3 +145,62 @@ subcortical nuclei.
     around the matrix midlines rather than adapting dynamically to the patient's
     internal striatal anatomy. ]
 )<panel_med3d_encoder>
+
+
+== Multimodal post-hoc inference on unseen cohorts (SWEDD) <swedd_app>
+
+To evaluate how clinical symptoms interact with functional neuroimaging
+signatures, a post-hoc zero-shot evaluation was executed using the late fusion
+configuration ($alpha = 0.5$). For this analysis, cohorts were aligned to
+isolate complete-record patients possessing both full DaTscan volumes and
+baseline tabular clinical data ($N = 779$). 
+
+The addition of baseline clinical features (including UPDRS3 and UPSIT scores)
+shifts the SWEDD cohort’s profile. While the image-only CNN backbone classifies
+the SWEDD group as highly healthy (median probability of $0.004$, with only
+$8.9%$ classified as PD), the multimodal model yields a large positive shift,
+increasing the median predicted PD probability to $0.450$ and tripling the
+classification rate to $30.4%$.
+
+
+#text(size: 10pt)[
+#figure(
+  tablec(
+    columns: (auto, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
+    align: center + horizon,
+      [*Group*], [*N*], [*CNN \ Mean*], [*CNN \ Med.*], [*CNN \ %PD*], [*Multi
+      Mean*], [*Multi Med.*], [*Multi %PD*],
+    [HC], [153], [0.029], [0.003], [2.0%], [0.042], [0.017], [1.3%],
+    [PD], [570], [0.953], [0.994], [97.4%], [0.946], [0.990], [99.1%],
+    [SWEDD], [56], [0.097], [0.004], [8.9%], [0.383], [0.450], [30.4%]
+  ),
+  caption: [Zero-shot evaluation metrics comparison between image-only (CNN) and late fusion multimodal configurations across complete-record aligned cohorts.],
+) <tab:multimodal_swedd>
+]
+
+Mann-Whitney U tests performed on the multimodal outputs reveal that the SWEDD
+group no longer remains statistically indistinguishable from Healthy Controls.
+Instead, it occupies a distinct, highly significant intermediate boundary
+position separating it from both pure cohorts (see @tab_multi_swedds).
+
+#figure(
+  tablec(
+    columns: (auto, auto, auto),
+    [ HC vs. SWEDD ], [ PD vs. SWEDD ], [ HC vs. PD ],
+    [ $U = 424.0$], [ $U = 31304.0$], [ $U = 39.0$],
+    [ $p < 0.0001$], [ $p < 0.0001$], [ $p < 0.0001$],
+  ),
+  caption: [Results of Mann-Whitney U test on the multimodal outputs with $alpha =
+0.5$]
+)<tab_multi_swedds>
+
+This behavior highlights a clinical reality: while the image-only model confirms
+that SWEDD patients exhibit structurally intact dopaminergic pathways, the
+multimodal fusion model captures their clinical presentation as a symptomatic
+"phenotypic mimic" of Parkinson's Disease.
+
+#figure(
+  image("../assets/figures/results/swedd_probabilities_violin_multimodal_comp.svg"),
+  caption: [Comparative probability distributions demonstrating the phenotypic
+  pull of tabular clinical features on the SWEDD cohort ($alpha = 0.5$).]
+)<fig_multimodal_violin>

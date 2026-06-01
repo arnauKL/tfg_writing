@@ -4,9 +4,6 @@
 #let dims(it) = {
   [ #it $times$ #it $times$ #it ]
 }
-#show regex("\bPPMI\b"): smol[PPMI]
-#show regex("\bSWEDD\b"): smol[SWEDD]
-#show regex("\bBIDS\b"): smol[BIDS]
 
 = Materials and Methods
 
@@ -85,7 +82,7 @@ For the tabular experiments (classical ML baseline, tabular row in @tab-dataset)
 was applied to the curated spreadsheet. After removing rows with missing values
 in the feature columns of interest, the tabular cohort comprised 3066 PD and
 296 HC subjects. The substantially larger tabular counts relative to the
-image cohort reflect the fact that #smol[PPMI] collects clinical assessments at
+image cohort reflect the fact that PPMI collects clinical assessments at
 multiple visits and from participants who did not undergo imaging at baseline.
 
 // maybe this last sentence should go
@@ -212,8 +209,7 @@ trained on different sizes.
 #redt[This probably needs its own graph in the results section?]
 */
 
-All image preprocessing was implemented using the MONAI library @Project /*
-monai's website, zotero got a weird bib key */, which
+All image preprocessing was implemented using the MONAI library @Project, which
 provides a composable, GPU-compatible pipeline of medical image transforms.
 
 Two parallel image sets were maintained throughout all experiments and never
@@ -237,7 +233,7 @@ image sets, (also see @pipelinefig):
 + *Intensity normalization.* Each volume was normalized to zero mean and unit
   variance across its non-zero voxels, making intensities comparable across
   subjects and scanners.
-+ *Spatial cropping.* Volumes were center-cropped using #smol[MONAI]’s
++ *Spatial cropping.* Volumes were center-cropped using MONAI’s
   `CenterSpatialCrop` transform. For the raw dataset, this step served to
   enforce a uniform input dimension across all subjects. For the registered
   dataset, where dimensions were already uniform, cropping functioned to isolate
@@ -259,13 +255,12 @@ image sets, (also see @pipelinefig):
 )<fig-compareraw-reg>
 
 
-#import fletcher.shapes: diamond
 #figure(
   text(1em, diagram(
     node-stroke: 1pt,
     node-corner-radius: 1pt,
     // 2.5d
-    node((0,0), [3#smol[D] volume]),
+    node((0,0), [3D volume]),
     edge("-|>"),
     node((1,0), [3 $times$ MIPS]),
     edge("-|>"),
@@ -317,7 +312,7 @@ any column belonging to the active feature set were dropped. No imputation was
 performed, as the missingness rate was low for the primary feature sets and
 imputation of clinical biomarkers risks introducing systematic bias.
 
-From the raw #smol[SBR] columns, four engineered features were derived to capture
+From the raw SBR columns, four engineered features were derived to capture
 lateralization and overall binding:
 
 #[
@@ -349,7 +344,7 @@ The classical ML baseline was trained on the curated tabular data using
 scikit-learn @Scikitlearn. A set of classifiers were evaluated: a Support Vector
 Machine (SVM) with a radial basis function (RBF) kernel and another using a
 linear kernel, a Random Forest classifier, a Gradient Boosting classifier and a
-Logistic Regression (LR) with L2 regularization /*what does this mean?*/.
+Logistic Regression (LR) with L2 regularization./*what does this mean?*/
 Hyperparameters were selected by nested cross-validation on the training
 folds.
 
@@ -451,10 +446,8 @@ volume were stacked as channels, producing a $3 times H times W$ input that
 matches the format expected by the pretrained network (refer to @mips). The
 original ImageNet classification head was replaced by a single linear layer with
 sigmoid output. During fine-tuning, all backbone weights were updated at a
-reduced learning rate ($10^(-4)$) to avoid overwriting pretrained
-representations, while the new classification head was trained at the default
-rate ($10^(-3)$).
-
+reduced learning rate ($1e^(-5)$, a tenth of the default) to avoid overwriting
+pretrained representations. 
 *3D ResNet10 with MedicalNet pretraining* (`med3d`). As a domain-specific
 alternative to ImageNet pretraining, a ResNet-10 backbone from MedicalNet
 @chenMed3D2019, pretrained on 23 heterogeneous medical image segmentation datasets
@@ -491,7 +484,7 @@ of 100 epochs. The model checkpoint achieving the highest validation AUC within
 each fold was saved and used for evaluation.
 
 Training and evaluation were performed on the GPU infrastructure of the
-#smol[VICOROB] research group. A separate evaluation script loaded the saved
+VICOROB research group. A separate evaluation script loaded the saved
 checkpoints from each fold and computed aggregate metrics and boxplot
 visualizations across the cross-validation runs.
 

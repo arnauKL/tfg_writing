@@ -1,7 +1,5 @@
 #import "../assets/ak_tfg_lib.typ": *
 
-// Revision done
-
 = Hypothesis and Objectives
 
 == Research question
@@ -79,6 +77,11 @@ with clinical variables, using the PPMI dataset as a standardized benchmark.
   gradient-based localization methods (Grad-CAM) to critically evaluate whether
   the top-performing networks are leveraging clinically sound anatomical regions
   (the striatum) or relying on confounding background shortcuts.
+
++ *Evaluate Generalizability on Unseen Clinical Mimics*. Validate the
+  physiological specificity of the learned imaging representations via
+  inference on an independent SWEDD cohort, ensuring the network captures
+  structural dopaminergic deficits rather than clinical confounding factors.
 
 
 == Scientific relevance and expected impact

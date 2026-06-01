@@ -61,14 +61,11 @@ variance and stabilizes the tree-based models (RF and GB). This shows feature
 engineering produced higher accuracy and F1 scores across all evaluated
 classifiers.
 
-
 Restricting the comparison to the engineered, manually balanced condition
-(@only_man_eng_allmodels), the SVM with a non-linear RBF kernel achieved the
-highest and most consistent performance across all metrics, with a median
-ROC-AUC of $0.998$, a mean accuracy of $0.974 plus.minus 0.014$, and a
-mean F1 of $0.983 plus.minus 0.012$. It also exhibited the narrowest
-interquartile range of all classifiers, indicating stable performance regardless
-of the specific train-test split.
+(@only_man_eng_allmodels), with a median ROC-AUC of $0.991$, a mean accuracy of
+$0.962 plus.minus 0.022$, and a mean F1 of $0.962 plus.minus 0.022$. It also
+exhibited the narrowest interquartile range of all classifiers, indicating
+stable performance regardless of the specific train-test split.
 
 #figure(
   image("../assets/figures/results/comparison_models_only.svg"),
@@ -281,36 +278,38 @@ each modality.
 
 === Information gain by feature group
 
+
 @tab_info_gain reports the cross-validated performance of the SVM RBF
 classifier, the best-performing model from the previous section, across all
 seven feature sets. The addition of the full PPMI SBR panel and the engineered
 features produced modest but consistent improvements over the four-indicator
-baseline (AUC $0.992$ to $0.995$). The inclusion of demographic variables (age
+baseline (AUC $0.982$ to $0.985$). The inclusion of demographic variables (age
 and sex) yielded no measurable gain. The largest single-step improvement was
-observed upon adding the motor assessment battery (UPDRS, and symptom
-flags), which raised the mean AUC from $0.995$ to $0.999$ and accuracy
-from $0.978$ to $0.990$. Subsequent addition of non-motor prodromal markers
-(UPSIT, RBD, ESS, GDS, SCOPA) produced a further marginal improvement in
-accuracy ($0.993$). The addition of secondary biomarkers
-(alpha-synuclein, NfL, urate) resulted in no further gain, with performance
-remaining stable at $0.998$ AUC.
+observed upon adding the motor assessment battery (UPDRS, and symptom flags),
+which raised the mean AUC from $0.985$ to $0.998$ and accuracy from $0.966$ to
+$0.986$. Subsequent addition of non-motor prodromal markers (UPSIT, RBD, ESS,
+GDS, SCOPA) produced a further marginal improvement in accuracy ($0.991$). The
+addition of secondary biomarkers (alpha-synuclein, NfL, urate) resulted in no
+further gain in AUC, with performance remaining stable at $0.998$, while
+balanced accuracy slightly decreased to $0.983$.
 
 /*mutli_pretty.py script*/
 #figure(
   tablec(columns: (auto, auto, auto, auto, auto),
-  [ Modality Set],[Feat. ],[AUC],[B_Acc],[F1],
-  [ DaTscan raw         ],[          4 ],[ 0.992 $plus.minus$ 0.012 ],[ 0.975 $plus.minus$ 0.015 ],[ 0.975 $plus.minus$ 0.015 ],
-  [ DaTscan full SBR    ],[         13 ],[ 0.994 $plus.minus$ 0.008 ],[ 0.976 $plus.minus$ 0.015 ],[ 0.976 $plus.minus$ 0.015 ],
-  [ DaTscan engineered  ],[         17 ],[ 0.995 $plus.minus$ 0.007 ],[ 0.978 $plus.minus$ 0.014 ],[ 0.978 $plus.minus$ 0.014 ],
-  [\+ Demographics      ],[         19 ],[ 0.995 $plus.minus$ 0.006 ],[ 0.978 $plus.minus$ 0.016 ],[ 0.978 $plus.minus$ 0.016 ],
-  [\+ Motor (UPDRS)     ],[         27 ],[ 0.999 $plus.minus$ 0.003 ],[ 0.990 $plus.minus$ 0.014 ],[ 0.990 $plus.minus$ 0.014 ],
-  [\+ Non-motor (UPSIT) ],[         33 ],[ 0.998 $plus.minus$ 0.003 ],[ 0.993 $plus.minus$ 0.008 ],[ 0.993 $plus.minus$ 0.008 ],
-  [\+ Biomarkers        ],[         36 ],[ 0.998 $plus.minus$
-  0.004 ],[ 0.990 $plus.minus$ 0.014 ],[ 0.990 $plus.minus$ 0.014 ]),
+    [ Modality Set        ],[   Features ],[ AUC           ],[ B_Acc         ],[ F1            ],
+    [ DaTscan raw         ],[          4 ],[ $0.982 plus.minus 0.011$ ],[ $0.962 plus.minus 0.022$ ],[ $0.962 plus.minus 0.022$ ],
+    [ DaTscan full SBR    ],[         13 ],[ $0.981 plus.minus 0.011$ ],[ $0.969 plus.minus 0.013$ ],[ $0.969 plus.minus 0.013$ ],
+    [ DaTscan engineered  ],[         17 ],[ $0.985 plus.minus 0.009$ ],[ $0.966 plus.minus 0.012$ ],[ $0.965 plus.minus 0.012$ ],
+    [ \+ Demographics      ],[         19 ],[ $0.985 plus.minus 0.009$ ],[ $0.966 plus.minus 0.012$ ],[ $0.966 plus.minus 0.012$ ],
+    [ \+ Motor (UPDRS)     ],[         27 ],[ $0.998 plus.minus 0.003$ ],[ $0.986 plus.minus 0.013$ ],[ $0.986 plus.minus 0.013$ ],
+    [ \+ Non-motor (UPSIT) ],[         33 ],[ $0.998 plus.minus 0.002$ ],[ $0.991 plus.minus 0.008$ ],[ $0.991 plus.minus 0.008$ ],
+    [ \+ Biomarkers        ],[         36 ],[ $0.998 plus.minus 0.003$ ],[ $0.983 plus.minus 0.012$ ],[ $0.983 plus.minus 0.012$ ]
+  ),
   caption: [SVM RBF cross-validated performance (mean $plus.minus$ std, 5-fold)
   across the seven additive feature sets. Performance is reported for the
   manually balanced dataset.]
 )<tab_info_gain>
+
 
 
 === SHAP on best multimodal configuration
@@ -341,7 +340,7 @@ DaTscan indicators remained highly influential even when clinical and motor
 features were present.
 
 #figure(
-  grid(columns: (auto, 4em), image("../assets/figures/results/shap_summary_multimodal_pt.svg"),[]),
+  grid(columns: (auto, 5em), image("../assets/figures/results/shap_summary_multimodal_pt.svg"),[]),
   caption: [SHAP beeswarm plot for the SVM RBF classifier trained on the full
   multimodal feature set (PD class). Each point represents one patient,
   positioned horizontally by its SHAP value and colored by the corresponding
@@ -466,7 +465,7 @@ small subset of patients receives substantially elevated PD probabilities
 
 #figure(
   gap: 0.5em,
-  image("../assets/figures/results/swedd_probabilities_violin.svg", width: 37%),
+  image("../assets/figures/results/swedd_probabilities_violin.svg", width: 32%),
   caption: [Violin plot of predicted PD probabilities for HC, PD, and SWEDD
   cohorts. Individual patient predictions are overlaid as markers. A
   well-calibrated model assigning purely image-based decisions would place HC
@@ -495,12 +494,15 @@ SWEDD           57   0.113    0.004  0.267   10.5%
 */
 
 Mann-Whitney U tests confirmed that the observed differences were statistically
-significant where expected. The comparison between HC and PD yielded strong
-separation ($U = 721$, $p < 0.001$), validating the model's primary
-classification performance. The PD against SWEDD comparison was equally
-significant ($U = 33754$, $p < 0.001$), confirming that SWEDD patients receive
-markedly lower PD probabilities than confirmed PD cases. Finally, the comparison
-between HC and SWEDD did not reach statistical significance ($U = 3765$, $p =
+significant where expected. The HC--PD comparison yielded strong separation ($U
+= 721$, $p < 0.001$), validating the model's primary classification performance.
+The PD--SWEDD comparison was equally significant ($U = 33754$, $p <
+0.001$), suggesting that SWEDD patients receive markedly lower PD probabilities
+than confirmed PD cases. Finally, the comparison between HC and SWEDD did not
+reach statistical significance ($U = 3765$, $p =
 0.077$), consistent with the hypothesis that SWEDD patients present DaTscan
   profiles that are statistically indistinguishable from HC subjects at the
   population level.
+
+A comparative expansion of these zero-shot evaluations utilizing the multimodal
+late fusion strategy is compiled in @swedd_app.

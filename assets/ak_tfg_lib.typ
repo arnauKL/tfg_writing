@@ -422,7 +422,7 @@
   show enum: it => { v(0.9em, weak: true) + it + v(0.9em, weak: true) }
 
   // figures
-  show figure: it => { v(2em, weak: true) + align(center, box(width: 98%, it)) + v(2em, weak: true) }
+  show figure: it => { v(1.25em, weak: true) + align(center, box(width: 98%, it)) + v(1.25em, weak: true) }
   show figure.caption: it => {
     set text(0.85em)
     smallcaps(it.supplement) + " " + context lin(it.counter.display(it.numbering)) + [: ] + it.body

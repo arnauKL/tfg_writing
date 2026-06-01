@@ -66,7 +66,7 @@ transporter scans were correctly classified as HC-like by a model that had never
 seen them during training.
 
 Commenting on the hypotheses defined in @sec-hypothesis, hypothesis _#smol[H]1_
-(that CNNs would outperform classical models) is partially supported. The
+(that CNNs would outperform classical models) is partially refuted. The
 `25d_resnet` does not exceed the SVM RBF baseline in raw AUC, but it operates
 directly on the full image volume without hand-crafted features and produces
 anatomically interpretable decisions, which are prerequisites for clinical
@@ -74,8 +74,8 @@ deployment. _#smol[H]2_ (that transfer learning compensates for data scarcity)
 is supported for ImageNet pretraining but not for MedicalNet, whose structural
 segmentation priors do not transfer to functional SPECT data. _#smol[H]3_ (that
 multimodal fusion improves upon imaging alone) is technically supported within
-the limitations of this study, but with the caveat that the gain attributable to
-motor features reflects circularity rather than genuine complementarity.
+the limitations of this study, but with the caveat that the gain attributable
+to motor features reflects circularity rather than genuine complementarity.
 
 == Future work
 
