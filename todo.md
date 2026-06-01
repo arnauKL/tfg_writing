@@ -33,3 +33,19 @@
   sessió era cada pacient, segurament hi ha bias.
 - El multimodal que més m'aporta és el motor, que realment no aporta res xq és
   redundant.
+
+
+
+
+Reescreiure
+
+Amb el PPMI vist el GradCAMM potser està mirant característiques no rellevants,
+cosa q potser compromet a al generalitzacció a altres sets de dades.
+
+Mirar si puc reentrenar x treure temporals i/o reconeixer q no
+
+Comentar com a lmitació
+
+
+Figura 7 , explicar d on surt el f1 tan alt/estret
+Cnaviar i fer q miri macro tb.

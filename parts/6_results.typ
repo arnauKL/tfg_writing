@@ -85,7 +85,7 @@ of the specific train-test split.
 Before integrating multimodal clinical characteristics, a comprehensive
 architectural exploration was conducted using standalone CNNs on the 3D DaTscan
 images. This baseline evaluation serves to establish the raw diagnostic capacity
-of the imaging data alone and adresses the the impact of spatial registration
+of the imaging data alone and addresses the the impact of spatial registration
 pipelines on deep features, and the scalability of custom architectures compared
 to established 3D transfer learning baselines.
 
