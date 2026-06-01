@@ -17,7 +17,7 @@
     line-style: (stroke: 8pt + luma(64%)),
     {
       headerline(group((smol[March], 2)), group((smol[April],
-      2)), group((smol[April], 2)), group((smol[June], 1)))
+      2)), group((smol[May], 2)), group((smol[June], 1)))
       // headerline(
       //   smol[March],
       //   smol[April],

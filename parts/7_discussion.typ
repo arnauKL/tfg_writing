@@ -81,13 +81,29 @@ focus. The `med3d_encoder` produced a distinctive ring-shaped activation
 encircling the image center, but not localized to the striatum itself.
 
 Achieving high AUC without attending to the diagnostically relevant anatomical
-region suggest that the models learned a shortcut. In a multicenter dataset like
-PPMI, plausible elements include site-specific acquisition differences, scanner
-intensity distributions, and background characteristics that may covary
-systematically with diagnosis group membership. The `25d_resnet`, ranking second
+region suggest that the models learned dataset-specific features and might
+struggle on other data. In a multicenter dataset like PPMI, plausible elements
+include site-specific acquisition differences, scanner intensity distributions,
+and background characteristics that may covary systematically with diagnosis
+group membership. The `25d_resnet`, ranking second in aggregate AUC at $0.979
+plus.minus 0.021$, is the only architecture whose classification decisions seem
+to be anatomically grounded, and therefore can be interpreted with clinical
+confidence.
+
+Achieving high AUC without apparent attention to the diagnostically relevant
+anatomical region raises the concern that these models may have learned to
+exploit dataset-specific confounds, such as site-related acquisition
+differences, scanner intensity distributions, or background characteristics that
+covary with diagnosis in the PPMI cohort. Whether this reflects genuine shortcut
+learning or a limitation of Grad-CAM as an interpretability tool cannot be
+established conclusively from this analysis alone; Grad-CAM provides a coarse,
+gradient-weighted approximation that does not guarantee a complete picture of
+what drives model decisions. Nevertheless, the finding motivates caution
+regarding out-of-distribution generalizability. The `25d_resnet`, ranking second
 in aggregate AUC at $0.979 plus.minus 0.021$, is the only architecture whose
-classification decisions are anatomically grounded, and therefore the only
-result that can be interpreted with clinical confidence.
+attention is consistently localized to the striatum, and is therefore the more
+conservative and clinically interpretable choice.
+
 
 === Transfer learning: ImageNet and MedicalNet
 
@@ -149,7 +165,7 @@ The MDS-UPDRS Part III is a clinician-administered motor examination whose score
 constitutes one of the primary criteria by which PD is formally diagnosed. In a
 cohort like PPMI, where diagnoses are expert-confirmed and UPDRS scores are
 collected at the same clinical visit as imaging, the motor score is not an
-independent predictor: it is, to a significant degree, a re-expression of the
+independent predictor: it is, to a significant degree, a reexpression of the
 diagnostic label. The performance improvement from adding UPDRS therefore
 reflects circularity rather than genuine multimodal complementarity. A model
 requiring UPDRS to classify PD provides no utility in early or prodromal
@@ -247,11 +263,14 @@ Class imbalance required majority-class downsampling, reducing the effective
 training set size and discarding informative PD cases. Alternative strategies
 such as data augmentation or oversampling were not systematically evaluated.
 
-Finally, the Grad-CAM analysis demonstrates that the high AUC values of the 3D
-custom architectures are not backed by anatomically meaningful attention. Their
-reported performance should not be taken as evidence of generalisable
-classification, and only the `25d_resnet` has been shown to learn the correct
-diagnostic signal on this dataset.
+Finally, Grad-CAM analysis suggests that the high AUC values of the 3D custom
+architectures may not be backed by anatomically meaningful attention, raising
+generalizability concerns for datasets acquired outside the PPMI protocol. It
+should be acknowledged that Grad-CAM itself is an approximation and may not
+fully reflect the features a model relies upon. These observations should
+therefore be treated as a signal for caution rather than a definitive
+characterization of model behavior. Only the 25d_resnet produced attention
+consistently localized to the striatum
 
 #v(-4pt)
 == Contributions to the United Nations' SDGs

@@ -85,7 +85,7 @@ of the specific train-test split.
 Before integrating multimodal clinical characteristics, a comprehensive
 architectural exploration was conducted using standalone CNNs on the 3D DaTscan
 images. This baseline evaluation serves to establish the raw diagnostic capacity
-of the imaging data alone and addresses the the impact of spatial registration
+of the imaging data alone and addresses the impact of spatial registration
 pipelines on deep features, and the scalability of custom architectures compared
 to established 3D transfer learning baselines.
 
@@ -217,7 +217,7 @@ activation, occasionally overlapping with the striatal region but more often
 localizing to small areas at image edges with no reproducible anatomical
 correspondence. The `3d_crop_deeper` and `med3d` variants exhibited strikingly
 similar activation patterns despite their architectural differences: both
-produced diffuse maps characterized by scattered pankake-like structures
+produced diffuse maps characterized by scattered pancake-like structures
 with no consistent focal point. The `med3d_encoder` produced a distinctive
 ring-shaped activation pattern centered on the image but not localized to the
 striatum itself (it can be seen more clearly in @panel_med3d_encoder in
@@ -239,7 +239,7 @@ striatum itself (it can be seen more clearly in @panel_med3d_encoder in
   patient panels for each architecture are provided in @app-gradcam.]
 )<gradcam_other_mean>
 
-// This paragraph might belong in the discussions section
+/*
 In all four cases, the attention maps provide no interpretable anatomical basis
 for the classification decision, suggesting these models exploit image-level
 shortcuts such as background intensity structure or acquisition geometry rather
@@ -252,10 +252,24 @@ diagnostically relevant dopaminergic signal. The `25d_resnet` is the only
 architecture whose attention is consistently and anatomically grounded in the
 striatum, making it the more trustworthy model and the natural choice as backbone
 for the multimodal fusion experiments that follow.
+*/
 
-Among all evaluated architectures, the 2.5D ResNet exhibited the strongest
-qualitative correspondence between highlighted regions and the expected
-anatomical location of dopaminergic uptake.
+In all four cases, the attention maps do not concentrate on the striatum,
+suggesting these models may be exploiting dataset-specific features, such as
+site-related intensity distributions or acquisition geometry, rather than the
+dopaminergic signal. It should be noted that Grad-CAM provides a coarse
+approximation of model attention and may not fully capture the features driving
+classification; these observations should therefore be interpreted as indicative
+rather than conclusive
+
+This interpretability analysis qualifies the quantitative ranking in
+@table_winners: although `3d_crop_deeper` achieved the highest aggregate AUC,
+its Grad-CAM maps suggest that its performance may not be primarily driven by
+the dopaminergic signal, raising concerns about generalizability to datasets
+acquired under different protocols. The `25d_resnet` is the only architecture
+whose attention is consistently localized to the striatum, making it the more
+trustworthy candidate and the natural choice as backbone for the multimodal
+fusion experiments that follow.
 
 == Multimodal integration with classical models
 
@@ -436,7 +450,7 @@ and PD ($sigma = 0.145$), reflecting greater heterogeneity within the SWEDD
 cohort. The violin plot in @violin_swedd makes this distribution particularly
 visible: the bulk of SWEDD predictions cluster near zero, alongside HC, while a
 small subset of patients receives substantially elevated PD probabilities
-(furhter commented in (further commented in @sec-swedd-discussion).
+(further commented in @sec-swedd-discussion).
 
 #figure(
   tablec(

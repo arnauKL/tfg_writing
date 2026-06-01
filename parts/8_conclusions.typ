@@ -40,15 +40,17 @@ of $0.998$, a result that underscores how discriminative the DaTscan signal
 already is at the manifest disease stage. More complex CNN architectures of
 varying dimensionality and pretraining strategy were compared under identical
 preprocessing and evaluation conditions. The `3d_crop_deeper` achieved the
-highest aggregate AUC ($0.991 plus.minus 0.015$), but Grad-CAM analysis revealed
-that this and all other 3D architectures learn non-anatomical shortcuts rather
-than the dopaminergic signal. The `25d_resnet`, leveraging ImageNet transfer
-learning via orthogonal maximum-intensity projections, was the only architecture
-whose attention was consistently localized to the striatum, making it the only
-clinically trustworthy model. Raw, unregistered images consistently outperformed
-spatially normalized ones across all architectures, suggesting that the
-interpolation and smoothing introduced by registration degrade the
-high-frequency intensity contrast on which DaTscan classification depends.
+highest aggregate AUC ($0.991 plus.minus 0.015$), but Grad-CAM analysis
+indicated that this and all other 3D architectures may be attending to
+non-anatomical features rather than the dopaminergic signal, raising
+generalizability concerns beyond the PPMI cohort. The `25d_resnet`, leveraging
+ImageNet transfer learning via orthogonal maximum-intensity projections, was the
+only architecture whose attention was consistently localized to the striatum,
+making it the only clinically trustworthy model. Raw, unregistered images
+consistently outperformed spatially normalized ones across all architectures,
+suggesting that the interpolation and smoothing introduced by registration
+degrade the high-frequency intensity contrast on which DaTscan classification
+depends.
 
 Multimodal fusion supported that motor scores (MDS-UPDRS) provide the largest
 single-step performance gain when added to imaging, but this improvement is
