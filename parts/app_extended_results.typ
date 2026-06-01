@@ -4,20 +4,20 @@
 
 #import "../assets/ak_tfg_lib.typ": *
 
-== Supplementary Interpretability Map Analyses <app-gradcam>
+== Supplementary interpretability map analysis <app-gradcam>
 
 Extended Grad-CAM saliency maps generated across all alternative 3D CNN
 architectures (`3d_crop`, `3d_crop_deeper`, `med3d`, and `med3d_encoder`). These
 visualizations supplement the aggregate findings presented in @sec-gradcam. They
-are categorized into cohort-averaged distributions for Healthy Controls (HC) and
+are categorized into cohort-averaged distributions for HC subjects and
 case-by-case individual patient panels for both clinical classes.
 
-=== Cohort-Averaged Scatter Maps (Healthy Controls)
+=== Cohort-averaged scatter maps (HC group)
 
-While the cohort-averaged maps for Parkinson's Disease (PD) patients were
-examined in @gradcam_other_mean to identify structural shortcut learning,
+While the cohort-averaged maps for PD patients were examined in
+@gradcam_other_mean to identify structural shortcut learning,
 @gradcam_other_hc_mean_3d and @gradcam_other_hc_mean_meds document the
-corresponding aggregate saliency maps across the Healthy Control (HC) cohort. 
+corresponding aggregate saliency maps across the HC cohort. 
 
 #figure(
   grid(
@@ -27,15 +27,14 @@ corresponding aggregate saliency maps across the Healthy Control (HC) cohort.
     image("../assets/figures/results/3d_gradcam/gradcam_3d_deeper_HC_scatter_mean.svg"),
   ),
   caption: [
-    Cohort-averaged Grad-CAM attention maps for Healthy Control (HC) patients
-    across the custom 3D architectures. Left: `3d_crop`; right:
-    `3d_crop_deeper`. In the absence of focal dopaminergic degradation, these
-    unregularized models distribute attention across diffuse extrastriatal areas
-    and outer cropping boundaries. Notably, these maps visualize only the top 5%
-    highest activations (95th percentile threshold); the absolute saliency
-    coefficients remain remarkably low-peaking at $0.3$ and $0.6$
-    respectively, confirming the absence of strong, anatomically structured
-    attention.
+    Cohort-averaged Grad-CAM attention maps for HC patients across the custom 3D
+    architectures. Left: `3d_crop`; right: `3d_crop_deeper`. In the absence of
+    focal dopaminergic degradation, these unregularized models distribute
+    attention across diffuse extrastriatal areas and outer cropping boundaries.
+    Notably, these maps visualize only the top 5% highest activations (95th
+    percentile threshold); the absolute saliency coefficients remain remarkably
+    low-peaking at $0.3$ and $0.6$ respectively, confirming the absence of
+    strong, anatomically structured attention.
   ]
 )<gradcam_other_hc_mean_3d>
 
@@ -47,8 +46,8 @@ corresponding aggregate saliency maps across the Healthy Control (HC) cohort.
     image("../assets/figures/results/3d_gradcam/gradcam_med3d_encoder_HC_scatter_mean.svg"),
   ),
   caption: [
-    Cohort-averaged Grad-CAM attention maps for Healthy Control (HC) patients
-    across the domain-pretrained MedicalNet baselines. Left: `med3d`; right:
+    Cohort-averaged Grad-CAM attention maps for HC patients across the
+    domain-pretrained MedicalNet baselines. Left: `med3d`; right:
     `med3d_encoder`. Parallel to the custom baselines, the lack of a localized
     pathognomonic signal loss causes these large-parameter models to settle onto
     diffuse outer matrix geometries and acquisition edge artifacts rather than
@@ -80,8 +79,10 @@ cohorts.
   grid(
     columns: 2,
     gutter: 1em,
-    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-3d_crop.svg") \ #text(size: 9pt, weight: "medium")[A: Healthy Control Samples]],
-    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-3d_crop.svg") \ #text(size: 9pt, weight: "medium")[B: Parkinson's Disease Samples]]
+    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-3d_crop.svg")
+    \ #text(size: 9pt, weight: "medium")[A: HC group samples]],
+    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-3d_crop.svg")
+    \ #text(size: 9pt, weight: "medium")[B: PD group samples]]
   ),
   caption: [
     Individual patient Grad-CAM panels for the lightweight `3d_crop` network.
@@ -94,8 +95,10 @@ cohorts.
   grid(
     columns: 2,
     gutter: 1em,
-    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-3d_deeper.svg") \ #text(size: 9pt, weight: "medium")[A: Healthy Control Samples]],
-    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-3d_deeper.svg") \ #text(size: 9pt, weight: "medium")[B: Parkinson's Disease Samples]]
+    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-3d_deeper.svg")
+    \ #text(size: 9pt, weight: "medium")[A: HC group samples]],
+    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-3d_deeper.svg")
+    \ #text(size: 9pt, weight: "medium")[B: PD group samples]]
   ),
   caption: [
     Individual patient Grad-CAM panels for the `3d_crop_deeper` network. The
@@ -117,8 +120,10 @@ subcortical nuclei.
   grid(
     columns: 2,
     gutter: 1em,
-    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-med3d.svg") \ #text(size: 9pt, weight: "medium")[A: Healthy Control Samples]],
-    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-med3d.svg") \ #text(size: 9pt, weight: "medium")[B: Parkinson's Disease Samples]]
+    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-med3d.svg") \
+    #text(size: 9pt, weight: "medium")[A: HC patient samples]],
+    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-med3d.svg") \
+    #text(size: 9pt, weight: "medium")[B: PD patient samples]]
   ),
   caption: [
     Individual patient Grad-CAM panels for the pretrained `med3d` baseline.
@@ -131,8 +136,10 @@ subcortical nuclei.
   grid(
     columns: 2,
     gutter: 1em,
-    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-med3d_encoder.svg") \ #text(size: 9pt, weight: "medium")[A: Healthy Control Samples]],
-    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-med3d_encoder.svg") \ #text(size: 9pt, weight: "medium")[B: Parkinson's Disease Samples]]
+    [#image("../assets/figures/results/3d_gradcam/gradcam_HC_panel-med3d_encoder.svg")
+    \ #text(size: 9pt, weight: "medium")[A: HC patient samples]],
+    [#image("../assets/figures/results/3d_gradcam/gradcam_PD_panel-med3d_encoder.svg")
+    \ #text(size: 9pt, weight: "medium")[B: PD patient samples]]
   ),
   caption: [
     Individual patient Grad-CAM panels for the `med3d_encoder` baseline.

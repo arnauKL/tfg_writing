@@ -3358,7 +3358,7 @@ z
      <use xlink:href="#LinLibertine-75" transform="translate(1573.583984 0)"/>
      <use xlink:href="#LinLibertine-70" transform="translate(1626.660156 0)"/>
     </g>
-    <!-- (trained on HC vs PD only, SWEDD never seen) -->
+    <!-- (trained on HC vs. PD only, SWEDD never seen) -->
     <g transform="translate(116.9125 36.432) scale(0.12 -0.12)">
      <defs>
       <path id="LinLibertine-28" d="M 281 1613 

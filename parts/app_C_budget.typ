@@ -2,6 +2,8 @@
 
 #import "../assets/ak_tfg_lib.typ": *
 
+#show "€": set text(font: "Gentium Plus")
+
 = Budget
 
 Despite the fact that this project was not financially compensated, an
@@ -16,8 +18,8 @@ personnel costs.
     row-gutter: 0pt,
     [ Personnel], [Hours ], [ Cost/hour ], [ Total],
     [ Junior AI Engineer / Research Assistant ], [ 450 h ], [ 18 €/h ], [ 8100 € ],
-    [ Academic Supervisor ], [ 16 h ], [ 25 €/h ], [ 400 € ],
-    [ *Total* ], [], [], [ *8500 €* ],
+    [ Academic Supervisor ], [ 20 h ], [ 25 €/h ], [ 500 € ],
+    [ *Total* ], [], [], [ *8600 €* ],
   ),
   caption: [Human Resources.]
 )<human>
@@ -56,8 +58,7 @@ and reproducibility of the work.
     [ MONAI          ],[ 1 ],[ 0 € ],[ 0 € ],[ Medical imaging framework ],
     [ Scikit-learn   ],[ 1 ],[ 0 € ],[ 0 € ],[Classical ML library],
     [ Git            ],[ 1 ],[ 0 € ],[ 0 € ],[ Version control system ],
-    [ Vim            ],[ 1 ],[ 0 € ],[ 0 € ],[ Primary text and code editor],
-    [ Codium         ],[ 1 ],[ 0 € ],[ 0 € ],[ Remote development ],
+    [ Vim, Codium    ],[ 1 ],[ 0 € ],[ 0 € ],[ Primary development tools ],
     [ *Total*        ],[   ],[     ],[ *0 €* ],[ ],
   ),
   caption: [Software Resources.]
@@ -70,10 +71,10 @@ Below is the final summary of the project's estimated budget (@totalbudget).
     row-gutter: 0pt,
     columns: 2,
     [ Category                    ],[ Total        ],
-    [ Human resources             ],[ 8500 €     ],
+    [ Human resources             ],[ 8600 €     ],
     [ Hardware and infrastructure ],[ 4100 €      ],
     [ Software resources          ],[ 0 €          ],
-    [ *Grand Total*             ],[ *12600 €* ],
+    [ *Grand Total*             ],[ *12700 €* ],
   ),
   caption: [Total estimated cost of development.]
 )<totalbudget>

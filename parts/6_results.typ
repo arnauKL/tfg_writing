@@ -1,5 +1,7 @@
 #import "../assets/ak_tfg_lib.typ": *
 
+#set par(leading: 0.50em + 1pt)
+
 /*
 * En aquest capítol es proporcionaran els resultats obtinguts, i s’explicaran
 * respecte als 
@@ -10,9 +12,9 @@ diferents escenaris d’experimentació descrits a l’apartat “Materials i m�
 
 = Results
 
-== Classical ML Baseline
+== Classical machine learning baseline
 
-=== Raw vs Engineered Features, Balanced vs Weighted
+=== Effects of feature engineering and class balancing
 
 Given how imbalanced the PPMI dataset was towards PD patients, one of the first
 major steps was evaluating how different balancing methods affected classifier
@@ -34,6 +36,16 @@ accuracy) and F1 scores, most notably for the Random Forest and Gradient
 Boosting classifiers. Based on these findings, manually balanced datasets were
 used in all subsequent experiments.
 
+#figure(
+  image("../assets/figures/results/classic_ml_compare_all_models_raw_deriv_eng_raw.svg",
+width: 90%),
+  caption: [Five-fold cross-validation performance comparison across classical
+  ML models. Subplots evaluate manual dataset balancing (1:1 HC:PD ratio)
+  compared to automatic sample weighting across five evaluation metrics,
+  contrasting raw DaTscan-derived indicators against feature-engineered
+  variants.]
+)<eng-vs-raw-manual-vs-auto>
+
 With respect to feature set composition, the addition of four engineered
 features derived from the primary DaTscan-derived indicators (orange and red
 variants) consistently outperformed the raw four-feature sets (blue and green
@@ -49,14 +61,6 @@ variance and stabilizes the tree-based models (RF and GB). This shows feature
 engineering produced higher accuracy and F1 scores across all evaluated
 classifiers.
 
-#figure(
-  image("../assets/figures/results/classic_ml_compare_all_models_raw_deriv_eng_raw.svg"),
-  caption: [Five-fold cross-validation performance comparison across classical
-  ML models. Subplots evaluate manual dataset balancing (1:1 HC:PD ratio) versus
-  automatic sample weighting across five evaluation metrics, contrasting raw
-  DaTscan-derived indicators against feature-engineered variants.]
-)<eng-vs-raw-manual-vs-auto>
-
 
 Restricting the comparison to the engineered, manually balanced condition
 (@only_man_eng_allmodels), the SVM with a non-linear RBF kernel achieved the
@@ -66,25 +70,6 @@ mean F1 of $0.983 plus.minus 0.012$. It also exhibited the narrowest
 interquartile range of all classifiers, indicating stable performance regardless
 of the specific train-test split.
 
-== CNN Architecture Comparison
-
-=== All Architectures: Raw and Registered
-
-Before integrating multimodal clinical characteristics, a comprehensive
-architectural exploration was conducted using standalone CNNs on the 3D DaTscan
-images. This baseline evaluation serves to establish the raw diagnostic capacity
-of the imaging data alone and adresses the the impact of spatial registration
-pipelines on deep features, and the scalability of custom architectures compared
-to established 3D transfer learning baselines.
-
-CNN architectures were evaluated on both raw (unregistered) and registered
-DaTscan image sets, spanning custom 2D, 3D, and transfer-learning-based
-approaches. An initial screening phase used 2-fold cross-validation across all
-architectures to rank models under a reduced computational budget; the
-top-performing architectures were subsequently re-evaluated using 5-fold
-cross-validation to obtain more reliable performance estimates. Results are
-presented in @basic_cnn_comp.
-
 #figure(
   image("../assets/figures/results/comparison_models_only.svg"),
   caption: [Five-fold cross-validation performance of all classical ML
@@ -93,6 +78,24 @@ presented in @basic_cnn_comp.
 )<only_man_eng_allmodels>
 
 
+== Comparison of CNN architectures
+
+=== Effect of spatial registration across architectures
+
+Before integrating multimodal clinical characteristics, a comprehensive
+architectural exploration was conducted using standalone CNNs on the 3D DaTscan
+images. This baseline evaluation serves to establish the raw diagnostic capacity
+of the imaging data alone and adresses the the impact of spatial registration
+pipelines on deep features, and the scalability of custom architectures compared
+to established 3D transfer learning baselines.
+
+Architectures were evaluated on both raw (unregistered) and registered DaTscan
+image sets, spanning custom 2D, 3D, and transfer-learning-based approaches. An
+initial screening phase used 2-fold cross-validation across all architectures to
+rank models under a reduced computational budget; the top-performing
+architectures were subsequently re-evaluated using 5-fold cross-validation to
+obtain more reliable performance estimates. Results are presented in
+@basic_cnn_comp.
 
 #figure(
   image("../assets/figures/results/cnn_unimodal_baselines_brief.svg"),
@@ -117,7 +120,7 @@ from $0.865$ (raw) to $0.818$ (registered), while the deeper variant
 spatial normalization.
 
 
-=== Custom Networks vs. 3D Transfer Learning
+=== Custom networks vs. 3D transfer learning
 
 To assess the trade-off between model complexity and performance, the
 lightweight custom 3D architectures were compared against the larger,
@@ -136,13 +139,6 @@ architectures. For completeness, @table_winners summarizes the mean performance
 obtained by each evaluated CNN architecture during the final 5-fold
 cross-validation experiments.
 
-The `3d_crop_deeper` architecture achieved the highest overall performance,
-reaching a mean ROC-AUC of $0.991 plus.minus 0.015$ and an F1-score of $0.951
-plus.minus 0.021$. The
-`25d_resnet` model achieved the second-highest performance, while the remaining
-architectures formed a lower-performing group with ROC-AUC values between
-$0.944$ and $0.954$.
-
 #figure(
   tablec(
     columns: (auto, auto, auto, auto),
@@ -155,10 +151,19 @@ $0.944$ and $0.954$.
     [ `3d_crop`        ],[ 0.944 $plus.minus$ 0.016 ],[ 0.871 $plus.minus$ 0.060 ],[ 0.865 $plus.minus$ 0.046 ],
   ),
   caption: [Summary of final 5-fold cross-validation performance for all
-  evaluated CNN architectures in the HC versus PD classification task.]
+  evaluated CNN architectures in the HC--PD classification task.]
 )<table_winners>
 
-=== Explainability Analysis (Grad-CAM) <sec-gradcam>
+The `3d_crop_deeper` architecture achieved the highest overall performance,
+reaching a mean ROC-AUC of $0.991 plus.minus 0.015$ and an F1-score of $0.951
+plus.minus 0.021$. The
+`25d_resnet` model achieved the second-highest performance, while the remaining
+architectures formed a lower-performing group with ROC-AUC values between
+$0.944$ and $0.954$.
+
+
+=== Interpretability analysis using Grad-CAM <sec-gradcam>
+
 
 To assess whether each architecture's classification decisions are grounded in anatomically meaningful regions, Grad-CAM visualizations were generated for all
 evaluated architectures and inspected at both the cohort-average and
@@ -166,17 +171,17 @@ individual-patient level.
 
 @d25_gradcam_mean shows the cohort-averaged attention heatmap for the `25d_resnet`
 on PD and HC patients separately. For images classified as PD, saliency is
-concentrated at the centre of the projection, corresponding to the anatomical
+concentrated at the center of the projection, corresponding to the anatomical
 location of the striatum. For images classified as HC, attention is diffuse and
 spread broadly across the projection, consistent with the absence of a focal
 pathological signal.
 
 #figure(
-  grid(
+  box(width: 95%, grid(
     columns: 2,
     image("../assets/figures/results/25d_gradcam/gradcam_mean_25d_raw_PD.svg"),
     image("../assets/figures/results/25d_gradcam/gradcam_mean_25d_raw_HC.svg")
-  ),
+  )),
   caption: [Mean Grad-CAM attention heatmaps for the `25d_resnet` model on raw
   images. Left: mean activation across PD patients. Right: mean activation
   across HC patients. Higher coefficient values indicate regions to which the
@@ -185,7 +190,7 @@ pathological signal.
 
 This spatial pattern is further confirmed by individual patient examples
 (@gradcam_panel_PD and @gradcam_panel_HC). In correctly classified PD cases,
-saliency maps consistently show a concentrated activation at the centre of the
+saliency maps consistently show a concentrated activation at the center of the
 projection. In HC cases, where the model assigns a low PD probability, attention
 is distributed broadly across the image with no focal striatal concentration.
 
@@ -209,14 +214,30 @@ In contrast, none of the remaining architectures produced anatomically grounded
 attention. @gradcam_other_mean shows the cohort-averaged PD activation maps for
 the four 3D architectures. The `3d_crop` model produced spatially inconsistent
 activation, occasionally overlapping with the striatal region but more often
-localising to small areas at image edges with no reproducible anatomical
+localizing to small areas at image edges with no reproducible anatomical
 correspondence. The `3d_crop_deeper` and `med3d` variants exhibited strikingly
 similar activation patterns despite their architectural differences: both
-produced diffuse maps characterised by scattered pankake-like structures
+produced diffuse maps characterized by scattered pankake-like structures
 with no consistent focal point. The `med3d_encoder` produced a distinctive
-ring-shaped activation pattern centred on the image but not localised to the
+ring-shaped activation pattern centered on the image but not localized to the
 striatum itself (it can be seen more clearly in @panel_med3d_encoder in
 @app_extended_results).
+
+#figure(
+  grid(
+    columns: 2,
+    gutter: 1em,
+    image("../assets/figures/results/3d_gradcam/gradcam_3d_crop_PD_scatter_mean.svg"),
+    image("../assets/figures/results/3d_gradcam/gradcam_3d_deeper_PD_scatter_mean.svg"),
+    image("../assets/figures/results/3d_gradcam/gradcam_med3d_PD_scatter_mean.svg"),
+    image("../assets/figures/results/3d_gradcam/gradcam_med3d_encoder_PD_scatter_mean.svg"),
+  ),
+  caption: [Cohort-averaged Grad-CAM attention maps for PD patients across the
+  four 3D architectures. Top-left: `3d_crop`; top-right: `3d_crop_deeper`;
+  bottom-left: `med3d`; bottom-right: `med3d_encoder`. None of the four
+  architectures produces attention concentrated at the striatum. Individual
+  patient panels for each architecture are provided in @app-gradcam.]
+)<gradcam_other_mean>
 
 // This paragraph might belong in the discussions section
 In all four cases, the attention maps provide no interpretable anatomical basis
@@ -236,24 +257,7 @@ Among all evaluated architectures, the 2.5D ResNet exhibited the strongest
 qualitative correspondence between highlighted regions and the expected
 anatomical location of dopaminergic uptake.
 
-
-#figure(
-  grid(
-    columns: 2,
-    gutter: 1em,
-    image("../assets/figures/results/3d_gradcam/gradcam_3d_crop_PD_scatter_mean.svg"),
-    image("../assets/figures/results/3d_gradcam/gradcam_3d_deeper_PD_scatter_mean.svg"),
-    image("../assets/figures/results/3d_gradcam/gradcam_med3d_PD_scatter_mean.svg"),
-    image("../assets/figures/results/3d_gradcam/gradcam_med3d_encoder_PD_scatter_mean.svg"),
-  ),
-  caption: [Cohort-averaged Grad-CAM attention maps for PD patients across the
-  four 3D architectures. Top-left: `3d_crop`; top-right: `3d_crop_deeper`;
-  bottom-left: `med3d`; bottom-right: `med3d_encoder`. None of the four
-  architectures produces attention concentrated at the striatum. Individual
-  patient panels for each architecture are provided in @app-gradcam.]
-)<gradcam_other_mean>
-
-== Multimodal Fusion: Classical ML
+== Multimodal integration with classical models
 
 Following the image-only evaluation, the contribution of progressively richer
 clinical feature sets to classification performance was assessed using the
@@ -261,7 +265,7 @@ classical ML framework. Features were added in the additive sequence described
 in @tab-incremental-sets, designed to mirror the increasing clinical burden of
 each modality.
 
-=== Information Gain by Feature Group
+=== Information gain by feature group
 
 @tab_info_gain reports the cross-validated performance of the SVM RBF
 classifier, the best-performing model from the previous section, across all
@@ -295,7 +299,7 @@ remaining stable at $0.998$ AUC.
 )<tab_info_gain>
 
 
-=== SHAP on Best Multimodal Configuration
+=== SHAP on best multimodal configuration
 
 To identify which individual features drove classification decisions in the best
 multimodal configuration, SHAP (SHapley Additive exPlanations) analysis
@@ -323,23 +327,23 @@ DaTscan indicators remained highly influential even when clinical and motor
 features were present.
 
 #figure(
-  image("../assets/figures/results/shap_summary_multimodal_pt.svg", width: 80%),
+  grid(columns: (auto, 4em), image("../assets/figures/results/shap_summary_multimodal_pt.svg"),[]),
   caption: [SHAP beeswarm plot for the SVM RBF classifier trained on the full
   multimodal feature set (PD class). Each point represents one patient,
-  positioned horizontally by its SHAP value and coloured by the corresponding
+  positioned horizontally by its SHAP value and colored by the corresponding
   feature value (red = high, blue = low). Features are ranked by mean absolute
   SHAP value.]
 )<shap_multimodal>
 
 
-== Multimodal Fusion: CNN
+== Multimodal integration with CNNs
 
 Following the classical ML multimodal evaluation, clinical features were
 integrated with the `25d_resnet` (raw images) to assess whether fusion improves
 over imaging alone. Although `3d_crop_deeper` achieved a marginally higher
 aggregate AUC in the image-only evaluation, the `25d_resnet` was selected as the
 fusion backbone on interpretability grounds: as shown in @sec-gradcam, it is the
-only architecture whose Grad-CAM activations are anatomically localised to the
+only architecture whose Grad-CAM activations are anatomically localized to the
 striatum, a prerequisite for clinically meaningful integration.
 
 The fusion cohort comprised $N = 306$ ($153$ HC, $153$ PD) patients after the
@@ -398,7 +402,7 @@ signal carried by the motor and olfactory domains.
   real useful data.
 */
 
-=== Late Fusion vs Feature-Level Fusion
+=== Comparison of fusion strategies
 
 Across nearly all feature group and metric combinations, late fusion
 demonstrated equal or superior performance to feature-level fusion (see
@@ -408,11 +412,11 @@ the cognitive feature subset: feature-level fusion on cognitive data produced a
 median precision of $0.963$ with a substantially elongated lower whisker,
 whereas late fusion maintained a stable median precision of $0.981$. The only
 exception to this pattern was a marginal advantage for feature-level fusion in
-the demographic AUC, which did not generalise to other metrics.
+the demographic AUC, which did not generalize to other metrics.
 
 == SWEDD Inference and CNN validation
 
-To further characterise the specificity of the imaging signal learned by the
+To further characterize the specificity of the imaging signal learned by the
 best-performing model, post-hoc inference was performed on the SWEDD cohort
 (Scans Without Evidence of Dopaminergic Deficit; $N = 57$). As described in
 @sec-swedd-inference, SWEDD patients were excluded from all training and model
@@ -423,16 +427,16 @@ directly without retraining or fine-tuning.
 probability distributions across all three cohorts. The model separated PD from
 HC with high confidence: HC patients received a mean predicted PD probability of
 $0.029$ (median $0.003$; $1.9%$ classified as PD), while PD patients received a
-mean of $0.954$ (median $0.994$; $97.5%$ classified as PD). SWEDD patients
-received a mean probability of $0.113$ (median $0.004$; $10.5%$ classified as
-PD). This value is substantially lower than the 97.5% observed in the PD cohort
-and closer to the HC distribution. The standard deviation for the SWEDD group
-($sigma = 0.267$) was notably higher than for HC ($sigma = 0.136$) and PD
-($sigma = 0.145$), reflecting greater heterogeneity within the SWEDD cohort. The
-violin plot in @violin_swedd makes this distribution particularly visible: the
-bulk of SWEDD predictions cluster near zero, alongside HC, while a small subset
-of patients receives substantially elevated PD probabilities (furhter commented
-in (further commented in @sec-swedd-discussion).
+mean of $0.954$ (median $0.994$; $97.5%$ classified as PD). Patients in the
+SWEDD cohort received a mean probability of $0.113$ (median $0.004$; $10.5%$
+classified as PD). This value is substantially lower than the 97.5% observed in
+the PD cohort and closer to the HC distribution. The standard deviation for the
+SWEDD group ($sigma = 0.267$) was notably higher than for HC ($sigma = 0.136$)
+and PD ($sigma = 0.145$), reflecting greater heterogeneity within the SWEDD
+cohort. The violin plot in @violin_swedd makes this distribution particularly
+visible: the bulk of SWEDD predictions cluster near zero, alongside HC, while a
+small subset of patients receives substantially elevated PD probabilities
+(furhter commented in (further commented in @sec-swedd-discussion).
 
 #figure(
   tablec(
@@ -447,7 +451,8 @@ in (further commented in @sec-swedd-discussion).
 )<tab_swedd_inference>
 
 #figure(
-  image("../assets/figures/results/swedd_probabilities_violin.svg", width: 50%),
+  gap: 0.5em,
+  image("../assets/figures/results/swedd_probabilities_violin.svg", width: 37%),
   caption: [Violin plot of predicted PD probabilities for HC, PD, and SWEDD
   cohorts. Individual patient predictions are overlaid as markers. A
   well-calibrated model assigning purely image-based decisions would place HC
@@ -476,11 +481,12 @@ SWEDD           57   0.113    0.004  0.267   10.5%
 */
 
 Mann-Whitney U tests confirmed that the observed differences were statistically
-significant where expected. The HC vs. PD comparison yielded strong separation
-($U = 721$, $p < 0.001$), validating the model's primary classification
-performance. The PD vs. SWEDD comparison was equally significant ($U = 33754$,
-$p < 0.001$), confirming that SWEDD patients receive markedly lower PD
-probabilities than confirmed PD cases. The HC vs. SWEDD comparison did not reach
-statistical significance ($U = 3765$, $p = 0.077$), consistent with the
-hypothesis that SWEDD patients present DaTscan profiles that are statistically
-indistinguishable from healthy controls at the population level.
+significant where expected. The comparison between HC and PD yielded strong
+separation ($U = 721$, $p < 0.001$), validating the model's primary
+classification performance. The PD against SWEDD comparison was equally
+significant ($U = 33754$, $p < 0.001$), confirming that SWEDD patients receive
+markedly lower PD probabilities than confirmed PD cases. Finally, the comparison
+between HC and SWEDD did not reach statistical significance ($U = 3765$, $p =
+0.077$), consistent with the hypothesis that SWEDD patients present DaTscan
+  profiles that are statistically indistinguishable from HC subjects at the
+  population level.

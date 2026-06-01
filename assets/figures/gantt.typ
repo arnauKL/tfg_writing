@@ -68,7 +68,7 @@
           (0.3, 6),
         )
         task(
-          "Thesis redaction",
+          "Thesis writing",
           (4, 6.1),
         )
       })

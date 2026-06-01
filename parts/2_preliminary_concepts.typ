@@ -31,9 +31,9 @@
 //== Clasical Machine learning
 // SVM, logistic regression
 
-== Parkinson's Disease
+== Parkinson's disease
 
-=== Overview and Epidemiology
+=== Overview and epidemiology
 
 Parkinson's disease (PD) is the second most common neurodegenerative disorder
 after Alzheimer's disease, affecting more than 10 million people worldwide. Its
@@ -48,7 +48,7 @@ system. As life expectancy increases globally, the number of individuals living
 with PD is expected to continue rising, creating a growing healthcare burden and
 motivating the development of objective diagnostic and monitoring tools.
 
-=== Pathophysiology: The Nigrostriatal Dopaminergic System
+=== Pathophysiology: the nigrostriatal dopaminergic system
 
 The central pathological event in PD is the progressive degeneration of
 dopaminergic neurons in the _substantia nigra pars compacta_ (SNpc), a pigmented
@@ -89,7 +89,7 @@ At the cellular level, the hallmark histopathological finding is the
 accumulation of Lewy bodies: intraneuronal protein aggregates composed primarily
 of misfolded alpha-synuclein (aSyn). 
 
-=== Clinical Presentation and Diagnosis
+=== Clinical presentation and diagnosis
 
 The cardinal motor features of PD: bradykinesia (obligatory for diagnosis under
 MDS criteria), resting tremor, rigidity, and postural instability, form the
@@ -99,11 +99,11 @@ degeneration, and a clear positive response to levodopa replacement therapy
 provides additional diagnostic support.
 // onset is such a cool word
 
-PD also produces a range of non-motor symptoms that frequently predate the motor
-phase by years. Hyposmia, REM sleep behavior disorder, constipation, and
-affective symptoms such as depression and anxiety belong to this prodromal
-syndrome and are increasingly used in research criteria for preclinical PD
-@tolosaChallenges2021.
+Parkinson's disease also produces a range of non-motor symptoms that frequently
+predate the motor phase by years. Hyposmia, REM sleep behavior disorder,
+constipation, and affective symptoms such as depression and anxiety belong to
+this prodromal syndrome and are increasingly used in research criteria for
+preclinical PD @tolosaChallenges2021.
 
 The primary diagnostic challenge is the clinical overlap with conditions that
 mimic parkinsonism: essential tremor (ET), drug-induced parkinsonism 
@@ -120,7 +120,7 @@ Several studies have demonstrated that DaTscan imaging substantially influences
 clinical decision-making in diagnostically uncertain cases, frequently leading
 to changes in diagnosis and treatment strategy. @isaacsonImpact2021
 
-== DaTscan: Imaging the Dopamine Transporter
+== DaTscan: imaging the dopamine transporter
 
 === Mechanism
 
@@ -141,12 +141,12 @@ tracer uptake. This map serves as a surrogate for the functional integrity of
 the nigrostriatal dopaminergic projection @booijAppropriate2013.
 
 The European Medicines Agency approved #super[123]I-ioflupane in 2000 under the
-trade name DaTscan); the United States' FDA followed in 2011. It remains the
+trade name DaTscan; the United States' FDA followed in 2011. It remains the
 only approved in vivo imaging biomarker for parkinsonian syndromes in clinical
 practice.
 
 
-=== Image Characteristics
+=== Image characteristics
 
 In a healthy brain, DaTscan produces a characteristic pattern of high bilateral
 tracer uptake forming "comma" shapes: the dense head of each comma corresponds
@@ -167,9 +167,9 @@ visual basis on which clinical readers classify scans.
     image("../assets/figures/preliminary_concepts/HC_example_41.svg"),
     image("../assets/figures/preliminary_concepts/PD_example_33.svg")
   )),
-  caption: [side-by-side DaTscan axial slices showing normal bilateral
-_comma_ pattern (left, healthy patient) vs. asymmetric _period_ pattern of PD
-(right, diagnosed patient).]
+  caption: [Side-by-side DaTscan axial slices showing normal bilateral _comma_
+  pattern (left, healthy patient) compared with the asymmetric _period_ pattern
+  of PD (right, diagnosed patient).]
 ) <datscan_image_compare>
 
 // is spare ok here or have I gone too fansi
@@ -180,20 +180,18 @@ parkinsonism, even when clinical features are indistinguishable.
 
 // Add sentence explaining why posterior putamen is affected first clinically
 
-=== Semi-Quantitative Analysis
+=== Semi-quantitative analysis
 
 The spatial complexity of DaTscan images is commonly reduced to a set of scalar
 metrics. The Striatal Binding Ratio (SBR) is the most widely used
 paradigm, defined as:
 
-$
-"SBR" = ("Striatal counts" - "Background counts")/"Background counts" ,
-$
+$ "SBR" = ("Striatal counts" - "Background counts") / "Background counts" thick , $
 
 where background activity is typically measured in the occipital cortex, a
 region demonstrating negligible DAT expression. SBR values are computed
 separately for the caudate, anterior putamen, and posterior putamen within each
-hemisphere, as implemented in the DaTQUANT software utiliated by the PPMI
+hemisphere, as implemented in the DaTQUANT software utilized by the PPMI
 dataset @neillPractical2021 @malyPerformance2025.
 
 Semi-quantitative SBR provides an objective, reproducible numerical summary of
@@ -203,7 +201,7 @@ SPECT volume into at most a handful of regional means, inevitably discarding
 information about the spatial distribution of uptake within regions, asymmetry
 patterns, and subtle texture changes that may be diagnostically informative.
 
-=== Clinical Utility and Limitations
+=== Clinical utility and limitations
 
 A 2021 systematic review confirmed that DaTscan led to a change in clinical
 management in approximately half of patients tested and altered the final
@@ -219,7 +217,7 @@ biomarkers.
 
 // pdt revisar
 
-== Classical machine learning for PD Classification
+== Classical machine learning for PD classification
 
 Before the current era of deep learning, automated analysis of DaTscan images
 typically followed a two-stage pipeline: extract a compact set of handcrafted
@@ -227,37 +225,37 @@ features from the image, then train a classical classifier on those features.
 
 Several classical classifiers are commonly employed:
 
-*Support Vector Machine (SVM).* An SVM learns a maximum-margin hyperplane in the
+*Support vector machine (SVM).* An SVM learns a maximum-margin hyperplane in the
 feature space that separates the two classes. For non-linearly separable data,
 the kernel trick implicitly maps features into a higher-dimensional space where
 a linear boundary suffices. SVMs generalize well in high-dimensional settings
 and with limited data, making them a natural baseline for medical applications
 with small cohort sizes @cortesSupportvector1995.
 
-*Logistic Regression (LR).* LR is a linear binary classifier
+*Logistic regression (LR).* LR is a linear binary classifier
 that models the log-odds of class membership as a linear function of the input
 features, producing calibrated probability estimates. Its simplicity and
 interpretability make it a standard reference point in clinical machine
 learning.
 
-*Random Forest.* Random Forest is an ensemble learning method that combines the
+*Random forest.* Random Forest is an ensemble learning method that combines the
 predictions of multiple decision trees trained on random subsets of the data and
 features. By averaging across many trees, the model reduces variance and
 typically achieves better generalization than a single decision tree.
 
-*Gradient Boosting.* Gradient Boosting constructs an ensemble sequentially, with
+*Gradient boosting.* Gradient Boosting constructs an ensemble sequentially, with
 each new tree focusing on correcting the errors of the previous ones. This
 iterative process often produces highly accurate predictive models while
 remaining applicable to heterogeneous clinical data.
 
 
-== Convolutional Neural Networks (CNN)
+== Convolutional neural networks (CNN)
 
 The foundational processing unit of a neural network is the perceptron: a model
 that computes a weighted sum of its inputs and passes the result through a
 nonlinear activation function $sigma$:
 
-$ hat(y) = sigma(w^T x + b) " " , $
+$ hat(y) = sigma(w^T x + b) thick , $
 
 where $w$ are learnable weights, $x$ is the input vector, and $b$ is a bias
 term. Stacking multiple layers of such units creates a multilayer perceptron
@@ -266,13 +264,13 @@ applying MLPs directly to images is impractical: a flat vector of pixel
 intensities contains no spatial structure, and the number of parameters grows
 exponentially with image resolution.
 
-=== Convolutional Layers
+=== Convolutional layers
 
 Convolutional Neural Networks address this by replacing the dense weight matrix
 with spatially local, shared filters (kernels). A 2D convolution of an input
 feature map $X$ with a kernel $K$ of size $k times k$ is computed as:
 
-$ (X * K)[i, j] = sum_(m=0)^(k-1) sum_(n=0)^(k-1) X[i+m, j+n] dot K[m, n] $
+$ (X * K)[i, j] = sum_(m=0)^(k-1) sum_(n=0)^(k-1) X[i+m, j+n] dot K[m, n] thick . $
 
 For volumetric data (as in 3D CNNs processing full SPECT volumes), the same
 principle extends to three spatial dimensions. Two properties of this operation
@@ -305,7 +303,7 @@ the relative intensity of the putamen relative to the caudate. The final layers
 are typically fully connected and produce a probability distribution over the
 target classes via a sigmoid (binary case) or softmax (multiclass) output.
 
-=== Landmark Architectures
+=== Landmark architectures
 
 The deep learning revolution in computer vision is conventionally dated to 2012,
 when AlexNet @krizhevskyImageNet2017 @Google (an eight-layer CNN trained on 1.2 million
@@ -327,13 +325,13 @@ substantially deeper networks. ResNet architectures remain among the most widely
 used CNN backbones in both natural-image and medical-imaging applications
 @heDeep2016.
 
-== Deep Learning in Medical Imaging
+== Deep learning in medical imaging
 
-=== Adoption and Domain-Specific Challenges
+=== Adoption and domain-specific challenges
 
 Following AlexNet's breakthrough, CNN-based methods rapidly displaced
 handcrafted feature pipelines across virtually every domain of medical image
-analysis /*source for this???*/. By the mid-2010s, deep learning was delivering
+analysis. By the mid-2010s, deep learning was delivering
 state-of-the-art performance in chest X-ray classification, skin lesion grading,
 retinal disease detection, and neuroimaging analysis @litjensSurvey2017. Applied
 to DaTscan specifically, CNN classifiers trained on PPMI data have achieved AUC
@@ -345,7 +343,7 @@ clinicians, and images are frequently three-dimensional rather than
 two-dimensional. These constraints increase the risk of overfitting and make
 transfer learning particularly attractive.
 
-=== 2D, 2.5D, and 3D Architectures
+=== 2D, 2.5D, and 3D architectures
 
 The most common approach in the literature converts the 3D SPECT volume
 into a 2D representation and applies architectures pretrained on ImageNet
@@ -370,7 +368,7 @@ pattern of striatal degeneration. In practice, however, 3D models lead to
 substantially higher memory usage and computational costs while requiring larger
 training sets to avoid overfitting.
 
-== Transfer Learning
+== Transfer learning
 
 === Motivation
 
@@ -383,7 +381,7 @@ on the target task @panSurvey2010.
 
 The early and intermediate layers of a CNN trained on any large visual dataset
 learn to detect general patterns that are useful across diverse image domains.
-Only the deeper layers need adaptation. Beginning training from a done
+Only the deeper layers need adaptation. Beginning training from a good
 initialization rather than random weights reduces the optimization problem to
 learning a correction to an already informative representation.
 
@@ -398,7 +396,7 @@ improve performance in data-limited medical imaging regimes
 domain gap between natural RGB photographs and medical scans is present 
 but low-level features such as edge detectors transfer across this gap.
 
-=== Transfer from Medical Imaging Data: MedicalNet
+=== Transfer from medical imaging data: MedicalNet
 
 An alternative is to pretrain on medical imaging data directly, eliminating the
 domain gap. MedicalNet is a ResNet-10 backbone pretrained on 23 heterogeneous
@@ -407,7 +405,7 @@ medical image segmentation datasets, including SPECT, MRI, and CT data
 representations that are more semantically aligned with the target task than
 ImageNet features.
 
-== Multimodal Learning
+== Multimodal learning
 
 === Rationale
 
@@ -419,7 +417,7 @@ integration by combining representations from multiple data streams within a
 single predictive model, aiming to capture complementary information that no
 individual modality fully provides @doanBridging2026.
 
-=== Fusion Strategies
+=== Fusion strategies
 
 Three main fusion paradigms are recognized in the literature @liReview2024:
 

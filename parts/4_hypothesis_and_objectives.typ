@@ -4,7 +4,7 @@
 
 = Hypothesis and Objectives
 
-== Research Question
+== Research question
 
 Current clinical interpretation of DaTscan images relies on subjective visual
 assessment by nuclear medicine specialists, supplemented in research settings by
@@ -14,12 +14,11 @@ traditional semi-quantitative metrics may discard diagnostically relevant
 spatial information. This thesis addresses the following research question:
 
 #quote[
-  Can end-to-end CNNs operating on the complete DaTscan image volume
-  perform better than traditional machine learning methods that use manually
-  crafted semi-quantitative features for the binary classification of
-  Parkinson's disease compared to healthy controls? Additionally, does
-  incorporating multimodal clinical variables offer a significant diagnostic
-  advantage over imaging alone?
+  Can end-to-end CNNs operating on the complete DaTscan image volume perform
+  better than traditional machine learning methods that use manually crafted
+  semi-quantitative features for the binary classification of PD compared to HC
+  patients? Additionally, does incorporating multimodal clinical variables offer
+  a significant diagnostic advantage over imaging alone?
 ]
 
 == Hypothesis <sec-hypothesis>
@@ -48,14 +47,14 @@ hypotheses:
 
 == Objectives
 
-=== General Objective
+=== General objective
 
 To systematically evaluate deep learning-based approaches for automated
 classification of Parkinson's disease from DaTscan SPECT images, and to
 quantify the diagnostic information gain achievable through multimodal fusion
 with clinical variables, using the PPMI dataset as a standardized benchmark.
 
-=== Specific Objectives
+=== Specific objectives
 
 + *Establish a classical ML baseline.* Train and evaluate classical machine
   learning classifiers on semi-quantitative DaTscan features (SBR values)
@@ -67,7 +66,7 @@ with clinical variables, using the PPMI dataset as a standardized benchmark.
   available data size.
 
 + *Assess the effect of spatial registration.* Compare classification
-  performance on registered versus raw DaTscan images to determine whether
+  performance on registered against raw DaTscan images to determine whether
   spatial normalization is beneficial or detrimental in this context.
 
 + *Evaluate multimodal fusion strategies.* Implement and compare fusion
@@ -76,11 +75,16 @@ with clinical variables, using the PPMI dataset as a standardized benchmark.
 + *Ensure ethical and reproducible use of data.* Conduct all experiments in
   accordance with the PPMI data use agreement.
 
++ *Audit model trustworthiness through visual explainability.* Utilize
+  gradient-based localization methods (Grad-CAM) to critically evaluate whether
+  the top-performing networks are leveraging clinically sound anatomical regions
+  (the striatum) or relying on confounding background shortcuts.
 
-== Scientific Relevance and Expected Impact
+
+== Scientific relevance and expected impact
 
 The clinical motivation for this work is immediate. DaTscan is currently
-interpreted by visual assessment in most clinical centres, a process that is
+interpreted by visual assessment in most clinical centers, a process that is
 time-intensive, requires specialized expertise, and produces disagreement,
 particularly for borderline cases in early disease. An automated classifier that
 operates directly on the full image volume could serve as a consistent second

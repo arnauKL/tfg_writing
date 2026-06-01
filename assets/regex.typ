@@ -1,12 +1,13 @@
+#import "../assets/ak_tfg_lib.typ": *
 #let apply-regex-rules(body) = {
   // Handle standard and plural acronyms
   show regex("\\b[A-Z]{2,}s?\\b"): it => {
     let txt = it.text
     if txt.ends-with("s") {
       let base = txt.slice(0, txt.len() - 1)
-      smallcaps.with(all: true)(base) + "s"
+      smol(base) + "s"
     } else {
-      smallcaps.with(all: true)(txt)
+      smol(txt)
     }
   }
 
@@ -21,9 +22,9 @@
 
     if rest.ends-with("s") {
       let letters = rest.slice(0, rest.len() - 1)
-      num + smallcaps.with(all: true)(letters) + "s"
+      num + smol(letters) + "s"
     } else {
-      num + smallcaps.with(all: true)(rest)
+      num + smol(rest)
     }
   }
 
@@ -36,8 +37,8 @@
 
   // link
   show link: it => {
-    show regex("\\b[A-Z]{2,}s?\\b"): it => smallcaps.with(all:true)(it.text)
-    show regex("\\b\\d+(?:\\.\\d+)?[A-Z]+s?\\b"): it => smallcaps.with(all:true)(it.text)
+    show regex("\\b[A-Z]{2,}s?\\b"): it => smol(it.text)
+    show regex("\\b\\d+(?:\\.\\d+)?[A-Z]+s?\\b"): it => smol(it.text)
     it
   }
 

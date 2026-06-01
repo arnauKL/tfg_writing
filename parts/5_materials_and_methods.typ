@@ -10,22 +10,22 @@
 
 = Materials and Methods
 
-== Dataset and Cohort
+== Dataset and cohort
 
 All data used in this study were obtained from the Parkinson's Progression
 Markers Initiative (PPMI) @marekParkinson2011, a large-scale, longitudinal,
 multicenter observational study launched in 2010 by the Michael J. Fox
-Foundation. PPMI collects multimodal data (neuroimaging, biospecimens, and
-clinical assessments) from participants across more than 30 international sites
-under a standardized acquisition protocol. The dataset is openly accessible to
-qualified researchers at #link("www.ppmi-info.org").
+Foundation. The PPMI study collects multimodal data (neuroimaging, biospecimens,
+and clinical assessments) from participants across more than 30 international
+sites under a standardized acquisition protocol. The dataset is openly
+accessible to qualified researchers at #link("www.ppmi-info.org").
 
 This work makes use of the three-dimensional DaTscan SPECT volumes and a curated
 tabular file containing semi-quantitative image-derived features alongside
 clinical assessments collected at each visit. These two data types are available
 within PPMI.
 
-=== Study Population and Cohort Selection
+=== Study population and cohort selection
 
 /* draft:
 // ill comment on the available data, how many of each, ages, etc.
@@ -48,8 +48,8 @@ there.
 Only subjects with a DaTscan image available and a confirmed diagnosis of either
 Parkinson's disease (PD) or healthy control (HC) were used. Subjects with
 Parkinson's symptoms at prodromal stages  were excluded from the analysis to
-avoid introducing ambiguous labels into the training set. SWEDD (Scans Without
-Evidence of Dopaminergic Deficit) patients were excluded from training as well
+avoid introducing ambiguous labels into the training set. Scans Without
+Evidence of Dopaminergic Deficit (SWEDD) patients were excluded from training as well
 but retained for later inference evaluation.
 
 To limit each subject to a single observation and avoid temporal data leakage,
@@ -91,7 +91,7 @@ multiple visits and from participants who did not undergo imaging at baseline.
 // maybe this last sentence should go
 
 
-=== Legal and Ethical Considerations
+=== Legal and ethical considerations
 
 // This section is a requirement
 
@@ -99,7 +99,7 @@ Access to PPMI data was requested and granted through the official PPMI data use
 agreement, which restricts use to research purposes and prohibits
 re-identification of participants. The PPMI study itself received ethical
 approval from the institutional review boards of all participating sites, and
-all participants provided written informed consent prior to enrolment. Further
+all participants provided written informed consent prior to enrollment. Further
 details are provided in @app_ethics.
 
 Data handling in this project complied with the General Data Protection
@@ -109,9 +109,9 @@ the purposes of this thesis, stored on the password-protected servers of the
 VICOROB research group, and were not transferred to unauthorized systems or
 shared with third parties.
 
-== Data Preprocessing
+== Data preprocessing
 
-=== BIDS Data Organisation <sec-bids>
+=== BIDS data organization <sec-bids>
 
 /*
 As mentioned, the data I'll be using from the PPMI dataset consists of 3d
@@ -185,7 +185,7 @@ reproducible preprocessing across the full cohort.
   registered directory is shown.]
 )<BIDS_ppmi>
 
-=== Image Preprocessing <sec-preprocessing>
+=== Image preprocessing <sec-preprocessing>
 
 /*
 First, I focused on the
@@ -250,8 +250,8 @@ image sets, (also see @pipelinefig):
 
 #figure(
   grid(
-    image("../assets/figures/methods/unregistered_images.svg", width: 100%),
-    image("../assets/figures/methods/registered_images.svg", width: 100%)
+    image("../assets/figures/methods/unregistered_images.svg", width: 120%),
+    image("../assets/figures/methods/registered_images.svg", width: 120%)
   ),
   placement: auto,
   caption: [Images from the `raw` set (above, multiple different sizes) compared to registered images
@@ -259,23 +259,9 @@ image sets, (also see @pipelinefig):
 )<fig-compareraw-reg>
 
 
-For the 2.5D model specifically, maximum intensity projections (MIPs) were
-computed from the preprocessed volume along each of the three anatomical axes
-(axial, coronal, sagittal) prior to cropping (see @mips). Each MIP retains, at
-every pixel position, the maximum intensity encountered along the projection
-direction. Using projections avoids the need to select specific anatomical
-slices and provides a compact representation of the full volume. This approach
-was derived after seeing success on other modalities with different projections
-of volumes to classify pulmonary nodules @setioPulmonary2016. The three
-resulting 2D projections were stacked as the three channels of a single 2D input
-tensor, matching the three-channel format expected by ImageNet-pretrained
-networks.
-
-
-
 #import fletcher.shapes: diamond
 #figure(
-  text(0.8em, diagram(
+  text(1em, diagram(
     node-stroke: 1pt,
     node-corner-radius: 1pt,
     // 2.5d
@@ -299,6 +285,21 @@ networks.
   (top) and 3D CNNs (bottom).]
 )<pipelinefig>
 
+For the 2.5D model specifically, maximum intensity projections (MIPs) were
+computed from the preprocessed volume along each of the three anatomical axes
+(axial, coronal, sagittal) prior to cropping (see @mips). Each MIP retains, at
+every pixel position, the maximum intensity encountered along the projection
+direction. Using projections avoids the need to select specific anatomical
+slices and provides a compact representation of the full volume. This approach
+was derived after seeing success on other modalities with different projections
+of volumes to classify pulmonary nodules @setioPulmonary2016. The three
+resulting 2D projections were stacked as the three channels of a single 2D input
+tensor, matching the three-channel format expected by ImageNet-pretrained
+networks.
+
+
+
+
 #figure(
     image("../assets/figures/methods/multi_axis_mip_rgb_concept.svg"),
     caption: [Pipeline for converting 3D DaTscan volumes into multi-axis
@@ -307,7 +308,7 @@ networks.
     Green, and Blue (RGB) input channels for a standard 2D RGB CNN architecture.]
 )<mips>
 
-=== Tabular Data Preprocessing 
+=== Tabular data preprocessing 
 
 The curated PPMI spreadsheet provides semi-quantitative DaTscan binding values
 alongside clinical assessments. Preprocessing of the tabular data consisted of
@@ -323,19 +324,15 @@ lateralization and overall binding:
 #set par(leading: 1em)
 $
 "AI"_"caudate" = frac("SBR"_"caudate,L" - "SBR"_"caudate,R", "SBR"_"caudate,L"
-+ "SBR"_"caudate,R")
-" ",\
++ "SBR"_"caudate,R") thick ,\
 
 "AI"_"putamen" = frac("SBR"_"putamen,L" - "SBR"_"putamen,R", "SBR"_"putamen,L"
-+ "SBR"_"putamen,R")
-
-" ",\
++ "SBR"_"putamen,R") thick ,\
 
 overline("SBR") = 1/4("SBR"_"caudate,L" + "SBR"_"caudate,R"
-+ "SBR"_"putamen,L" + "SBR"_"putamen,R")
-" ",\
++ "SBR"_"putamen,L" + "SBR"_"putamen,R") thick ,\
 
-"PCR" = frac(overline("SBR")_"putamen", overline("SBR")_"caudate") " ";
+"PCR" = frac(overline("SBR")_"putamen", overline("SBR")_"caudate") thick ;
 $
 ]
 
@@ -344,7 +341,7 @@ engineered features encode the asymmetric onset pattern characteristic of PD and
 the relative putaminal loss relative to the caudate, both of which are
 clinically recognized hallmarks of the disease.
 
-== Classical Machine Learning Baseline
+== Classical machine learning baseline
 /* I worked on the data from the given tabular file `PPMI_Curated_Data_Cut_Public_20240729.xlsx`
 containing data extracted from the DaTscan images and other metadata. */
 
@@ -386,9 +383,9 @@ feature selection in the multimodal fusion experiments.
 )<tab-incremental-sets>
 
 
-== Deep Learning strategies
+== Deep learning strategies
 
-=== CNN Architectures <sec-deep-learning-strategies>
+=== CNN architectures <sec-deep-learning-strategies>
 /*
 // Tried approaches: 2d, 3D, 3D-deeper (more layers), mednet3d, imagenet
 // (2.5d)
@@ -451,12 +448,12 @@ learning from a large natural image dataset, a ResNet18 backbone pretrained on
 ImageNet @dengImageNet2009 was fine-tuned for binary DaTscan classification. As
 described in @sec-preprocessing, the three orthogonal MIPs extracted from each
 volume were stacked as channels, producing a $3 times H times W$ input that
-matches the format expected by the pretrained network (refer to @mips for a
-visualization). The original ImageNet classification head was replaced by a
-single linear layer with sigmoid output. During fine-tuning, all backbone
-weights were updated at a reduced learning rate ($10^(-4)$) to avoid overwriting
-pretrained representations, while the new classification head was trained at the
-default rate ($10^(-3)$).
+matches the format expected by the pretrained network (refer to @mips). The
+original ImageNet classification head was replaced by a single linear layer with
+sigmoid output. During fine-tuning, all backbone weights were updated at a
+reduced learning rate ($10^(-4)$) to avoid overwriting pretrained
+representations, while the new classification head was trained at the default
+rate ($10^(-3)$).
 
 *3D ResNet10 with MedicalNet pretraining* (`med3d`). As a domain-specific
 alternative to ImageNet pretraining, a ResNet-10 backbone from MedicalNet
@@ -471,7 +468,7 @@ attaching a lightweight custom classification head. The latter approach reduces
 parameter count and allows greater flexibility in the design of the
 classification stage while preserving the pretrained feature representations.
 
-=== Training Protocol <sec-training>
+=== Training protocol <sec-training>
 
 /*
 I'd like to mention the `train.py` script I have created.
@@ -487,11 +484,11 @@ to verify that the results were not down to a lucky train-test split.
 
 All CNN models were trained using the same script (`train.py`, see @app_code)
 and configuration to ensure comparability. The binary cross-entropy with logits
-loss (`BCEWithLogitsLoss`) was used throughout. The Adam optimizer was employed
-with default momentum parameters ($beta_1 = 0.9$, $beta_2 = 0.999$) and weight
-decay of $10^(-4)$. Training was run for a maximum of 100 epochs. The model
-checkpoint achieving the highest validation AUC within each fold was saved and
-used for evaluation.
+loss (`BCEWithLogitsLoss`) was used throughout. The Adam optimizer
+@kingmaAdam2017 was employed with default momentum parameters ($beta_1 = 0.9$,
+$beta_2 = 0.999$) and weight decay of $10^(-4)$. Training was run for a maximum
+of 100 epochs. The model checkpoint achieving the highest validation AUC within
+each fold was saved and used for evaluation.
 
 Training and evaluation were performed on the GPU infrastructure of the
 #smol[VICOROB] research group. A separate evaluation script loaded the saved
@@ -512,7 +509,7 @@ trained at the base rate of $10^(-4)$. All remaining architectures (`2d_sum`,
 `3d_crop`, and `3d_crop_deeper`) used a uniform learning rate of $10^(-4)$
 throughout.
 
-=== Cross-Validation Scheme
+=== Cross-validation scheme
 
 Stratified $k$-fold cross-validation was used throughout to produce performance
 estimates that are robust to the specific train-test split. An initial phase
@@ -522,7 +519,7 @@ architectures identified were then re-evaluated with 5-fold cross-validation
 to produce more reliable and statistically interpretable estimates. Performance
 is reported as the mean and standard deviation across folds.
 
-=== Reproducibility and Experiment Management
+=== Reproducibility and experiment management
 
 To facilitate reproducibility, all experiments were managed through a unified
 training pipeline (`train.py`). Model configurations, preprocessing parameters,
@@ -534,7 +531,7 @@ exported to csv files for subsequent statistical analysis and visualization.
 Source code was maintained under Git version control and is publicly available
 through the repository described in @app_code.
 
-== Multimodal Fusion
+== Multimodal fusion
 
 /*
 // I have not yet finished this
@@ -557,7 +554,7 @@ fusion
 Multimodal experiments combined DaTscan-derived information with tabular
 clinical features, following two different strategies depending on the modality.
 
-=== Fusion with Classical Classifiers
+=== Fusion with classical classifiers
 
 For the classical ML models, multimodal integration was straightforward: the
 tabular feature sets described in the baseline section already include clinical
@@ -661,7 +658,7 @@ to learn a complex clinical model, but rather to project the tabular variables
 into a compact latent representation that could be combined with the image
 embedding.
 
-== Evaluation Metrics
+== Evaluation metrics
 
 To rigorously assess and validate the classification performance of the
 developed models, a comprehensive suite of evaluation metrics was employed. In
@@ -683,9 +680,9 @@ the True Positive Rate (TPR), or sensitivity, against the False Positive Rate
 Rate are defined as
 
 $
-"TPR" = "TP" / ("TP" + "FN") " " ,
+"TPR" = "TP" / ("TP" + "FN") thick ,
 \
-"FPR" = "FP" / ( "TN" + "FP") = 1 - "Specifity (TPR)" " ".
+"FPR" = "FP" / ( "TN" + "FP") = 1 - "Specificity" thick .
 $
 
 The AUC measure provides a measure of performance across all possible
@@ -699,28 +696,28 @@ metrics.
   and negative) among the total number of cases examined and is defined as the
   ratio of correct predictions against the total number of predictions:
 
-$ "Accuracy" = ("TP" + "TN") / ("TP" + "TN" + "FP" + "FN") " ". $
+$ "Accuracy" = ("TP" + "TN") / ("TP" + "TN" + "FP" + "FN") thick . $
 
 Given the balanced class distribution enforced by the downsampling protocol in this work, the standard accuracy yields an identical value to the balanced accuracy across all experiments.
 
 - _Sensitivity_ (also referred to as recall) measures the model's ability to correctly identify actual positive cases (the fraction of true PD cases detected):
 
-$ "Sensitivity" = "TP" / ("TP" + "FN" ) " " . $
+$ "Sensitivity" = "TP" / ("TP" + "FN" ) thick . $
 
 - _Specificity_ (or True Negative Rate) measures the model's capacity to correctly identify actual negative cases (the fraction of true HC detected):
 
-$ "Specifity" = "TN" / ("TN" + "FP" ) " " . $
+$ "Specificity" = "TN" / ("TN" + "FP" ) thick . $
 
 
 - _Precision_ measures the proportion of predicted positive cases that are truly positive:
 
-$ "Precision" = "TP" / ("TP" + "FP") " ". $
+$ "Precision" = "TP" / ("TP" + "FP") thick . $
 
 - _F1-score_ combines precision and recall into a single metric by computing
   their harmonic mean:
 
 $ "F1" = 2 thick ("precision" dot "recall") / ("precision" + "recall") =
-(2 "TP") / (2 "TP" + "FP" + "FN") $
+(2 "TP") / (2 "TP" + "FP" + "FN") thick . $
 
 The F1-score is particularly useful when both false positives and false
 negatives are clinically relevant, as it balances the trade-off between
@@ -732,7 +729,7 @@ ground truth.
 To ensure reproducibility and statistical validity, all metrics are reported as
 the mean $plus.minus$ standard deviation ($sigma$) computed across the validation folds of the cross-validation architecture. Where direct performance comparisons between distinct model architectures are made, the complete performance distributions across folds are visualized using boxplots. This approach effectively conveys fold-level variability alongside the aggregate mean, offering insight into the stability and robustness of the models.
 
-== Post-hoc SWEDD Inference <sec-swedd-inference>
+== Post-hoc SWEDD inference <sec-swedd-inference>
 
 To assess the specificity of the learned imaging representation, the
 best-performing trained model was applied post-hoc to the SWEDD cohort (Scans

@@ -19,6 +19,10 @@
   counter(heading).update(0)
   counter(page).update(0)
   set page(numbering: "1")
+  {
+    show heading: none
+    heading(bookmarked: true, depth: 1, numbering: none)[Appendices]
+  }
   body
 }
 
@@ -51,9 +55,13 @@
   }
 }
 
-#let smol(it) = { if debug { text(orange, smallcaps(all: true, it)) } else {
-  smallcaps(all: true, it) } }
-//#let smol(it) = { it } 
+#let smol(it) = {
+  if debug {
+    text(orange, smallcaps(all: true, it))
+  } else {
+    smallcaps(all: true, it)
+  }
+}
 #let caps(it) = { if debug { text(green, upper(it)) } else { upper(it) } }
 
 #let redt(it) = { if show_red { text(red, it) } }
@@ -70,7 +78,7 @@
   epigraph: none,
   author: none,
 ) = {
-  show smallcaps: set text(spacing: 120%, tracking: 0.05em)
+  show smallcaps: set text(spacing: 120%, tracking: 0.08em)
   place(top + center, dy: +5%, { image("UdG_dues_linies_centrat_blau.svg", width: 40%) })
   if debug {
     place(horizon + center, dy: 10em,text(2em, red, smallcaps[debug
@@ -81,6 +89,7 @@
     align(
       center,
       text(size: 1.85em, smallcaps(title))
+      //text(size: 1.85em, font: "Libertinus Serif Display", title)
         + v(2.5%, weak: true)
         + if subtitle != none {
           text(size: 2em, smallcaps(subtitle))
@@ -128,6 +137,7 @@
   let math-font = "Libertinus Math" // same as text
   let mono-font = "BlexMono Nerd Font"
 
+  show smallcaps: set text(spacing: 120%, tracking: 0.04em)
   set text(font: text-font, 11pt, fill: rgb("#141414"))
   set text(number-type: "old-style")
   show math.equation: set text(font: math-font, number-type: "lining")
@@ -140,7 +150,7 @@
     first-line-indent: (amount: INDENT, all: false),
     justify: true,
     spacing: 1em,
-    leading: 0.5em + 1pt,
+    leading: 0.55em + 1pt,
     justification-limits: (
       // allow adjusting spaces to fix justification
       // spacing -> spaces between words
@@ -306,17 +316,47 @@
   )
 
   // configure outlines
-  show outline.entry.where(level: 1): set block(above: 1.375em, breakable: true)
-  show outline.entry.where(level: 2): set block(above: .75em, breakable: true)
+  show outline.entry.where(level: 1): set block(above: 1.75em, breakable: true)
+  show outline.entry.where(level: 1): set text(weight: 600)
+  show outline.entry.where(level: 2): set block(above: 1em, breakable: true)
+  show outline: it => align(center)[#block(width: 80%, [
+     #it
+  ])]
+
+  // old outline
+  // show outline.entry.where(level: 1): set block(above: 1.375em, breakable: true)
+  // show outline.entry.where(level: 2): set block(above: .75em, breakable: true)
   show outline.entry: set outline.entry(fill: "")
   show outline.entry.where(level: 1): set outline.entry(fill: repeat(text(.5em)[.], gap: 0.15em))
-  show outline: it => align(center)[#block(width: 100%, [
-    #it
-  ])]
   show outline.entry: it => link(
     it.element.location(),
-    it.indented(text(0.85em, lin(it.prefix())), lin(it.inner())),
+    it.indented(lin(it.prefix()), lin(it.inner()))
   )
+
+  // new attempt ? more clean ?
+  // show outline.entry: it => link(it.element.location(), {
+  //   let pagenum = it.inner().children.at(5)
+  //   let pgwidth = measure(pagenum).width
+  //   set outline.entry(fill: "")
+  //   set text(number-type: "lining")
+  //   grid(
+  //     box(
+  //       if pgwidth < 10pt {
+  //         if it.level == 1 { h(measure([*10*]).width - pgwidth) }
+  //         else { h(measure([10]).width - pgwidth)}
+  //       } +
+  //       strong(pagenum) + h(INDENT) +
+  //       [$dot$] + h(INDENT) +
+  //       if it.prefix() != none { it.prefix() + h(INDENT) } +
+  //       {
+  //         set text(number-type: "old-style")
+  //         if it.level == 1 { text(1.25em, it.element.body) }
+  //         else { it.element.body }
+  //       }
+  //       + h(1fr)
+  //     )
+  //   )
+  // })
 
   // configure headings
   set heading(numbering: "1.1.1 a")
@@ -341,7 +381,7 @@
 
   show heading.where(level: 2): heading-func.with(body-fmt: emph, use-line: true)
   show heading.where(level: 2): it => {
-    set block(above: 2em, below: 1em)
+    set block(above: 1.675em, below: 1em)
     text(size: 1.1em, it)
   }
 
@@ -390,11 +430,10 @@
   show figure.where(kind: table): set figure.caption(position: bottom)
   show figure.where(kind: table): set figure(gap: 1em)
   show figure.where(kind: table): set text(number-type: "lining")
-  show figure.where(kind: table): it => { v(1.5em, weak: true) + it + v(2em, weak: true) }
+  show figure.where(kind: table): it => { v(1.25em, weak: true) + it + v(2em, weak: true) }
 
   pagebreak()
   body
-  //bibliography("references.bib")
 }
 
 /// Theorem environment. Optionally can have a name, like "Rolle's" theorem.

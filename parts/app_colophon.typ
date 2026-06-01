@@ -18,11 +18,14 @@ including #link("https://www.deepl.com/en/translator", "DeepL"),
 #link("https://www.wordreference.com/", "WordReference"),
 #link("https://www.thesaurus.com/", "Thesaurus.com"),
 #link("https://practicaltypography.com/", "Practical Typography"), and
-#link("https://academic-englishuk.com/", "Academic English UK"). These tools were used exclusively for translation
-assistance, vocabulary refinement, stylistic guidance, and proofreading.
+#link("https://academic-englishuk.com/", "Academic English UK"). These tools
+were used exclusively for translation assistance, vocabulary refinement,
+stylistic guidance, and proofreading.
 
-All software used during the development and writing of this thesis is free and
-open-source software.
+Finally, #link("https://www.zotero.org/", "Zotero") was invaluable in the
+process of managing all references consulted. Its BibTex plugin was used to
+generate the bibliography.
+
 
 This report manuscript is distributed under the Creative Commons Attribution 4.0
 International License (CC BY 4.0), while the accompanying source code is
