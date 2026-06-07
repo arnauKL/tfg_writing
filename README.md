@@ -2,7 +2,6 @@
 
 [Typst](https://typst.app) source code and pdf for the accompanying bachelor's
 thesis in Biomedical Engineering at the Universitat de Girona.
-The full report is available [here](report.pdf).
 
 
 The experimental codebase, including CNN implementations, preprocessing
