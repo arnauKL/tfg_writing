@@ -1,10 +1,13 @@
 # Bachelor's Thesis: Deep Learning-Based Classification of Parkinson's Disease from DaTscan Images
 
-[Typst](https://typst.app) source code and pdf for the accompanying bachelor's thesis in Biomedical Engineering at the Universitat de Girona.
+[Typst](https://typst.app) source code and pdf for the accompanying bachelor's
+thesis in Biomedical Engineering at the Universitat de Girona.
 The full report is available [here](report.pdf).
 
 
-The experimental codebase, including CNN implementations, preprocessing pipelines, and multimodal machine learning experiments, is maintained separately at [arnauKL/code_thesis](https://github.com/arnauKL/code_thesis).
+The experimental codebase, including CNN implementations, preprocessing
+pipelines, and multimodal machine learning experiments, is maintained
+separately at [arnauKL/code_thesis](https://github.com/arnauKL/code_thesis).
 
 ## Building
 
