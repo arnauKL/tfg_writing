@@ -81,15 +81,14 @@
   show smallcaps: set text(spacing: 120%, tracking: 0.08em)
   place(top + center, dy: +5%, { image("UdG_dues_linies_centrat_blau.svg", width: 40%) })
   if debug {
-    place(horizon + center, dy: 10em,text(2em, red, smallcaps[debug
-    mode on]))
+    place(horizon + center, dy: 10em, text(2em, red, smallcaps[debug
+      mode on]))
   }
   place(horizon + center, dy: -5%, {
     set par(leading: .5em, justify: false)
     align(
       center,
       text(size: 1.85em, smallcaps(title))
-      //text(size: 1.85em, font: "Libertinus Serif Display", title)
         + v(2.5%, weak: true)
         + if subtitle != none {
           text(size: 2em, smallcaps(subtitle))
@@ -162,6 +161,7 @@
   //set enum(indent: INDENT, numbering: "1.")
   set list(indent: .75em, marker: [--], body-indent: .75em)
   set terms(hanging-indent: INDENT)
+  //set page(paper: "presentation-16-9")
   set page(paper: "a4")
   show list: set block(breakable: true)
 
@@ -179,7 +179,7 @@
   show raw.where(block: true): it => align(center)[#it]
   show raw: set text(font: mono-font, number-type: "lining")
   // inline raw
-  show raw: it => h(1pt) + box(it , outset: 1.5pt, fill: luma(240), radius: 3pt)+ h(1pt)
+  show raw: it => h(1pt) + box(it, outset: 1.5pt, fill: luma(240), radius: 3pt) + h(1pt)
 
   set document(author: if author != none { author } else { () }, title: shorttitle)
 
@@ -231,8 +231,7 @@
       let chap_num = if current_chapter != none [
         #if current_chapter.supplement.at("text") == "Section" [Sec.] else [App.] // show correct supplement if chapter of appendix
         #if current_chapter.numbering != none [
-        #numbering(current_chapter.numbering,
-        ..counter(heading).at(current_chapter.location()))]
+          #numbering(current_chapter.numbering, ..counter(heading).at(current_chapter.location()))]
       ]
 
       let sec_num = if current_sec != none [
@@ -320,7 +319,7 @@
   show outline.entry.where(level: 1): set text(weight: 600)
   show outline.entry.where(level: 2): set block(above: 1em, breakable: true)
   show outline: it => align(center)[#block(width: 80%, [
-     #it
+    #it
   ])]
 
   // old outline
@@ -330,7 +329,7 @@
   show outline.entry.where(level: 1): set outline.entry(fill: repeat(text(.5em)[.], gap: 0.15em))
   show outline.entry: it => link(
     it.element.location(),
-    it.indented(lin(it.prefix()), lin(it.inner()))
+    it.indented(lin(it.prefix()), lin(it.inner())),
   )
 
   // new attempt ? more clean ?
@@ -561,7 +560,7 @@
   set par(justify: false)
   table(
     row-gutter: .35em,
-    align: (x, y) => { if (y != 0 and x == 0) {left} else {center}},
+    align: (x, y) => { if (y != 0 and x == 0) { left } else { center } },
     stroke: (x, y) => {
       if (y == 0) {
         (

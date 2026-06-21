@@ -4,7 +4,7 @@
   //title: [Deep Learning-Based \ Classification  of Parkinson's Disease \ from DaTscan Images],
   //title: [Deep Learning for Parkinson's Disease Classification from DaTscan Images: \ Architecture Comparison,  Interpretability,\ and  Multimodal Fusion],
   title: [A Comparative Study of Deep Learning Architectures for Parkinson's
-  Disease Classification from DaTscan],
+    Disease Classification from DaTscan],
   shorttitle: [DL Classification of Parkinson's Disease (DaTscan)],
   subsubtitle: [Bachelor's Thesis],
   tutor: "Adrià Casamitjana Díaz",

@@ -5,36 +5,12 @@
    viewBox="0 0 270.00001 323.99999"
    version="1.1"
    id="svg2"
-   sodipodi:docname="HC_example_41.svg"
-   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <sodipodi:namedview
-     id="namedview2"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="pt"
-     showgrid="false"
-     inkscape:zoom="1.8576389"
-     inkscape:cx="307.11029"
-     inkscape:cy="230.4"
-     inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="figure_1" />
   <metadata
      id="metadata1">
     <rdf:RDF>
@@ -56,12 +32,55 @@
     <style
        type="text/css"
        id="style1">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       id="filter9"
+       x="0"
+       y="0"
+       width="0.99917044"
+       height="1">
+      <feFlood
+         result="result1"
+         flood-color="rgb(200,55,55)"
+         flood-opacity="1"
+         id="feFlood8" />
+      <feImage
+         xlink:href=""
+         result="result2"
+         id="feImage8" />
+      <feBlend
+         result="result4"
+         in2="result1"
+         mode="multiply"
+         id="feBlend8" />
+      <feMerge
+         result="fbSourceGraphic"
+         id="feMerge9">
+        <feMergeNode
+           in="result1"
+           id="feMergeNode8" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode9" />
+      </feMerge>
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix47" />
+      <feColorMatrix
+         id="feColorMatrix48"
+         values="-1 0 0 0 1 0 0 -1 0 1 0 -1 0 0 1 -0.21 -0.72 -0.07 2 0 "
+         result="color2"
+         in="fbSourceGraphic" />
+    </filter>
   </defs>
   <g
      id="figure_1">
     <g
        id="axes_1"
-       transform="translate(-95.400002,-10.8)">
+       transform="translate(-95.400002,-10.8)"
+       style="filter:url(#filter9)">
       <g
          clip-path="url(#p59e7bb113f)"
          id="g1">
