@@ -6,6 +6,7 @@
  * https://polylux.dev/book/
  * https://github.com/Woelkchen/uni-ms-pres-schloss
  */
+
 #import "@preview/polylux:0.4.0": *
 #import "@preview/cetz:0.5.2": canvas, draw
 #import "@preview/cetz:0.5.2"
@@ -19,8 +20,8 @@
 
 // Make the paper dimensions fit for a presentation and the text larger
 #set page(
-  paper: "presentation-16-9",
-  //paper: "presentation-4-3",
+  //paper: "presentation-16-9",
+  paper: "presentation-4-3",
   margin: (x: x-margin, y: y-margin),
 )
 #set text(size: 20pt, font: "Adwaita Sans")
@@ -29,14 +30,13 @@
 
 #set list(marker: [--])
 
-
 // Colors
 #let accent = rgb("#c64600")
 #let accent2 = rgb("#9141ac")
 #let yellow = rgb("#f8e45c")
 #let dark-grey = rgb("#f6f5f4")
 #let medium-grey = rgb("#c0bfbc")
-#let light-grey = rgb("#5e5c64")
+#let light-grey = rgb("#282828")
 #let grey = rgb("#9a9996")
 #let bg = rgb("#ffffff")
 
@@ -87,7 +87,6 @@
       place(bottom, dx: -x-margin, dy: y-margin - 1pt, page-progress)
       place(bottom, dy: y-margin / 2 + y-margin / 8, {
         set text(0.75em, accent)
-        //h(1fr) + toolbox.current-section + h(1em) + [§] + h(1em) + toolbox.slide-number
         h(1fr) + toolbox.slide-number
       })
     }
@@ -147,7 +146,8 @@
   set par(justify: false)
   table(
     row-gutter: .35em,
-    align: (x, y) => { if (y != 0 and x == 0) { left } else { center } },
+    //align: (x, y) => { if (y != 0 and x == 0) { left } else { center } },
+    align: (x, y) => { center },
     stroke: (x, y) => {
       if (y == 0) {
         (
@@ -201,6 +201,7 @@
     numbering: n => text(fill: accent, weight: "extrabold")[#n.],
   )
   toolbox.all-sections((sections, current) => {
+    set text(1.5em)
     enum(..sections)
   })
 })
@@ -217,6 +218,12 @@
     text(1.2em, [people living\ with Parkinson's]), text(1.2em, [U.S. Economic \ Burden 2024]),
   )
 })
+
+#slide({
+  set align(center + horizon)
+  image("assets/figures/preliminary_concepts/Nigrostriatalpathway_dark.svg", height: 120%)
+})
+
 
 #slide({
   //place(top + left, [Timeline])
@@ -278,22 +285,22 @@
 #slide({
   set align(center + horizon)
   import cetz.draw: *
-  cetz.canvas(x: 5, y: 5, {
+  cetz.canvas(x: 6, y: 6, {
     cetz-venn.venn2(
       name: "venn",
       padding: 50em,
       stroke: light-grey,
       fill: bg,
-      a-fill: accent.transparentize(50%),
+      a-fill: accent.transparentize(10%),
+      ab-fill: accent.transparentize(40%),
     )
     content("venn.a", text(1.5em)[*PD*])
     content("venn.ab", [
       #set align(center)
-      #set text(.75em)
+      #set text(.9em)
       Tremor \ Bradykinesia \ Rigidity
-
     ])
-    content("venn.b", text(1em)[
+    content("venn.b", text(1.2em)[
       *Drug-induced \ parkinsonism, \
       essential \ tremor*
     ])
@@ -356,7 +363,7 @@
 })
 
 #slide({
-  place(left, [= SBR, a partial fix])
+  place(left, [= Striatal Binding Ratio (SBR), a partial fix])
   set align(center + horizon)
   [
     #grid(
@@ -369,6 +376,7 @@
       [
         #set text(1.25em)
         #tablec(
+          align: (x, y) => { if (y != 0 and x == 0) { left } else { center } },
           columns: 3,
           [],
           [Left],
@@ -382,7 +390,7 @@
         )
       ],
 
-      [Full DaTscan 3D volume], [], [Striatal Binding Ratio (SBR)],
+      [Full DaTscan 3D volume], [], [SBR],
     )
   ]
   place(
@@ -457,13 +465,13 @@
         [HC],
         [PD],
         [rawdata],
-        [158],
+        [*158*],
         [618],
         [registered],
-        [124],
+        [*124*],
         [561],
         [tabular],
-        [290],
+        [*290*],
         [1346],
       )
       v(1em)
@@ -492,19 +500,21 @@
       Normalization \
       $arrow.b.double$ \
       Center cropping ROI: 76 $times$ 76 $times$ 76 \
-      $arrow.b.double$
     ]
   }))
 })
 
 #slide({
-  [= Preprocessing pipeline: 2.5D MIP]
+  [= Preprocessing pipeline:] + text(.85em)[2.5D Maximum Intensity Projection (MIP)]
   set align(center + horizon)
-  image("assets/slides/mip_google_modified_dark.png", height: 80%)
+  grid(
+    columns: (1fr, 1fr, 1.5fr),
+    [Normalization], [$arrow.r.double.long$], image("assets/slides/mip_google_modified_dark.png", height: 70%),
+  )
 })
 
 #slide({
-  [= Preprocessing pipeline: 2.5D MIP]
+  [= Preprocessing pipeline: 2.5D Maximum Intensity Projection (MIP)]
   set align(center + horizon)
   image("assets/slides/mip.svg", width: 100%)
 })
@@ -539,12 +549,15 @@
     [
       #set text(1em)
       #set align(left)
-      Additive feature sets, mirroring the clinical workflow: \
+      Additive feature sets, \ mirroring clinical workflow: \
       #v(.5em)
       Raw SBR \
       $arrow.b$ + full SBR panel \
       $arrow.b$ + engineered features \
       $arrow.b$ + demographics \
+      #v(-.75em)
+      #line(length: 70%, stroke: (thickness: 1pt, paint: light-grey, dash: "dashed"))
+      #v(-.75em)
       $arrow.b$ + motor (UPDRS) \
       $arrow.b$ + olfactory (UPSIT) \
       $arrow.b$ + secondary biomarkers
@@ -602,63 +615,51 @@
   )
 })
 
-
-
-#let viz-placeholder(name, height: 10em) = box(
-  width: 100%,
-  height: height,
-  radius: .5em,
-  stroke: (paint: grey, dash: "dashed"),
-  align(center + horizon)[
-    #set text(.8em, fill: grey, style: "italic")
-    #name
-  ],
-)
-
-#section-slide([Results])
+#section-slide([Image-based model results])
 
 #slide({
   [= Classical ML results]
   set align(center + horizon)
-  grid(
-    columns: (1fr, 1fr),
-    column-gutter: 2em,
-    viz-placeholder([classical_ml_5fold_boxplot]),
-    [
-      #set text(.9em)
-      #set align(left)
-      *SVM (RBF), imaging-only* \
-      Median AUC: *0.991* \
-      Mean Acc / F1: *0.962*
+  image("assets/figures/results/comparison_models_only.svg", height: 80%)
+})
 
-      v(1em)
+#slide({
+  [= Classical ML results: *SVM (RBF), imaging-only*]
+  set align(center + horizon)
+  [
+    #set align(left)
 
-      Manual balancing $>$ sample weighting \
-      (weighting biased toward majority class)
+    Median AUC: *0.991* \
+    Mean Acc / F1: *0.962*
 
-      v(.5em)
+    #set text(1.25em)
+    #grid(
+      columns: (1fr, 2em, 1fr),
+      row-gutter: 1em,
+      column-gutter: 1em,
+      align(right)[Manual balancing], text(1.75em)[*>*], [ sample weighting (weighting biased toward majority class)],
 
-      Engineered ratios (Putamen/Caudate, \
-      Asymmetry Index) $>$ raw SBR
-    ],
-  )
+      align(right)[Engineered ratios (Putamen/Caudate, Asymmetry Index)], text(1.75em)[*>*], [raw SBR],
+    )
+  ]
 })
 
 #slide({
   [= CNNs: raw outperforms registered]
   set align(center + horizon)
-  viz-placeholder([cnn_raw_vs_registered_boxplot], height: 14em)
-  v(.5em)
+  image("assets/figures/results/cnn_unimodal_baselines_brief.svg")
   text(
-    .85em,
-  )[Across all five architectures, raw unregistered volumes \ outperformed spatially registered ones -- consistently.]
+    2em,
+  )[Raw unregistered volumes \ outperformed spatially registered ones.]
 })
 
 #slide({
   [= CNN performance summary (raw, 5-fold)]
   set align(center + horizon)
-  tablef(
-    columns: (auto, auto, auto),
+  v(2em)
+  set text(1.5em)
+  tablec(
+    columns: (10em, auto, auto),
     [Architecture],
     [AUC],
     [F1],
@@ -668,28 +669,36 @@
     [25d_resnet],
     [0.979 ± 0.021],
     [0.943],
-    [med3d_encoder, med3d, \ 2d_sum, 3d_crop],
-    [0.944 -- 0.954],
-    [--],
   )
+  v(1em)
+  set text(.75em)
+  [med3d_encoder, med3d, 2d_sum, 3d_crop \
+    AUC [0.944 -- 0.954]]
 })
 
 #slide({
-  [= Grad-CAM: 25d_resnet]
+  place(top + left, dy: -y-margin / 2, [= Grad-CAM: 25d_resnet])
   set align(center + horizon)
-  viz-placeholder([gradcam_25dresnet_pd_vs_hc_cohort_avg], height: 12em)
-  v(.5em)
-  text(.85em)[Cohort-averaged attention: focal at the striatum for PD, \ diffuse and broad for HC.]
+  box(width: 95%, grid(
+    columns: 2,
+    column-gutter: 1em,
+    image("assets/figures/results/25d_gradcam/gradcam_mean_25d_raw_PD.svg"),
+    image("assets/figures/results/25d_gradcam/gradcam_mean_25d_raw_HC.svg"),
+  ))
+  [`25d_resnet` + raw images. Left: PD. Right: HC.]
 })
 
 #slide({
-  [= Grad-CAM: 3D architectures]
-  set align(center + horizon)
-  viz-placeholder([gradcam_3d_architectures_grid], height: 12em)
-  v(.5em)
-  text(
-    .85em,
-  )[No anatomical grounding: edge artifacts (3d_crop), \ diffuse "pancake" activations (3d_crop_deeper), \ off-target ring activation (med3d_encoder).]
+  place(top + left, dy: -y-margin / 2, [= Grad-CAM: 3D architectures])
+  grid(
+    columns: (1fr,) * 2,
+    gutter: 1em,
+    image("assets/figures/results/3d_gradcam/gradcam_3d_crop_PD_scatter_mean.svg"),
+    image("assets/figures/results/3d_gradcam/gradcam_3d_deeper_PD_scatter_mean.svg"),
+
+    image("assets/figures/results/3d_gradcam/gradcam_med3d_PD_scatter_mean.svg"),
+    image("assets/figures/results/3d_gradcam/gradcam_med3d_encoder_PD_scatter_mean.svg"),
+  )
 })
 
 #slide({
@@ -703,62 +712,142 @@
   ]
 })
 
+#section-slide([Multimodal results])
+
 #slide({
   [= Multimodal classical ML]
   set align(center + horizon)
-  viz-placeholder([additive_feature_sets_auc_table5], height: 8em)
+
+  tablec(
+    align: (x, y) => { if (y != 0 and x == 0) { left } else { center } },
+    columns: (auto, auto, 1fr, 1fr, 1fr),
+    [ Modality Set        ],
+    [   Features ],
+    [ AUC           ],
+    [ B_Acc         ],
+    [ F1            ],
+    [ DaTscan raw         ],
+    [          4 ],
+    [ $0.982 plus.minus 0.011$ ],
+    [ $0.962 plus.minus 0.022$ ],
+    [ $0.962 plus.minus 0.022$ ],
+    [ DaTscan full SBR    ],
+    [         13 ],
+    [ $0.981 plus.minus 0.011$ ],
+    [ $0.969 plus.minus 0.013$ ],
+    [ $0.969 plus.minus 0.013$ ],
+    [ DaTscan engineered  ],
+    [         17 ],
+    [ $0.985 plus.minus 0.009$ ],
+    [ $0.966 plus.minus 0.012$ ],
+    [ $0.965 plus.minus 0.012$ ],
+    [ \+ Demographics      ],
+    [         19 ],
+    [ $0.985 plus.minus 0.009$ ],
+    [ $0.966 plus.minus 0.012$ ],
+    [ $0.966 plus.minus 0.012$ ],
+    [ \+ Motor (UPDRS)     ],
+    [         27 ],
+    [ $0.998 plus.minus 0.003$ ],
+    [ $0.986 plus.minus 0.013$ ],
+    [ $0.986 plus.minus 0.013$ ],
+    [ \+ Non-motor (UPSIT) ],
+    [         33 ],
+    [ $0.998 plus.minus 0.002$ ],
+    [ $0.991 plus.minus 0.008$ ],
+    [ $0.991 plus.minus 0.008$ ],
+    [ \+ Biomarkers        ],
+    [         36 ],
+    [ $0.998 plus.minus 0.003$ ],
+    [ $0.983 plus.minus 0.012$ ],
+    [ $0.983 plus.minus 0.012$ ],
+  )
+
+  place(bottom + center, dy: 2em, text(.85em)[SVM RBF cross-validated performance (mean $plus.minus$ std, 5-fold)
+    across the seven additive feature sets. Performance is reported for the
+    manually balanced dataset.])
+
   v(.5em)
   grid(
-    columns: (1fr, 1fr),
-    column-gutter: 2em,
-    [
-      #set text(.85em)
-      #set align(left)
-      *Motor (UPDRS)*: AUC 0.985 $arrow$ 0.998 \
-      $arrow.r$ largest jump, but circular -- \
-      UPDRS is part of the diagnostic criteria.
-    ],
-    [
-      #set text(.85em)
-      #set align(left)
-      *Olfactory (UPSIT)*: genuinely complementary \
-      3rd-highest SHAP rank, behind only \
-      UPDRS and Putamen/Caudate Ratio.
-    ],
+    columns: (1fr, 2fr),
+    row-gutter: 2em,
+    grid(
+      columns: 1fr,
+      row-gutter: 2em,
+      [
+        #set text(.85em)
+        #set align(left)
+        *Motor (UPDRS)*:\ AUC 0.985 $arrow$ 0.998 \
+        largest jump, but circular
+      ],
+      [
+        #set text(.85em)
+        #set align(left)
+        *Olfactory (UPSIT)*:\ genuinely complementary \
+        3rd-highest SHAP rank, behind only \
+        UPDRS and Putamen/Caudate Ratio.
+      ],
+    ),
+    image("assets/figures/results/shap_summary_multimodal_pt_updated.svg", height: 120%),
   )
 })
 
+
 #slide({
-  [= Multimodal CNN fusion]
+  place(top + left, dy: -y-margin / 1.5, text(.5em)[= Multimodal CNN fusion])
   set align(center + horizon)
-  viz-placeholder([fusion_late_vs_featurelevel_boxplot], height: 12em)
-  v(.5em)
-  text(
-    .85em,
-  )[Motor-only late fusion: median AUC *0.999*, narrowest IQR. \ Late fusion $gt.eq$ feature-level fusion throughout (n = 306).]
+  image("assets/figures/results/multimodal_cnn.svg", height: 120%)
 })
 
 #slide({
-  [= SWEDD: a specificity test]
+  place(top + left, dy: -y-margin / 1.5, [= Multimodal CNN fusion])
   set align(center + horizon)
-  viz-placeholder([swedd_predicted_probability_violin], height: 11em)
-  v(.5em)
+  text(
+    1.5em,
+  )[Motor-only late fusion: \ median AUC *0.999*, narrowest IQR.
+
+    Late fusion $gt.eq$ feature-level fusion.]
+})
+
+#slide({
+  place(top + left, dy: -y-margin / 2, [= Scans Without Evidence of Dopaminergic Deficit])
+  set align(center + horizon)
   grid(
-    columns: (1fr, 1fr),
-    column-gutter: 2em,
-    [
-      #set text(.85em)
-      *Image-only model* \
-      mean $P$(PD) = 0.113, median 0.004 \
-      vs. 0.954 for confirmed PD \
-      (Mann–Whitney $p = 0.077$ vs. HC)
-    ],
-    [
-      #set text(.85em)
-      *+ Multimodal (UPDRS)* \
-      median $P$(PD) shifts to 0.450 \
-      30.4% classified as PD
-    ],
+    columns: (2fr, 1fr),
+    {
+      image("assets/figures/results/swedd_probabilities_violin.svg", height: 100%)
+    },
+
+    grid(
+      columns: 1fr,
+      column-gutter: 2em,
+      row-gutter: 2em,
+      [
+        #set text(.85em)
+        #set align(left)
+        *Image-only model* \
+        mean P(PD) = 0.113, \
+        median = 0.004 \
+        vs. 0.954 for confirmed PD \
+        (Mann–Whitney $p = 0.077$ vs. HC)
+      ],
+      [
+        #set text(.85em)
+        #set align(left)
+        *Image-only model* \
+        mean P(PD) = 0.113, \
+        median = 0.004 \
+        vs. 0.954 for confirmed PD \
+        (Mann–Whitney $p = 0.077$ vs. HC)
+      ],
+      [
+        #set text(.85em)
+        #set align(left)
+        *+ Multimodal (UPDRS)* \
+        median P(PD) shifts to 0.450 \
+        30.4% classified as PD
+      ],
+    ),
   )
 })
 
@@ -904,69 +993,45 @@
 
 #slide({
   [= Limitations]
-  v(1em)
-  set text(.95em)
-  list(
-    [Binary manifest PD vs. HC only -- the clinically least ambiguous task],
-    [No external validation on independent cohorts / scanners],
-    [Grad-CAM is indicative, not definitive],
-  )
+  v(2em)
+  set text(1.5em)
+  [
+    - Binary manifest PD vs. HC only
+    - 2 folds initially and small batch size
+    - Grad-CAM is indicative, not definitive
+  ]
 })
 
 #slide({
   [= Future work]
   v(1em)
   grid(
-    columns: (1fr,) * 3,
+    columns: (1fr,) * 2,
     column-gutter: 1em,
     box(
       inset: 1.5em,
       radius: .5em,
       height: 80%,
-      stroke: light-grey,
       [#align(center)[*Short term*] Re-run on an updated PPMI extract including prodromal DaTscan data.],
     ),
     box(
       inset: 1.5em,
       radius: .5em,
       height: 80%,
-      stroke: light-grey,
-      [#align(center)[*Medium term*] Grad-CAM consistency loss. Penalize attention outside an anatomical striatal mask.],
+      [#align(center)[*Longer term*] Grad-CAM consistency loss. Penalize attention outside an anatomical striatal mask.],
     ),
-    box(
-      inset: 1.5em,
-      radius: .5em,
-      height: 80%,
-      stroke: light-grey,
-      [#align(center)[*Ambitious*] MRI $arrow.r$ DaTscan synthesis on healthy subjects; deviation = subject-specific abnormality score.],
-    ),
-  )
-})
-
-#slide({
-  [= Summary]
-  v(1em)
-  set text(.95em)
-  list(
-    [Classical SBR baseline is already near-ceiling for manifest PD vs. HC],
-    [25d_resnet: the only model combining competitive performance with anatomically grounded decisions],
-    [Raw, unregistered images consistently outperform registered ones],
-    [Multimodal fusion improves performance -- olfactory genuinely, motor circularly],
-    [SWEDD inference validates the dopaminergic signal, not a cohort artifact],
   )
 })
 
 #slide(progress: false, {
   set align(center + horizon)
-  text(2em)[*Thank you.*]
   v(.5em)
-  text(1.2em, fill: grey)[Questions?]
+  text(2em)[*Thank you.*]
 })
 
-
-
-#slide({
+#slide(progress: false, {
   [= References]
   set text(14pt)
   bibliography("assets/references.bib", title: none)
+  align(bottom + center, image("assets/slides/Typst.svg", width: 5cm))
 })

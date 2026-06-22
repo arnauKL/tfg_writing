@@ -1,3 +1,4 @@
 notes/
 *.pdf
+!*slides*.pdf
 defense/
