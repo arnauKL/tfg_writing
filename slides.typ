@@ -20,8 +20,8 @@
 
 // Make the paper dimensions fit for a presentation and the text larger
 #set page(
-  //paper: "presentation-16-9",
-  paper: "presentation-4-3",
+  paper: "presentation-16-9",
+  //paper: "presentation-4-3",
   margin: (x: x-margin, y: y-margin),
 )
 #set text(size: 20pt, font: "Adwaita Sans")
@@ -554,10 +554,10 @@
       Raw SBR \
       $arrow.b$ + full SBR panel \
       $arrow.b$ + engineered features \
-      $arrow.b$ + demographics \
       #v(-.75em)
       #line(length: 70%, stroke: (thickness: 1pt, paint: light-grey, dash: "dashed"))
       #v(-.75em)
+      $arrow.b$ + demographics \
       $arrow.b$ + motor (UPDRS) \
       $arrow.b$ + olfactory (UPSIT) \
       $arrow.b$ + secondary biomarkers
